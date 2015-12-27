@@ -9,7 +9,7 @@ setup(
   description = 'A projekt management library',
   author = 'Pixel Stereo',
   author_email = 'contact@pixelstereo.org',
-  install_requires=['json, OSC,  ],
+  install_requires=['PyOSC'],
   zip_safe=False)
   url = 'https://github.com/PixelStereo/PyProjekt', 
   download_url = 'https://github.com/PixelStereo/PyProjekt/tarball/0.1.1', 
