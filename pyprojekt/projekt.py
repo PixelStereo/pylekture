@@ -349,23 +349,27 @@ class Event(object):
             if debug : print 'waiting' , wait
             sleep(wait)
         else:
-            address = self.content[0]
-            args = self.content[1:]
-            ip = self.getoutput().ip
-            port = self.getoutput().udp
-            for arg in args:
-                try:
-                    if debug : 
-                        print 'connecting to : ' + ip + ':' + str(port)
-                    client.connect((ip , int(port)))
-                    msg = OSCMessage()
-                    msg.setAddress(address)
-                    msg.append(arg)
-                    client.send(msg)
-                    sleep(0.001)
-                    msg.clearData()
-                except OSCClientError :
-                    print 'Connection refused'
+            out = self.getoutput()
+            if out.protocol == 'OSC':
+                address = self.content[0]
+                args = self.content[1:]
+                ip = out.ip
+                port = out.udp
+                for arg in args:
+                    try:
+                        if debug : 
+                            print 'connecting to : ' + ip + ':' + str(port)
+                        client.connect((ip , int(port)))
+                        msg = OSCMessage()
+                        msg.setAddress(address)
+                        msg.append(arg)
+                        client.send(msg)
+                        sleep(0.001)
+                        msg.clearData()
+                    except OSCClientError :
+                        print 'Connection refused'
+            else:
+                print 'protocol' , out.protocol , 'is not yet implemented'
 
     def getoutput(self):
         """rerurn the current output for this event.
@@ -382,11 +386,12 @@ class Event(object):
 
 class Output(Project):
     """Create a new output"""
-    def __init__(self,project,ip='127.0.0.1',name='no-name',udp =10000):
+    def __init__(self,project,protocol='OSC',ip='127.0.0.1',name='no-name',udp =10000):
         if debug == 2:
             print
             print "........... OUTPUT created ..........."
             print
+        self.protocol=protocol
         self.name=name
         self.udp = udp
         self.ip=ip
