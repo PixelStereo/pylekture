@@ -165,7 +165,9 @@ class Project(object):
     def scenarios_set(self,old,new):
         """Change order of a scenario in the scenario list of the project"""
         s_list = self.scenarios()
-        s_list[old] , s_list[new] = s_list[new] , s_list[old]
+        s_temp = s_list[old]
+        s_list.pop(old)
+        s_list.insert(new,s_temp)
         for scenario in s_list:
             scenario_list.remove(scenario)
         for scenario in s_list:
