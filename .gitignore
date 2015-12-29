@@ -1,2 +1,3 @@
 *.gz
 MANIFEST
+doc/_build
