@@ -385,7 +385,16 @@ class Event(object):
                     f = sock.makefile()
                     proj = Projector(f)
                     proj.authenticate(lambda:'admin')
-                    proj.set_mute(1,1)
+                    command = self.content[0]
+                    value = self.content[1:]
+                    if command == 'POWR':
+                        proj.set_power(value)
+                    elif command == 'INPT':
+                        proj.set_input(value)
+                    elif command == 'AVMT':
+                        proj.set_mute(value)
+                    else:
+                        'print PJLINK command' , command , 'is not implemented ('+value+')'
                 except socket_error:
                     print 'Connection refused'
             else:
