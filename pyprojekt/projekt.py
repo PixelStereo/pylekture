@@ -193,7 +193,7 @@ class Project(object):
         taille = len(output_list)
         the_output = None
         output_list.append(the_output)
-        output_list[taille] = Output(self,protocol='OSC')
+        output_list[taille] = Output(self)
         for key, value in kwargs.items():
             setattr(output_list[taille], key, value)
         return output_list[taille]

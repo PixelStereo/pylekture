@@ -15,7 +15,7 @@ projekt.test = False
 my_project = projekt.new_project()
 """When creating a project, an output is created, default is protocol 'OSC' and 127.0.0.1:10000"""
 # create another osc output for testing purpose
-second_out = my_project.new_output('PJLINK')
+second_out = my_project.new_output(protocol='PJLINK')
 second_out.name = 'another output'
 second_out.ip = socket.gethostbyname(socket.gethostname())
 second_out.udp = 1234
@@ -27,9 +27,6 @@ for output in my_project.outputs():
 	print 'output n°'+str(out_counter)+' :' , output.name , '/' , output.protocol , '/' , output.ip + ':' + str(output.udp)
 
 my_project.path = '/Users/reno/Desktop/testt.json'
-my_project.write()
-
-quit()
 
 another_project = projekt.new_project()
 
@@ -57,3 +54,5 @@ my_scenario.play()
 When creating an event, it doesn't have an output. It use output's scenario. But you can assing an output for an event if you want"""
 my_event.output = 1
 my_scenario.play()
+
+my_project.write()
