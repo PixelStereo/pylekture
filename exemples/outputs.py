@@ -26,26 +26,25 @@ for output in my_project.outputs():
 	out_counter += 1
 	print 'output n°'+str(out_counter)+' :' , output.name , '/' , output.protocol , '/' , output.ip + ':' + str(output.udp)
 
-my_project.path = '/Users/reno/Desktop/testt.json'
-
-another_project = projekt.new_project()
-
-print 'HERE' , my_project
-
-
-
 # create a scenario
 my_scenario = my_project.new_scenario()
-
 # create an event
 my_event = my_scenario.new_event(content=['/zob',232])
-
+pj_event = my_scenario.new_event(content=['AVMUTE'])
+pj_event.output = ['PJLINK',1]
 #play first scenario with default output
 my_scenario.play()
 
+my_project.path = '/Users/reno/Desktop/testt.json'
+my_project.write()
+
+quit()
+
+another_project = projekt.new_project()
+
 #play first scenario with second output
 my_scenario.output = 2
-"""THE PRIBLEM CAN BE SEEN HERE. THE OUTPUT OF SCENARIO IS NOT IN THE SCENARIO LIST. WHO CREATES AN OUTPUT WHICH IS NOT IN THE INSTANCES LIST ????????"""
+"""THE PROBLEM CAN BE SEEN HERE. THE OUTPUT OF SCENARIO IS NOT IN THE SCENARIO LIST. WHO CREATES AN OUTPUT WHICH IS NOT IN THE INSTANCES LIST ????????"""
 print my_project.outputs().index(my_scenario.getoutput())
 print 'new output' , my_scenario.output , my_scenario.getoutput() , my_project.outputs()
 my_scenario.play()
@@ -55,4 +54,3 @@ When creating an event, it doesn't have an output. It use output's scenario. But
 my_event.output = 1
 my_scenario.play()
 
-my_project.write()

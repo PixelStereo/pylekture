@@ -11,6 +11,9 @@ from functions import unicode2_list
 from functions import unicode2string_dict
 from functions import unicode2string_list
 from OSC import OSCMessage , OSCClientError
+from socket import socket
+from socket import error as socket_error
+from pjlink import Projector
 from devicemanager import OSCClient as OSCClient
 client = OSCClient()
 
@@ -174,9 +177,13 @@ class Project(object):
         for scenario in s_list:
             scenario_list.append(scenario)
 
-    def outputs(self):
+    def outputs(self,protocol='OSC'):
         """return a list of available output for this project"""
-        return Output.getinstances(self)
+        outs = []
+        for out in Output.getinstances(self):
+            if protocol == out.protocol:
+                outs.append(out)
+        return outs
 
     def new_scenario(self,*args,**kwargs):
         """create a new scenario"""
@@ -251,7 +258,7 @@ class Scenario(Project):
             print "........... SCENARIO created ..........."
             print
         if output == '':
-            output = 1
+            output = ['OSC' , 1]
         if description == '':
             description = "write a comment"
         if name == '':
@@ -371,6 +378,16 @@ class Event(object):
                         msg.clearData()
                     except OSCClientError :
                         print 'Connection refused'
+            elif out.protocol == 'PJLINK':
+                try:
+                    sock = socket()
+                    sock.connect((out.ip, out.udp))
+                    f = sock.makefile()
+                    proj = Projector(f)
+                    proj.authenticate(lambda:'admin')
+                    proj.set_mute(1,1)
+                except socket_error:
+                    print 'Connection refused'
             else:
                 print 'protocol' , out.protocol , 'is not yet implemented'
 
@@ -382,8 +399,9 @@ class Event(object):
             output = self.scenario.output
         else:
             output = self.output
-        output = output - 1
-        output = self.scenario.project.outputs()[output]
+        protocol = output[0]
+        output = output[1] - 1
+        output = self.scenario.project.outputs(protocol)[output]
         return output
 
 
