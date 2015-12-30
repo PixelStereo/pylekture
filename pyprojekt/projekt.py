@@ -22,9 +22,10 @@ test = True
 #But if i don't do that, I can't create scenario objects 
 # because when I call Scenario.getinstances(), the instances list is empty
 project_list = []
-output_list = []
 scenario_list = []
 event_list = []
+output_list = []
+output_osc_list = []
 
 def new_project():
     """Create a new project"""
@@ -51,7 +52,7 @@ class Project(object):
         self.version = None
         self.path = None
         self.lastopened = timestamp()
-        self.new_output(self)
+        self.new_output(self,'OSC')
 
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
@@ -192,7 +193,7 @@ class Project(object):
         taille = len(output_list)
         the_output = None
         output_list.append(the_output)
-        output_list[taille] = Output(self)
+        output_list[taille] = Output(self,protocol='OSC')
         for key, value in kwargs.items():
             setattr(output_list[taille], key, value)
         return output_list[taille]
@@ -233,9 +234,11 @@ class Project(object):
 
     def export_outputs(self):
         """export outputs of the project"""
-        outputs = []
+        outputs = {}
         for output in self.outputs():
-            outputs.append({'attributes':{'ip':output.ip,'udp':output.udp,'name':output.name}})
+            if not output.protocol in outputs:
+                outputs.setdefault(output.protocol,[])
+            outputs[output.protocol].append({'attributes':{'ip':output.ip,'udp':output.udp,'name':output.name}})
         return outputs
 
 
@@ -386,16 +389,22 @@ class Event(object):
 
 class Output(Project):
     """Create a new output"""
-    def __init__(self,project,protocol='OSC',ip='127.0.0.1',name='no-name',udp =10000):
+    def __init__(self,project,protocol='OSC',name='no-name'):
         if debug == 2:
             print
             print "........... OUTPUT created ..........."
             print
         self.protocol=protocol
-        self.name=name
-        self.udp = udp
-        self.ip=ip
         self.project = project
+        self.name = name
+        if protocol == 'OSC':
+            self.osc = OSC()
+            self.ip = self.osc.ip
+            self.udp = self.osc.udp
+        if protocol == 'PJLINK':
+            self.pjlink = PJLINK()
+            self.ip = self.pjlink.ip
+            self.udp = self.pjlink.udp
 
     @staticmethod
     def getinstances(project):
@@ -404,4 +413,42 @@ class Output(Project):
         for output in output_list:
             if project == output.project:
                 instances.append(output)
+        return instances
+
+class OSC(Output):
+    """Create an OSC output"""
+    def __init__(self,ip='127.0.0.1',udp =10000):
+        if debug == 2:
+            print
+            print "........... OSC OUTPUT created ..........."
+            print
+        self.udp = udp
+        self.ip=ip
+
+    @staticmethod
+    def getinstances(project):
+        """return a list of osc outputs for a given project"""
+        instances = []
+        for output_osc in output_osc_list:
+            if project == output_osc.project:
+                instances.append(output_osc)
+        return instances
+
+class PJLINK(Output):
+    """Create a PJLINK output"""
+    def __init__(self,ip='10.0.0.10',udp =4352):
+        if debug == 2:
+            print
+            print "........... OSC OUTPUT created ..........."
+            print
+        self.udp = udp
+        self.ip=ip
+
+    @staticmethod
+    def getinstances(project):
+        """return a list of pjlink outputs for a given project"""
+        instances = []
+        for output_pjlink in output_pjlink_list:
+            if project == output_pjlink.project:
+                instances.append(output_pjlink)
         return instances
