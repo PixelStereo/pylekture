@@ -177,13 +177,16 @@ class Project(object):
         for scenario in s_list:
             scenario_list.append(scenario)
 
-    def outputs(self,protocol='OSC'):
+    def outputs(self,protocol='all'):
         """return a list of available output for this project"""
         outs = []
-        for out in Output.getinstances(self):
-            if protocol == out.protocol:
-                outs.append(out)
-        return outs
+        if protocol == 'all':
+            return Output.getinstances(self)
+        else:
+            for out in Output.getinstances(self):
+                if protocol == out.protocol:
+                    outs.append(out)
+            return outs
 
     def new_scenario(self,*args,**kwargs):
         """create a new scenario"""

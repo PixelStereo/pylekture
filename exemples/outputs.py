@@ -15,11 +15,13 @@ projekt.test = False
 my_project = projekt.new_project()
 """When creating a project, an output is created, default is protocol 'OSC' and 127.0.0.1:10000"""
 # create another osc output for testing purpose
+print  'OSC outputs :' , my_project.outputs('OSC')
 second_out = my_project.new_output(protocol='PJLINK')
 second_out.name = 'another output'
 second_out.ip = socket.gethostbyname(socket.gethostname())
 second_out.udp = 1234
-my_project_outputs = my_project.outputs()
+print  'PJLINK outputs :' , my_project.outputs('PJLINK')
+print '--------------------------------------------------'
 # iterate outputs
 out_counter = 0
 for output in my_project.outputs():
@@ -39,6 +41,8 @@ my_project.path = '/Users/reno/Desktop/testt.json'
 my_project.write()
 
 quit()
+
+
 
 another_project = projekt.new_project()
 
