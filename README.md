@@ -25,6 +25,13 @@ For the moment, **PyProjekt** is capable of:
 -  Create dynamic scenario and events
 -  Save projects to json files
 
+Build Documentation
+=======================
+
+    pip install sphinx
+    cd doc
+    make html
+
 Copyright and Licensing
 =======================
 
