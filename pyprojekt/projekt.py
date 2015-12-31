@@ -469,7 +469,7 @@ class PJLINK(Output):
     def __init__(self,ip='10.0.0.10',udp =4352):
         if debug == 2:
             print
-            print "........... OSC OUTPUT created ..........."
+            print "........... PJLINK OUTPUT created ..........."
             print
         self.udp = udp
         self.ip=ip
@@ -481,4 +481,23 @@ class PJLINK(Output):
         for output_pjlink in output_pjlink_list:
             if project == output_pjlink.project:
                 instances.append(output_pjlink)
+        return instances
+
+class MIDI(Output):
+    """Create a MIDI output"""
+    def __init__(self,port=0,channel=0):
+        if debug == 2:
+            print
+            print "........... MIDI OUTPUT created ..........."
+            print
+        self.port = port
+        self.channel=channel
+
+    @staticmethod
+    def getinstances(project):
+        """return a list of pjlink outputs for a given project"""
+        instances = []
+        for output_midi in output_midi_list:
+            if project == output_midi.project:
+                instances.append(output_midi)
         return instances
