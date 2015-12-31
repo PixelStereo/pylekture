@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import socket
-from time import sleep
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
@@ -11,34 +10,40 @@ debug = True
 projekt.debug = True
 projekt.test = False
 
-# create a project
+# create a project. Note that when creating a project, an output is created
+# this default output is protocol 'OSC' and 127.0.0.1:10000
 my_project = projekt.new_project()
-"""When creating a project, an output is created, default is protocol 'OSC' and 127.0.0.1:10000"""
-# create another osc output for testing purpose
-print  'OSC outputs :' , my_project.outputs('OSC')
+
+# create another output with another protocol
 second_out = my_project.new_output(protocol='PJLINK')
 second_out.name = 'another output'
 second_out.ip = socket.gethostbyname(socket.gethostname())
 second_out.udp = 1234
+#get a list of all outputs for this project
+print  'ALL outputs :' , my_project.outputs()
+#get a list of PJLINK outputs for this project
 print  'PJLINK outputs :' , my_project.outputs('PJLINK')
+#get a list of OSC outputs for this project
+print  'OSC outputs :' , my_project.outputs('PJLINK')
 print '--------------------------------------------------'
 # iterate outputs
 out_counter = 0
 for output in my_project.outputs():
 	out_counter += 1
 	print 'output n°'+str(out_counter)+' :' , output.name , '/' , output.protocol , '/' , output.ip + ':' + str(output.udp)
-
+print '--------------------------------------------------'
 # create a scenario
 my_scenario = my_project.new_scenario()
 # create an event
 my_event = my_scenario.new_event(content=['/zob',232])
-pj_event = my_scenario.new_event(content=['AVMUTE'])
+pj_event = my_scenario.new_event(content=['AVMUTE',1])
 pj_event.output = ['PJLINK',1]
 #play first scenario with default output
 my_scenario.play()
 
 my_project.path = '/Users/reno/Desktop/testt.json'
 my_project.write()
+
 
 quit()
 
