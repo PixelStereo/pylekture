@@ -28,7 +28,7 @@ project_list = []
 scenario_list = []
 event_list = []
 output_list = []
-
+protocol_list = ['OSC','MIDI','PJLINK']
 def new_project():
     """Create a new project"""
     taille = len(project_list)
