@@ -10,9 +10,25 @@ debug = True
 projekt.debug = True
 projekt.test = False
 
-# create a project. Note that when creating a project, an output is created
-# this default output is protocol 'OSC' and 127.0.0.1:10000
+# create a project. Note it is an empty box when created.
+# It only has project.attributes (author / version / path)
 my_project = projekt.new_project()
+
+# create a scenario
+my_scenario = my_project.new_scenario()
+
+# create an output
+my_output = my_project.new_output()
+
+# get available protocols for this projects
+print 'protocols available for this project :' , my_project.getprotocols() 
+
+# Attribute output to scenario
+my_scenario.output = ['OSC' , 1]
+print my_scenario.output
+
+# Get the current output object for my_scenario
+print my_scenario.getoutput()
 
 # create another output with another protocol
 second_out = my_project.new_output(protocol='PJLINK')
@@ -32,8 +48,6 @@ for output in my_project.outputs():
 	out_counter += 1
 	print 'output n°'+str(out_counter)+' :' , output.name , '/' , output.protocol , '/' , output.ip + ':' + str(output.udp)
 print '--------------------------------------------------'
-# create a scenario
-my_scenario = my_project.new_scenario()
 # create an event
 my_event = my_scenario.new_event(content=['/zob',232])
 pj_event = my_scenario.new_event(content=['AVMUTE',1])
