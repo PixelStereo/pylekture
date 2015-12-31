@@ -252,7 +252,7 @@ class Project(object):
 
 class Scenario(Project):
     """Create a new scenario"""
-    def __init__(self,project,name='',description = '',output=''):
+    def __init__(self,project,name='',description = '',output=None):
         """create an scenario"""
         if debug == 2:
             print
