@@ -316,9 +316,20 @@ class Scenario(Project):
         return self.name , 'play done'
 
     def getoutput(self):
-        """get the default output for this scenario"""
-        output = self.output - 1
-        output = self.project.outputs()[output]
+        """get the output object for this scenario"""
+        if self.output:
+            out_protocol = self.output[0]
+            out_index = self.output[1] - 1
+            out_list = []
+            for out in self.project.outputs():
+                if out.protocol == out_protocol:
+                    out_list.append(out)
+            if len(out_list) > out_index:
+                output = out_list[out_index]
+            else:
+                output = None
+        else:
+            output = None
         return output
 
 class Event(object):
