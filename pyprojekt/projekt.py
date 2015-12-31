@@ -28,7 +28,6 @@ project_list = []
 scenario_list = []
 event_list = []
 output_list = []
-output_osc_list = []
 
 def new_project():
     """Create a new project"""
@@ -55,7 +54,6 @@ class Project(object):
         self.version = None
         self.path = None
         self.lastopened = timestamp()
-        self.new_output(self,'OSC')
 
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
