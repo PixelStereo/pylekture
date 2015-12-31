@@ -186,6 +186,15 @@ class Project(object):
                     outs.append(out)
             return outs
 
+    def getprotocols(self):
+        protocols = []
+        for out in self.outputs():
+            protocols.append(out.protocol)
+        if protocols == []:
+            return None
+        else:
+            return protocols
+
     def new_scenario(self,*args,**kwargs):
         """create a new scenario"""
         taille = len(scenario_list)
