@@ -32,6 +32,14 @@ Build Documentation
     cd doc
     make html
 
+Change Log
+==========
+
+0.1.2
+-----
+- output attribute of scenario is now a list of two elements [protocol,index]
+- add a new method for getting available protocols for a project
+
 Copyright and Licensing
 =======================
 
