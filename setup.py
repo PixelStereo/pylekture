@@ -14,8 +14,7 @@ setup(
   download_url = 'https://github.com/PixelStereo/PyProjekt/tarball/0.1.2', 
   keywords = ['modular', 'model', 'parameter' , 'project' , 'projekt'], 
   classifiers = [
-    'Development Status :: 1 - Planning',
-    'Environment :: No Input/Output (Daemon)',
+    'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
     'Natural Language :: English',
