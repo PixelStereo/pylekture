@@ -29,6 +29,7 @@ scenario_list = []
 event_list = []
 output_list = []
 protocol_list = ['OSC','MIDI','PJLINK']
+
 def new_project():
     """Create a new project"""
     taille = len(project_list)
@@ -182,7 +183,7 @@ class Project(object):
             return Output.getinstances(self)
         else:
             for out in Output.getinstances(self):
-                if protocol == out.protocol:
+                if protocol == out.getprotocol():
                     outs.append(out)
             return outs
 
@@ -205,12 +206,12 @@ class Project(object):
             setattr(scenario_list[taille], key, value)
         return scenario_list[taille]
 
-    def new_output(self,*args,**kwargs):
+    def new_output(self,protocol,**kwargs):
         """create a new output for this project"""
         taille = len(output_list)
         the_output = None
         output_list.append(the_output)
-        output_list[taille] = Output(self)
+        output_list[taille] = Output(self,protocol)
         for key, value in kwargs.items():
             setattr(output_list[taille], key, value)
         return output_list[taille]
@@ -442,26 +443,45 @@ class Output(Project):
             print
             print "........... OUTPUT created ..........."
             print
-        self.protocol=protocol
-        self.project = project
+        self._protocol = protocol
+        self._project = project
         self.name = name
         if protocol == 'OSC':
-            self.osc = OSC()
-            self.ip = self.osc.ip
-            self.udp = self.osc.udp
+            osc = OSC()
+            self.ip = osc.ip
+            self.udp = osc.udp
         if protocol == 'PJLINK':
-            self.pjlink = PJLINK()
-            self.ip = self.pjlink.ip
-            self.udp = self.pjlink.udp
+            pjlink = PJLINK()
+            self.ip = pjlink.ip
+            self.udp = pjlink.udp
+        if protocol == 'MIDI':
+            midi = MIDI()
+            self.port = midi.port
+            self.channel = midi.channel
+            self.type = midi.type
 
     @staticmethod
     def getinstances(project):
         """return a list of outputs for a given project"""
         instances = []
         for output in output_list:
-            if project == output.project:
+            if project == output.getproject():
                 instances.append(output)
         return instances
+
+    def getprotocol(self):
+        return self._protocol
+
+    def getproject(self):
+        return self._project
+
+    def vars_(self):
+        # make a copy
+        attrs = list(vars(self).keys())
+        for attr in attrs:
+            if attr.startswith('_'):
+                attrs.remove(attr)
+        return attrs
 
 class OSC(Output):
     """Create an OSC output"""
@@ -473,15 +493,6 @@ class OSC(Output):
         self.udp = udp
         self.ip=ip
 
-    @staticmethod
-    def getinstances(project):
-        """return a list of osc outputs for a given project"""
-        instances = []
-        for output_osc in output_osc_list:
-            if project == output_osc.project:
-                instances.append(output_osc)
-        return instances
-
 class PJLINK(Output):
     """Create a PJLINK output"""
     def __init__(self,ip='10.0.0.10',udp =4352):
@@ -492,30 +503,13 @@ class PJLINK(Output):
         self.udp = udp
         self.ip=ip
 
-    @staticmethod
-    def getinstances(project):
-        """return a list of pjlink outputs for a given project"""
-        instances = []
-        for output_pjlink in output_pjlink_list:
-            if project == output_pjlink.project:
-                instances.append(output_pjlink)
-        return instances
-
 class MIDI(Output):
     """Create a MIDI output"""
-    def __init__(self,port=0,channel=0):
+    def __init__(self,port=0,channel=0,midi_type='CC'):
         if debug == 2:
             print
             print "........... MIDI OUTPUT created ..........."
             print
         self.port = port
         self.channel=channel
-
-    @staticmethod
-    def getinstances(project):
-        """return a list of pjlink outputs for a given project"""
-        instances = []
-        for output_midi in output_midi_list:
-            if project == output_midi.project:
-                instances.append(output_midi)
-        return instances
+        self.type = midi_type
