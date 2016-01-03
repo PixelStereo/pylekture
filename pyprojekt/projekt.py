@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import random
+import weakref
 import devicemanager
 from time import sleep
 from functions import timestamp
@@ -19,29 +20,29 @@ client = OSCClient()
 
 debug = True
 
-# this is not the best way to do.
-#But if i don't do that, I can't create scenario objects 
-# because when I call Scenario.getinstances(), the instances list is empty
-project_list = []
 protocol_list = ['OSC','MIDI','PJLINK']
-
 def new_project():
     """Create a new project"""
-    taille = len(project_list)
-    the_project = None
-    project_list.append(the_project)
-    project_list[taille] = Project()
-    return project_list[taille]
+    return Project()
 
 def projects():
     """return a list of projects available"""
+    project_list = []
+    for proj in Project.getinstances():
+        project_list.append(proj)
     return project_list
-
 
 class Project(object):
     """docstring for Project"""
+
+    # used  to make a list of projects 
+    _instances = set()
+
     def __init__(self):
         super(Project, self).__init__()
+
+        self._instances.add(weakref.ref(self))
+
         if debug == 2:
             print
             print "........... PROJECT created ..........."
@@ -52,6 +53,17 @@ class Project(object):
         self.lastopened = timestamp()
         self.scenario_list = []
         self.output_list = []
+
+    @classmethod
+    def getinstances(cls):
+        dead = set()
+        for ref in cls._instances:
+            obj = ref()
+            if obj is not None:
+                yield obj
+            else:
+                dead.add(ref)
+        cls._instances -= dead
 
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
