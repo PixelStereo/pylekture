@@ -252,9 +252,9 @@ class Project(object):
         """export outputs of the project"""
         outputs = {}
         for output in self.outputs():
-            if not output.protocol in outputs:
-                outputs.setdefault(output.protocol,[])
-            outputs[output.protocol].append({'attributes':{'ip':output.ip,'udp':output.udp,'name':output.name}})
+            if not output.getprotocol() in outputs:
+                outputs.setdefault(output.getprotocol(),[])
+            outputs[output.getprotocol()].append({'attributes':{'ip':output.ip,'udp':output.udp,'name':output.name}})
         return outputs
 
 
@@ -378,7 +378,7 @@ class Event(object):
             sleep(wait)
         else:
             out = self.getoutput()
-            if out.protocol == 'OSC':
+            if out.getprotocol() == 'OSC':
                 address = self.content[0]
                 args = self.content[1:]
                 ip = out.ip
@@ -396,7 +396,7 @@ class Event(object):
                         msg.clearData()
                     except OSCClientError :
                         print 'Connection refused'
-            elif out.protocol == 'PJLINK':
+            elif out.getprotocol() == 'PJLINK':
                 try:
                     sock = socket()
                     sock.connect((out.ip, out.udp))
@@ -426,11 +426,11 @@ class Event(object):
             output = self.scenario.output
         else:
             output = self.output
-        protocol = output[0]
-        output = output[1] - 1
-        output = self.scenario.project.outputs(protocol)[output]
+        if output:
+            protocol = output[0]
+            output = output[1] - 1
+            output = self.scenario.project.outputs(protocol)[output]
         return output
-
 
 class Output(Project):
     """Create a new output"""
