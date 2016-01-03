@@ -95,8 +95,8 @@ class Project(object):
                     in_file.close()
                     for key,val in loaded.items():
                         if key == 'scenario' :
-                            for self.scenario_list in loaded['scenario']:
-                                for attribute , value in self.scenario_list['attributes'].items():
+                            for scenar_list in loaded['scenario']:
+                                for attribute , value in scenar_list['attributes'].items():
                                     if attribute == 'name':
                                         name = value
                                     elif attribute == 'description':
