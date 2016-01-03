@@ -14,6 +14,7 @@ my_project.name = 'my_first_project'
 my_project.author = 'me and I'
 my_project.version = '0.0.1'
 
+my_project.new_output('OSC')
 my_scenario = my_project.new_scenario()
 my_scenario.name = 'first'
 my_event = my_scenario.new_event()
@@ -24,14 +25,29 @@ my_poulscenario.name = 'second'
 sleep(0.1)
 another_scenario = my_project.new_scenario()
 another_scenario.name = 'third'
-another_scenario.content = [['zob',22]]
+toto_event = my_poulscenario.new_event()
+toto_event.content = [['zob',22]]
 sleep(0.1)
 another_scenario.content = [['/plouf' , 32]]
 
-for scenario in my_project.scenarios():
-	print 'scenario :' , scenario.name
-	for event in scenario.events():
-		print 'event :', event.content
+my_other_project = projekt.new_project()
+my_other_scenario = my_other_project.new_scenario()
+my_other_scenario.name = 'scenar From other project'
+
+proj = 1
+for project in projekt.projects():
+	print 'project n°'+str(proj)+':' 
+	proj += 1
+	scenar = 1
+	out = 1
+	for output in project.outputs():
+		print 'output n°'+str(out)+':' , output.getprotocol()
+		out += 1
+	for scenario in project.scenarios():
+		print 'scenario n°'+str(scenar)+':' , scenario.name
+		scenar += 1
+		for event in scenario.events():
+			print 'event :', event.content
 
 my_project.path = 'test.json'
 my_project.write()
