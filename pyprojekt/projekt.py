@@ -190,7 +190,7 @@ class Project(object):
     def getprotocols(self):
         protocols = []
         for out in self.outputs():
-            protocols.append(out.protocol)
+            protocols.append(out.getprotocol())
         if protocols == []:
             return None
         else:
@@ -332,7 +332,7 @@ class Scenario(Project):
             out_index = self.output[1] - 1
             out_list = []
             for out in self.project.outputs():
-                if out.protocol == out_protocol:
+                if out.getprotocol() == out_protocol:
                     out_list.append(out)
             if len(out_list) > out_index:
                 output = out_list[out_index]
