@@ -26,7 +26,15 @@ my_poulscenario.name = 'second'
 toto_event = my_poulscenario.new_event()
 toto_event.content = [['zob',22]]
 
-
+print '-------------------------------------------'
+print 'before :' , my_poulscenario
+my_project.del_scenario(my_poulscenario)
+print my_poulscenario.play()
+print 'after :' , my_poulscenario
+print '-------------------------------------------'
+print 'the problem is that my_poulscenario still exists'
+print '-------------------------------------------'
+print
 another_scenario = my_project.new_scenario()
 another_scenario.name = 'third'
 another_scenario.content = [['/plouf' , 32]]
