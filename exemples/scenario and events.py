@@ -17,7 +17,10 @@ my_other_project.name = 'other'
 my_other_project.author = 'me and I'
 my_other_project.version = '2.2.1'
 
+my_output = my_project.new_output('OSC')
+another_output = my_project.new_output('PJLINK')
 my_scenario = my_project.new_scenario()
+my_scenario.output = ['OSC' , 1]
 my_project.name = 'toto-la-roulette'
 print 'name' , my_scenario.name
 print 'description' , my_scenario.description
@@ -25,26 +28,26 @@ print 'output' , my_scenario.output
 for event in my_scenario.events():
 	print 'event-name' ,event.name
 	print 'event-name' ,event.content
-print
-
 another_scenario = my_project.new_scenario()
-print 'content before' , len(another_scenario.events())
-an_event = another_scenario.new_event(content=1000)
-an_event = another_scenario.new_event(content=['/zob',232])
-print 'content after' , len(another_scenario.events())
+another_scenario.output = ['OSC',1]
+print 'Events in Another Scenario :' , len(another_scenario.events())
+first_event = another_scenario.new_event(content=['/previous',232])
+second_event = another_scenario.new_event(content=1000)
+third_event = another_scenario.new_event(content=['/zob',232])
+print 'Events in Another Scenario :' , len(another_scenario.events())
 
-an_event.play()
-an_event.content = ['/plouf' , 32]
-print an_event.content
-an_event.play()
+first_event.play()
+first_event.content = ['/current' , 32]
+print first_event.content
+first_event.play()
 another_scenario.play()
 
 for project in projekt.projects():
-	print 'path' ,  project.path
-	print 'version' ,  project.version
-	print 'author' , project.author
+	print 'project path :' ,  project.path
+	print 'project version :' ,  project.version
+	print 'project author :' , project.author
 	for scenario in project.scenarios():
-		print 'scenario :' , scenario.name
+		print 'scenario name :' , scenario.name
 	print
 
 if projekt.projects():
