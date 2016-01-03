@@ -22,6 +22,10 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
+- v0.2.1  - 31 Dec. 2015
+    New design for Outputs
+    various fixes
+    
 - v0.2.0  - 22 Dec. 2015
     ADD new Class Design. Project / Scenario / Event
     FIX outputs
