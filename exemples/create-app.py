@@ -5,6 +5,7 @@
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
+
 from pyprojekt import modular
 from pyprojekt.modular import Application,Model,Parameter,Node
 
