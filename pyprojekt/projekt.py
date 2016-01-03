@@ -49,6 +49,7 @@ class Project(object):
         self.path = None
         self.lastopened = timestamp()
         self.output_list = []
+        self.scenario_list = []
 
     @classmethod
     def getinstances(cls):
@@ -75,7 +76,7 @@ class Project(object):
         for scenario in self.scenarios():
             for event in scenario.events():
                 scenario.event_list.remove(event)
-            self.Scenario._instances.remove(scenario)
+            self.scenario_list.remove(scenario)
 
     def read(self,path) : 
         """open a lekture project"""
@@ -169,11 +170,7 @@ class Project(object):
 
     def scenarios(self):
         """return a list of available scenario for this project"""
-        scen_list = []
-        for scenario in Scenario.getinstances():
-            if scenario._project == self:
-                scen_list.append(scenario)
-        return scen_list
+        return self.scenario_list
 
     def scenarios_set(self,old,new):
         """Change order of a scenario in the scenario list of the project"""
@@ -182,9 +179,9 @@ class Project(object):
         s_list.pop(old)
         s_list.insert(new,s_temp)
         for scenario in s_list:
-            Scenario._instances.remove(scenario)
+            self.scenario_list.remove(scenario)
         for scenario in s_list:
-            Scenario._instances.append(scenario)
+            self.scenario_list.append(scenario)
 
     def outputs(self,protocol='all'):
         """return a list of available output for this project"""
@@ -208,7 +205,9 @@ class Project(object):
 
     def new_scenario(self,*args,**kwargs):
         """create a new scenario"""
-        return Scenario(self)
+        scenario = Scenario(self)
+        self.scenario_list.append(scenario)
+        return scenario
 
     def new_output(self,protocol,**kwargs):
         """create a new output for this project"""
@@ -228,15 +227,12 @@ class Project(object):
             for event in scenario.events():
                 scenario.del_event(event)
             # delete the scenario itself
-            for ref in Scenario._instances:
-                obj = ref()
-                if obj == scenario:
-                    Scenario._instances.remove(ref)
-                if debug == 2:
-                    print 'delete scenario' , scenario , len(Scenario._instances)
+            self.scenario_list.remove(scenario)
+            if debug == 2:
+                print 'delete scenario' , scenario , len(self.scenario_list)
         else:
             if debug == 2:
-                print 'ERROR - trying to delete a scenario which not exists in Scenario._instances' , scenario
+                print 'ERROR - trying to delete a scenario which not exists in self.scenario_list' , scenario
 
     def export_attributes(self):
         """export attributes of the project"""
@@ -261,23 +257,22 @@ class Project(object):
         """export outputs of the project"""
         outputs = {}
         for output in self.outputs():
-            if not output.getprotocol() in outputs:
-                outputs.setdefault(output.getprotocol(),[])
-            outputs[output.getprotocol()].append({'attributes':{'ip':output.ip,'udp':output.udp,'name':output.name}})
+            protocol = output.getprotocol()
+            if not protocol in outputs:
+                outputs.setdefault(protocol,[])
+            outputs[protocol].append({'attributes':{}})
+            index = len(outputs[protocol])
+            index -= 1
+            for attr in output.vars_():
+                if not attr.startswith('_'):
+                    outputs[protocol][index]['attributes'].setdefault(attr,getattr(output,attr))
         return outputs
 
 
 class Scenario(Project):
     """Create a new scenario"""
-
-    # used  to make a list of projects 
-    _instances = []
-
     def __init__(self,project,name='',description = '',output=None):
         """create an scenario"""
-
-        self._instances.append(weakref.ref(self))
-
         if debug == 2:
             print
             print "........... SCENARIO created ..........."
@@ -294,18 +289,9 @@ class Scenario(Project):
         self.description=description
         self.event_list = []
 
-    @classmethod
-    def getinstances(cls):
-        """return a list of all scenarios (not sorted by project)""" 
-        dead = set()
-        for ref in cls._instances:
-            obj = ref()
-            if obj is not None:
-                yield obj
-            else:
-                dead.add(ref)
-        for d in dead:
-            cls._instances.remove(dead)
+    def getinstances(self):
+        """return a list of all scenarios for this project""" 
+        return self.project.scenario_list
 
     def events(self):
         """return a list of events for this scenario"""
