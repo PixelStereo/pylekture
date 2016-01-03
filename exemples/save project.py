@@ -27,10 +27,6 @@ toto_event = my_poulscenario.new_event()
 toto_event.content = [['zob',22]]
 
 
-print my_poulscenario
-my_project.del_scenario(my_poulscenario)
-print my_poulscenario
-
 another_scenario = my_project.new_scenario()
 another_scenario.name = 'third'
 another_scenario.content = [['/plouf' , 32]]
