@@ -20,7 +20,6 @@ client = OSCClient()
 
 debug = True
 
-protocol_list = ['OSC','MIDI','PJLINK']
 def new_project():
     """Create a new project"""
     return Project()
@@ -465,6 +464,10 @@ class Output(Project):
         """return a list of outputs for a given project"""
         return project.output_list
 
+    @staticmethod
+    def protocols():
+        return ['OSC','MIDI','PJLINK']
+
     def getprotocol(self):
         return self._protocol
 
@@ -478,6 +481,7 @@ class Output(Project):
             if attr.startswith('_'):
                 attrs.remove(attr)
         return attrs
+
 
 class OSC(Output):
     """Create an OSC output"""

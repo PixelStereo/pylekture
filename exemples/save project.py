@@ -34,6 +34,9 @@ my_other_project = projekt.new_project()
 my_other_scenario = my_other_project.new_scenario()
 my_other_scenario.name = 'scenar From other project'
 
+print projekt.Output.protocols()[0]
+print 
+
 proj = 1
 for project in projekt.projects():
 	print 'project n°'+str(proj)+':' 
