@@ -35,13 +35,11 @@ class Project(object):
     """docstring for Project"""
 
     # used  to make a list of projects 
-    _instances = set()
+    _instances = []
 
     def __init__(self):
         super(Project, self).__init__()
-
-        self._instances.add(weakref.ref(self))
-
+        self._instances.append(weakref.ref(self))
         if debug == 2:
             print
             print "........... PROJECT created ..........."
@@ -50,7 +48,6 @@ class Project(object):
         self.version = None
         self.path = None
         self.lastopened = timestamp()
-        self.scenario_list = []
         self.output_list = []
 
     @classmethod
@@ -62,7 +59,8 @@ class Project(object):
                 yield obj
             else:
                 dead.add(ref)
-        cls._instances -= dead
+        for d in dead:
+            cls._instances.remove(dead)
 
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
@@ -77,7 +75,7 @@ class Project(object):
         for scenario in self.scenarios():
             for event in scenario.events():
                 scenario.event_list.remove(event)
-            self.scenario_list.remove(scenario)
+            self.Scenario._instances.remove(scenario)
 
     def read(self,path) : 
         """open a lekture project"""
@@ -171,7 +169,11 @@ class Project(object):
 
     def scenarios(self):
         """return a list of available scenario for this project"""
-        return Scenario.getinstances(self)
+        scen_list = []
+        for scenario in Scenario.getinstances():
+            if scenario._project == self:
+                scen_list.append(scenario)
+        return scen_list
 
     def scenarios_set(self,old,new):
         """Change order of a scenario in the scenario list of the project"""
@@ -180,9 +182,9 @@ class Project(object):
         s_list.pop(old)
         s_list.insert(new,s_temp)
         for scenario in s_list:
-            self.scenario_list.remove(scenario)
+            Scenario._instances.remove(scenario)
         for scenario in s_list:
-            self.scenario_list.append(scenario)
+            Scenario._instances.append(scenario)
 
     def outputs(self,protocol='all'):
         """return a list of available output for this project"""
@@ -206,13 +208,7 @@ class Project(object):
 
     def new_scenario(self,*args,**kwargs):
         """create a new scenario"""
-        taille = len(self.scenario_list)
-        the_scenario = None
-        self.scenario_list.append(the_scenario)
-        self.scenario_list[taille] = Scenario(self)
-        for key, value in kwargs.iteritems():
-            setattr(self.scenario_list[taille], key, value)
-        return self.scenario_list[taille]
+        return Scenario(self)
 
     def new_output(self,protocol,**kwargs):
         """create a new output for this project"""
@@ -227,17 +223,20 @@ class Project(object):
     def del_scenario(self,scenario):
         """delete a scenario of this project
         This function will delete events of the scenario"""
-        if scenario in self.scenario_list:
+        if scenario in self.scenarios():
             # delete events of this scenario
             for event in scenario.events():
                 scenario.del_event(event)
             # delete the scenario itself
-            self.scenario_list.remove(scenario)
-            if debug == 2:
-                print 'delete scenario' , scenario , len(self.scenario_list)
+            for ref in Scenario._instances:
+                obj = ref()
+                if obj == scenario:
+                    Scenario._instances.remove(ref)
+                if debug == 2:
+                    print 'delete scenario' , scenario , len(Scenario._instances)
         else:
             if debug == 2:
-                print 'ERROR - trying to delete a scenario which not exists in scenario_list' , scenario
+                print 'ERROR - trying to delete a scenario which not exists in Scenario._instances' , scenario
 
     def export_attributes(self):
         """export attributes of the project"""
@@ -270,8 +269,15 @@ class Project(object):
 
 class Scenario(Project):
     """Create a new scenario"""
+
+    # used  to make a list of projects 
+    _instances = []
+
     def __init__(self,project,name='',description = '',output=None):
         """create an scenario"""
+
+        self._instances.append(weakref.ref(self))
+
         if debug == 2:
             print
             print "........... SCENARIO created ..........."
@@ -283,15 +289,23 @@ class Scenario(Project):
         if name == '':
             name = timestamp(format='nice')
         self.name=name
-        self.project = project
+        self._project = project
         self.output=output
         self.description=description
         self.event_list = []
 
-    @staticmethod
-    def getinstances(project):
-        """return a list of scenario for a given project""" 
-        return project.scenario_list
+    @classmethod
+    def getinstances(cls):
+        """return a list of all scenarios (not sorted by project)""" 
+        dead = set()
+        for ref in cls._instances:
+            obj = ref()
+            if obj is not None:
+                yield obj
+            else:
+                dead.add(ref)
+        for d in dead:
+            cls._instances.remove(dead)
 
     def events(self):
         """return a list of events for this scenario"""
@@ -334,7 +348,7 @@ class Scenario(Project):
             out_protocol = self.output[0]
             out_index = self.output[1] - 1
             out_list = []
-            for out in self.project.outputs():
+            for out in self._project.outputs():
                 if out.getprotocol() == out_protocol:
                     out_list.append(out)
             if len(out_list) > out_index:
@@ -432,7 +446,7 @@ class Event(object):
         if output:
             protocol = output[0]
             output = output[1] - 1
-            output = self.scenario.project.outputs(protocol)[output]
+            output = self.scenario._project.outputs(protocol)[output]
         return output
 
 class Output(Project):

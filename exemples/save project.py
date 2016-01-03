@@ -19,22 +19,28 @@ my_scenario = my_project.new_scenario()
 my_scenario.name = 'first'
 my_event = my_scenario.new_event()
 my_event.content = [['/pouett/no/yfughk',54678654]]
-sleep(0.1)
+
+
 my_poulscenario = my_project.new_scenario()
 my_poulscenario.name = 'second'
-sleep(0.1)
-another_scenario = my_project.new_scenario()
-another_scenario.name = 'third'
 toto_event = my_poulscenario.new_event()
 toto_event.content = [['zob',22]]
-sleep(0.1)
+
+
+print my_poulscenario
+my_project.del_scenario(my_poulscenario)
+print my_poulscenario
+
+another_scenario = my_project.new_scenario()
+another_scenario.name = 'third'
 another_scenario.content = [['/plouf' , 32]]
+
 
 my_other_project = projekt.new_project()
 my_other_scenario = my_other_project.new_scenario()
 my_other_scenario.name = 'scenar From other project'
 
-print projekt.Output.protocols()[0]
+print 'default-protocol is the first one :' , projekt.Output.protocols()[0]
 print 
 
 proj = 1
