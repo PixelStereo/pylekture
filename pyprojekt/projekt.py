@@ -18,8 +18,6 @@ from devicemanager import OSCClient as OSCClient
 client = OSCClient()
 
 debug = True
-# test will create events each time we create a scenario
-test = True
 
 # this is not the best way to do.
 #But if i don't do that, I can't create scenario objects 
@@ -278,8 +276,6 @@ class Scenario(Project):
         self.project = project
         self.output=output
         self.description=description
-        if test:
-            self.new_event(content=['/node/integer',random.randint(65e2,65e3)]),self.new_event(content=random.randint(500,3000)),self.new_event(content=['/node/list',[float(random.randint(0,100))/100,random.randint(65e2, 65e3),"egg"]])
 
     @staticmethod
     def getinstances(project):
