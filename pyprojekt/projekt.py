@@ -186,10 +186,10 @@ class Project(object):
     def outputs(self,protocol='all'):
         """return a list of available output for this project"""
         outs = []
-        if protocol == 'all':
+        if protocol == 'all' or protocol == None:
             return Output.getinstances(self)
         else:
-            for out in Output.getinstances(self):
+            for out in self.output_list:
                 if protocol == out.getprotocol():
                     outs.append(out)
             return outs

@@ -22,13 +22,19 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
-- v0.2.1  - 31 Dec. 2015
+- v0.1.3  - 3 Jan. 2016
+	Revamp projects() and scenarios() method
+	Remove a few horribles global variables that existed
+	some attributes are now private and must be change only with dedicated methods such as output.getprotocol() 
+	Ougetprotocols
+
+- v0.1.2  - 31 Dec. 2015
     New design for Outputs
     various fixes
     
-- v0.2.0  - 22 Dec. 2015
+- v0.1.1  - 27 Dec. 2015
     ADD new Class Design. Project / Scenario / Event
     FIX outputs
     
-- v0.1.0  - 18 Dec. 2015
+- v0.1  - 25 Dec. 2015
     First draft"""
