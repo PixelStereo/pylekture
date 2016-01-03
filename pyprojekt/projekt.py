@@ -23,9 +23,6 @@ debug = True
 #But if i don't do that, I can't create scenario objects 
 # because when I call Scenario.getinstances(), the instances list is empty
 project_list = []
-scenario_list = []
-event_list = []
-output_list = []
 protocol_list = ['OSC','MIDI','PJLINK']
 
 def new_project():
@@ -53,6 +50,8 @@ class Project(object):
         self.version = None
         self.path = None
         self.lastopened = timestamp()
+        self.scenario_list = []
+        self.output_list = []
 
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
@@ -62,12 +61,12 @@ class Project(object):
         self.path = None
         # reset outputs
         for output in self.outputs():
-            output_list.remove(output)
+            self.output_list.remove(output)
         # reset scenarios and events
         for scenario in self.scenarios():
             for event in scenario.events():
-                event_list.remove(event)
-            scenario_list.remove(scenario)
+                scenario.event_list.remove(event)
+            self.scenario_list.remove(scenario)
 
     def read(self,path) : 
         """open a lekture project"""
@@ -85,8 +84,8 @@ class Project(object):
                     in_file.close()
                     for key,val in loaded.items():
                         if key == 'scenario' :
-                            for scenario_list in loaded['scenario']:
-                                for attribute , value in scenario_list['attributes'].items():
+                            for self.scenario_list in loaded['scenario']:
+                                for attribute , value in self.scenario_list['attributes'].items():
                                     if attribute == 'name':
                                         name = value
                                     elif attribute == 'description':
@@ -170,9 +169,9 @@ class Project(object):
         s_list.pop(old)
         s_list.insert(new,s_temp)
         for scenario in s_list:
-            scenario_list.remove(scenario)
+            self.scenario_list.remove(scenario)
         for scenario in s_list:
-            scenario_list.append(scenario)
+            self.scenario_list.append(scenario)
 
     def outputs(self,protocol='all'):
         """return a list of available output for this project"""
@@ -196,35 +195,35 @@ class Project(object):
 
     def new_scenario(self,*args,**kwargs):
         """create a new scenario"""
-        taille = len(scenario_list)
+        taille = len(self.scenario_list)
         the_scenario = None
-        scenario_list.append(the_scenario)
-        scenario_list[taille] = Scenario(self)
+        self.scenario_list.append(the_scenario)
+        self.scenario_list[taille] = Scenario(self)
         for key, value in kwargs.iteritems():
-            setattr(scenario_list[taille], key, value)
-        return scenario_list[taille]
+            setattr(self.scenario_list[taille], key, value)
+        return self.scenario_list[taille]
 
     def new_output(self,protocol,**kwargs):
         """create a new output for this project"""
-        taille = len(output_list)
+        taille = len(self.output_list)
         the_output = None
-        output_list.append(the_output)
-        output_list[taille] = Output(self,protocol)
+        self.output_list.append(the_output)
+        self.output_list[taille] = Output(self,protocol)
         for key, value in kwargs.items():
-            setattr(output_list[taille], key, value)
-        return output_list[taille]
+            setattr(self.output_list[taille], key, value)
+        return self.output_list[taille]
 
     def del_scenario(self,scenario):
         """delete a scenario of this project
         This function will delete events of the scenario"""
-        if scenario in scenario_list:
+        if scenario in self.scenario_list:
             # delete events of this scenario
             for event in scenario.events():
                 scenario.del_event(event)
             # delete the scenario itself
-            scenario_list.remove(scenario)
+            self.scenario_list.remove(scenario)
             if debug == 2:
-                print 'delete scenario' , scenario , len(scenario_list)
+                print 'delete scenario' , scenario , len(self.scenario_list)
         else:
             if debug == 2:
                 print 'ERROR - trying to delete a scenario which not exists in scenario_list' , scenario
@@ -276,15 +275,12 @@ class Scenario(Project):
         self.project = project
         self.output=output
         self.description=description
+        self.event_list = []
 
     @staticmethod
     def getinstances(project):
         """return a list of scenario for a given project""" 
-        instances = []
-        for scenario in scenario_list:
-            if project == scenario.project:
-                instances.append(scenario)
-        return instances
+        return project.scenario_list
 
     def events(self):
         """return a list of events for this scenario"""
@@ -292,24 +288,24 @@ class Scenario(Project):
 
     def new_event(self,*args,**kwargs):
         """create a new event for this scenario"""
-        taille = len(event_list)
+        taille = len(self.event_list)
         the_event = None
-        event_list.append(the_event)
-        event_list[taille] = Event(self)
+        self.event_list.append(the_event)
+        self.event_list[taille] = Event(self)
         for key, value in kwargs.iteritems():
-            setattr(event_list[taille], key, value)
-        return event_list[taille]
+            setattr(self.event_list[taille], key, value)
+        return self.event_list[taille]
 
     def del_event(self,index):
         """delete an event, by index or with object instance"""
         if type(index) == int:
-            event_list.pop(index)
+            self.event_list.pop(index)
         else:
-            event_list.remove(index)
+            self.event_list.remove(index)
 
     def play_from_here(self,index):
         """play scenario from a given index"""
-        index = event_list.index(index)
+        index = self.event_list.index(index)
         self.play(index)
 
     def play(self,index=0):
@@ -363,11 +359,7 @@ class Event(object):
     @staticmethod
     def getinstances(scenario):
         """return a list of events for a given scenario"""
-        instances = []
-        for event in event_list:
-            if scenario == event.scenario:
-                instances.append(event)
-        return instances
+        return scenario.event_list
 
     def play(self):
         """play the current event"""
@@ -459,11 +451,7 @@ class Output(Project):
     @staticmethod
     def getinstances(project):
         """return a list of outputs for a given project"""
-        instances = []
-        for output in output_list:
-            if project == output.getproject():
-                instances.append(output)
-        return instances
+        return project.output_list
 
     def getprotocol(self):
         return self._protocol
