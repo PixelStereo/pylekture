@@ -419,7 +419,7 @@ class Event(object):
                 except socket_error:
                     print 'Connection refused'
             else:
-                print 'protocol' , out.protocol , 'is not yet implemented'
+                print 'protocol' , out.getprotocol() , 'is not yet implemented'
 
     def getoutput(self):
         """rerurn the current output for this event.
