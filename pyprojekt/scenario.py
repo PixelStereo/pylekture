@@ -154,7 +154,6 @@ class Event(object):
                             msg.setAddress(address)
                             msg.append(arg)
                             client.send(msg)
-                            sleep(0.001)
                             msg.clearData()
                         except OSCClientError :
                             print 'Connection refused'
