@@ -8,11 +8,12 @@ from pyprojekt import project
 
 debug = True
 project.debug = True
-project.test = False
+
 
 # create a project. Note it is an empty box when created.
 # It only has project.attributes (author / version / path)
 my_project = project.new_project()
+
 
 # create a scenario
 my_scenario = my_project.new_scenario()

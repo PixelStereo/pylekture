@@ -20,9 +20,7 @@ client = OSCClient()
 
 debug = True
 
-from node import Node
-
-class Scenario(Node):
+class Scenario(object):
     """Create a new scenario"""
     def __init__(self,project,name='',description = '',output=None):
         """create an scenario"""
