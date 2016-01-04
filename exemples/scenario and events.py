@@ -4,15 +4,15 @@ from time import sleep
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-from pyprojekt import projekt
+from pyprojekt import project
 
 debug = True
-projekt.debug = True
+project.debug = True
 
-my_project = projekt.new_project()
+my_project = project.new_project()
 my_project.name = 'pouette'
 
-my_other_project = projekt.new_project()
+my_other_project = project.new_project()
 my_other_project.name = 'other'
 my_other_project.author = 'me and I'
 my_other_project.version = '2.2.1'
@@ -42,7 +42,7 @@ print first_event.content
 first_event.play()
 another_scenario.play()
 
-for project in projekt.projects():
+for project in project.projects():
 	print 'project path :' ,  project.path
 	print 'project version :' ,  project.version
 	print 'project author :' , project.author
@@ -50,7 +50,7 @@ for project in projekt.projects():
 		print 'scenario name :' , scenario.name
 	print
 
-if projekt.projects():
+if project.projects():
 	print 'PLAY ALL EVENTS'
 	print '--------------'
 	for scenario in my_project.scenarios():

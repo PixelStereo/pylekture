@@ -4,15 +4,15 @@ import socket
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-from pyprojekt import projekt
+from pyprojekt import project
 
 debug = True
-projekt.debug = True
-projekt.test = False
+project.debug = True
+project.test = False
 
 # create a project. Note it is an empty box when created.
 # It only has project.attributes (author / version / path)
-my_project = projekt.new_project()
+my_project = project.new_project()
 
 # create a scenario
 my_scenario = my_project.new_scenario()
@@ -58,7 +58,7 @@ pj_event.output = ['PJLINK',1]
 #play first scenario with default output
 my_scenario.play()
 
-another_project = projekt.new_project()
+another_project = project.new_project()
 
 #play first scenario with second output
 my_scenario.output = ['OSC' , 2]
@@ -70,5 +70,5 @@ When creating an event, it doesn't have an output. It use output's scenario. But
 my_event.output = ['OSC',1]
 my_scenario.play()
 
-my_project.path = '/Users/reno/Desktop/testt.json'
+my_project.path = 'test.json'
 my_project.write()

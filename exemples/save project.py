@@ -4,12 +4,12 @@ from time import sleep
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-from pyprojekt import projekt
+from pyprojekt import project
 
 debug = True
-projekt.debug = False
+project.debug = False
 
-my_project = projekt.new_project()
+my_project = project.new_project()
 my_project.name = 'my_first_project'
 my_project.author = 'me and I'
 my_project.version = '0.0.1'
@@ -40,15 +40,15 @@ another_scenario.name = 'third'
 another_scenario.content = [['/plouf' , 32]]
 
 
-my_other_project = projekt.new_project()
+my_other_project = project.new_project()
 my_other_scenario = my_other_project.new_scenario()
 my_other_scenario.name = 'scenar From other project'
 
-print 'default-protocol is the first one :' , projekt.Output.protocols()[0]
+print 'default-protocol is the first one :' , project.Output.protocols()[0]
 print 
 
 proj = 1
-for project in projekt.projects():
+for project in project.projects():
 	print 'project n°'+str(proj)+':' 
 	proj += 1
 	scenar = 1

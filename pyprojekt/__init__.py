@@ -22,11 +22,15 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
+- v0.1.4  -  Jan. 2016
+    Split Modular file into Node, Application, Model and Parameter different files
+    Split Projekt file into Project, Output and Scenario different files
+    Rename projekt into project
+
 - v0.1.3  - 3 Jan. 2016
 	Revamp projects() and scenarios() method
 	Remove a few horribles global variables that existed
 	some attributes are now private and must be change only with dedicated methods such as output.getprotocol() 
-	Ougetprotocols
 
 - v0.1.2  - 31 Dec. 2015
     New design for Outputs
