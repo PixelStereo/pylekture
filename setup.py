@@ -13,12 +13,12 @@ with open(path.join(here, 'README.md'), 'rb') as f:
 setup(
   name = 'pyprojekt',
   packages = ['pyprojekt'], 
-  version = '0.1.4',
+  version = '0.1.5',
   description = 'A projekt management library',
   author = 'Pixel Stereo',
   install_requires=['PyOSC','pjlink'],
   url='https://github.com/PixelStereo/PyProjekt', 
-  download_url = 'https://github.com/PixelStereo/PyProjekt/tarball/0.1.4', 
+  download_url = 'https://github.com/PixelStereo/PyProjekt/tarball/0.1.5', 
   classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
