@@ -2,23 +2,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from distutils.core import setup
-from os import path
-
-here = path.abspath(path.dirname(__file__))
-
-# Get the long description from the README file
-with open(path.join(here, 'README.md'), 'rb') as f:
-    long_description = f.read()
-
 setup(
   name = 'pyprojekt',
   packages = ['pyprojekt'], 
   version = '0.1.4',
   description = 'A projekt management library',
   author = 'Pixel Stereo',
+  author_email = 'contact@pixelstereo.org',
   install_requires=['PyOSC','pjlink'],
   url='https://github.com/PixelStereo/PyProjekt', 
   download_url = 'https://github.com/PixelStereo/PyProjekt/tarball/0.1.4', 
+  keywords = ['modular', 'model', 'parameter' , 'project' , 'projekt'], 
   classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
