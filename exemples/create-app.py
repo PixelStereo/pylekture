@@ -6,12 +6,14 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
-from pyprojekt import modular
-from pyprojekt.modular import Application,Model,Parameter,Node
+import pyprojekt
+from pyprojekt.application import Application
+from pyprojekt.node import Node
+from pyprojekt.model import Model
+from pyprojekt.parameter import Parameter
 
 import pprint
-
-modular.debug = True
+pp = pprint.PrettyPrinter(indent=4)
 
 print '--Creating an application--'
 print '---------------------------'
@@ -25,4 +27,4 @@ print '--Creating another App--'
 print '------------------------'
 another_app = Application('Another Py App')
 
-print Application.export()
+pp.pprint(Application.export())
