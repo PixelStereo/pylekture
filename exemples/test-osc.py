@@ -4,16 +4,16 @@
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-from pyprojekt import modular
-from pyprojekt.modular import Application,Model,Parameter
+import pyprojekt
+from pyprojekt.application import Application
+from pyprojekt.node import Node
+from pyprojekt.model import Model
+from pyprojekt.parameter import Parameter
 
-#import pprint
-
-modular.debug = True
 
 def headerprint(args):
-	print
-	print '--------' , args , '--------'
+	print ()
+	print ('--------' , args , '--------')
 	
 # create the main application
 my_app = Application('test_App',author='Pixel Stereo',version='0.0.1',project='my first project')
@@ -61,11 +61,11 @@ def get_child(arg):
 
 headerprint('Application attributes')
 for attr in get_app_attr():
-	print attr , ':' , getattr(my_app,attr)
+	print (attr , ':' , getattr(my_app,attr))
 headerprint('Get Children')
-print 'root' , ':' , get_app_child()
+print ('root' , ':' , get_app_child())
 for child in get_app_child():
-	print child  , ':' , get_child(child)
+	print (child  , ':' , get_child(child))
 	
 
 
@@ -92,7 +92,7 @@ queue = Queue.Queue()
 
 def osc_handler( addr, tags, stuff, source):
     global queue
-    print addr,tags,stuff,source
+    print (addr,tags,stuff,source)
     queue.put( stuff[0] )
 
 osc.addMsgHandler("/OSC", osc_handler) # adding our function
@@ -103,7 +103,7 @@ try :
 	while 1 :
 		pass
 except KeyboardInterrupt :
-	print "\nClosing OSCClient and OSCServer"
+	print ("\nClosing OSCClient and OSCServer")
 	osc.close()
 	st.join()
-	print "Done"
+	print ("Done")

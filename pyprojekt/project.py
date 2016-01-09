@@ -5,7 +5,6 @@ import sys
 import json
 import random
 import weakref
-import devicemanager
 from time import sleep
 from functions import timestamp
 from functions import unicode2_list
@@ -38,9 +37,9 @@ class Project(object):
         super(Project, self).__init__()
         self._instances.append(weakref.ref(self))
         if debug == 2:
-            print
-            print "........... PROJECT created ..........."
-            print 
+            print ()
+            print ("........... PROJECT created ...........")
+            print ()
         self.author = None
         self.version = None
         self.path = None
@@ -79,14 +78,14 @@ class Project(object):
         """open a lekture project"""
         path = os.path.abspath(path)
         if not os.path.exists(path):
-            print "ERROR - THIS PATH IS NOT VALID" , path
+            print ("ERROR - THIS PATH IS NOT VALID" , path)
         else :
-            print 'loading' , path
+            print ('loading' , path)
             try:
                 with open(path) as in_file :
                     # clear the project
                     self.reset()
-                    if debug : print 'file reading : ' , path
+                    if debug : print ('file reading : ' , path)
                     loaded = json.load(in_file,object_hook=unicode2string_dict)
                     in_file.close()
                     for key,val in loaded.items():
@@ -138,11 +137,11 @@ class Project(object):
                                         if attribute == 'udp':
                                             udp = value
                                     self.new_output(protocol,name=name,ip=address_ip,udp=udp)
-                    if debug : print 'project loaded'
+                    if debug : print ('project loaded')
                     self.path = path
             # catch error if file is not valid or if file is not a lekture project
             except (IOError , ValueError):
-                if debug : print 'error : project not loaded'
+                if debug : print ('error : project not loaded')
                 return False
             return True
 
@@ -227,10 +226,10 @@ class Project(object):
             # delete the scenario itself
             self.scenario_list.remove(scenario)
             if debug == 2:
-                print 'delete scenario' , scenario , len(self.scenario_list)
+                print ('delete scenario' , scenario , len(self.scenario_list))
         else:
             if debug == 2:
-                print 'ERROR - trying to delete a scenario which not exists in self.scenario_list' , scenario
+                print ('ERROR - trying to delete a scenario which not exists in self.scenario_list' , scenario)
 
     def export_attributes(self):
         """export attributes of the project"""

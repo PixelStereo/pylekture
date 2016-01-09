@@ -26,15 +26,15 @@ my_poulscenario.name = 'second'
 toto_event = my_poulscenario.new_event()
 toto_event.content = [['zob',22]]
 
-print '-------------------------------------------'
-print 'before :' , my_poulscenario
+print ('-------------------------------------------')
+print ('before :' , my_poulscenario)
 my_project.del_scenario(my_poulscenario)
-print my_poulscenario.play()
-print 'after :' , my_poulscenario
-print '-------------------------------------------'
-print 'the problem is that my_poulscenario still exists'
-print '-------------------------------------------'
-print
+print (my_poulscenario.play())
+print ('after :' , my_poulscenario)
+print ('-------------------------------------------')
+print ('the problem is that my_poulscenario still exists')
+print ('-------------------------------------------')
+print ()
 another_scenario = my_project.new_scenario()
 another_scenario.name = 'third'
 another_scenario.content = [['/plouf' , 32]]
@@ -44,23 +44,23 @@ my_other_project = project.new_project()
 my_other_scenario = my_other_project.new_scenario()
 my_other_scenario.name = 'scenar From other project'
 
-print 'default-protocol is the first one :' , project.Output.protocols()[0]
-print 
+print ('default-protocol is the first one :' , project.Output.protocols()[0])
+print ()
 
 proj = 1
 for project in project.projects():
-	print 'project n°'+str(proj)+':' 
+	print ('project n°'+str(proj)+':' )
 	proj += 1
 	scenar = 1
 	out = 1
 	for output in project.outputs():
-		print 'output n°'+str(out)+':' , output.getprotocol()
+		print ('output n°'+str(out)+':' , output.getprotocol())
 		out += 1
 	for scenario in project.scenarios():
-		print 'scenario n°'+str(scenar)+':' , scenario.name
+		print ('scenario n°'+str(scenar)+':' , scenario.name)
 		scenar += 1
 		for event in scenario.events():
-			print 'event :', event.content
+			print ('event :', event.content)
 
 my_project.path = 'test.json'
 my_project.write()

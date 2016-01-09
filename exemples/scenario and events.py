@@ -22,51 +22,51 @@ another_output = my_project.new_output('PJLINK')
 my_scenario = my_project.new_scenario()
 my_scenario.output = ['OSC' , 1]
 my_project.name = 'toto-la-roulette'
-print 'name' , my_scenario.name
-print 'description' , my_scenario.description
-print 'output' , my_scenario.output
+print ('name' , my_scenario.name)
+print ('description' , my_scenario.description)
+print ('output' , my_scenario.output)
 for event in my_scenario.events():
-	print 'event-name' ,event.name
-	print 'event-name' ,event.content
+	print ('event-name' ,event.name)
+	print ('event-name' ,event.content)
 another_scenario = my_project.new_scenario()
 another_scenario.output = ['OSC',1]
-print 'Events in Another Scenario :' , len(another_scenario.events())
+print ('Events in Another Scenario :' , len(another_scenario.events()))
 first_event = another_scenario.new_event(content=['/previous',232])
 second_event = another_scenario.new_event(content=1000)
 third_event = another_scenario.new_event(content=['/zob',232])
-print 'Events in Another Scenario :' , len(another_scenario.events())
+print ('Events in Another Scenario :' , len(another_scenario.events()))
 
 first_event.play()
 first_event.content = ['/current' , 32]
-print first_event.content
+print (first_event.content)
 first_event.play()
 another_scenario.play()
 
-for project in project.projects():
-	print 'project path :' ,  project.path
-	print 'project version :' ,  project.version
-	print 'project author :' , project.author
-	for scenario in project.scenarios():
-		print 'scenario name :' , scenario.name
-	print
+for proj in project.projects():
+	print ('project path :' ,  proj.path)
+	print ('project version :' ,  proj.version)
+	print ('project author :' , proj.author)
+	for scenario in proj.scenarios():
+		print ('scenario name :' , scenario.name)
+	print ()
 
 if project.projects():
-	print 'PLAY ALL EVENTS'
-	print '--------------'
+	print ('PLAY ALL EVENTS')
+	print ('--------------')
 	for scenario in my_project.scenarios():
-		print 'play scenario :' , scenario.name
+		print ('play scenario :' , scenario.name)
 		scenario.play()
 		
 if my_project.scenarios():
-	print 'PLAY ALL EVENTS'
-	print '--------------'
+	print ('PLAY ALL EVENTS')
+	print ('--------------')
 	for scenario in my_project.scenarios():
-		print 'play scenario :' , scenario.name
+		print ('play scenario :' , scenario.name)
 		scenario.play()
 
-print 'how many scenario :' , len(my_project.scenarios()) , my_project.scenarios()
+print ('how many scenario :' , len(my_project.scenarios()) , my_project.scenarios())
 #my_project.del_scenario(my_scenario)
-print 'how many scenario :' , len(my_project.scenarios()) , my_project.scenarios()
+print ('how many scenario :' , len(my_project.scenarios()) , my_project.scenarios())
 
 my_project.path = 'test_project.json'
 my_project.write()

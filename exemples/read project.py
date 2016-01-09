@@ -4,18 +4,17 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 from pyprojekt import project
-from time import sleep
 
 # create a project
 my_project = project.new_project()
 
 my_project.read(path='test.json')
-print '-----------------------------------------'
+print ('-----------------------------------------')
 
 for scenario in my_project.scenarios():
-	print 'name :' , scenario.name
+	print ('name :' , scenario.name)
 	for event in scenario.events():
-		print 'event :' , event.content
+		print ('event :' , event.content)
 
 for scenario in my_project.scenarios():
 	scenario.play()
