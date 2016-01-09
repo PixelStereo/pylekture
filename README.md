@@ -25,9 +25,9 @@ For the moment, **PyProjekt** is capable of:
 -  Create dynamic scenario and events
 -  Save projects to json files
 
-[![Code Climate](https://codeclimate.com/github/PixelStereo/lekture/badges/gpa.svg)](https://codeclimate.com/github/PixelStereo/lekture)
-[![Test Coverage](https://codeclimate.com/github/PixelStereo/lekture/badges/coverage.svg)](https://codeclimate.com/github/PixelStereo/lekture/coverage)
-[![Issue Count](https://codeclimate.com/github/PixelStereo/lekture/badges/issue_count.svg)](https://codeclimate.com/github/PixelStereo/lekture)
+[![Code Climate](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/gpa.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt)
+[![Test Coverage](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/coverage.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt/coverage)
+[![Issue Count](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/issue_count.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt)
 
 Build Documentation
 =======================
