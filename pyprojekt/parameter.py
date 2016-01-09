@@ -24,7 +24,7 @@ class Parameter(Node):
 		Node.__new__(self,*args,**kwargs)
 		_new = object.__new__(self)
 		Parameter.instances[_new] = None
-		if debug : print "........... PARAM %s created ..........." %args[0]
+		if debug : (print "........... PARAM %s created ..........." %args[0])
 		return _new
 	def __init__(self,*args,**kwargs):
 		"""ERROR NEED TO SEND ARGS TO NODE. E.G. : IF I DEFINE A PRIORITY OR TAG WHEN CREATING PARAMETER, IT NEED TO BE SEND TO THE NODE"""
@@ -49,7 +49,7 @@ class Parameter(Node):
 			self.datatype = kwargs['datatype']
 		else:
 			self.datatype = 'generic'
-		if debug : print "........... PARAM %s inited ..........." %args[0]
+		if debug : print ("........... PARAM %s inited ..........." %args[0])
 
 
 	# ----------- RAW VALUE -------------

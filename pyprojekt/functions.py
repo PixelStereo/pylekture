@@ -68,7 +68,7 @@ def checkType(data):
     elif isInt(data):
         data = int(data)
     else:
-        print 'no type' , data , type(data)
+        print ('no type' , data , type(data))
     return data
 
 def isString(value):
@@ -119,9 +119,9 @@ def isInt(value):
 """a_string = u'popo2'
 a_float = u'122.2'
 an_int = u'122'
-print 'a_string' , checkType(a_string)
-print 'a_float' , checkType(a_float)
-print 'an_int' , checkType(an_int)"""
+print ('a_string' , checkType(a_string))
+print ('a_float' , checkType(a_float))
+print ('an_int' , checkType(an_int)""")
 
 
 
@@ -150,7 +150,7 @@ def dict2string(content):
 def string2dict(content):
     content = content.split('\n')
     toto = {}
-    print 'CALLLL string2dict function in lekture main module'
+    print ('CALLLL string2dict function in lekture main module')
     if debug :  'content' , content
     for scenario in content:
         scenario = scenario.split(" ",1)

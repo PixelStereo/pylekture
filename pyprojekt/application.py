@@ -15,7 +15,7 @@ class Application(Model):
 		Model.__new__(self,*args,**kwargs)
 		_new = object.__new__(self)
 		Application.instances[_new] = None
-		if debug : print "........... APP %s created ..........." %args[0]
+		if debug : (print "........... APP %s created ..........." %args[0])
 		return _new
 	def __init__(self,*args,**kwargs):
 		Model.__init__(self,args[0])
@@ -32,7 +32,7 @@ class Application(Model):
 		else:
 			self.version = 'unknown'
 		self.name = args[0]
-		if debug : print "........... APP %s inited ..........." %args[0]
+		if debug : (print "........... APP %s inited ..........." %args[0])
 
 	@staticmethod
 	def getinstances():

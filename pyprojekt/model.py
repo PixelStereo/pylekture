@@ -14,8 +14,8 @@ class Model(Node):
 		Node.__new__(self,*args,**kwargs)
 		_new = object.__new__(self)
 		Model.instances[_new] = None
-		if debug : print "........... MODEL %s created ..........." %args[0]
+		if debug : print ("........... MODEL %s created ..........." %args[0])
 		return _new
 	def __init__(self,*args,**kwargs):
 		Node.__init__(self,*args,**kwargs)
-		if debug : print "........... MODEL %s Inited  ..........." %args[0]
+		if debug : print ("........... MODEL %s Inited  ..........." %args[0])

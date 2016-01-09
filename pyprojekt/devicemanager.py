@@ -24,9 +24,9 @@ class ServerThread(threading.Thread):
         self.oscServer.serve_forever()
     def defaultMessageHandler(self, addr, tags, data, client_address):
         """ Default handler for the OSCServer. """
-        print "OSC DEFAULT INPUT" , addr, tags, data, client_address
+        print ("OSC DEFAULT INPUT" , addr, tags, data, client_address)
         if addr.startswith('/project'):
-            print addr , tags , data ,client_address
+            print (addr , tags , data ,client_address)
 
 class OSCServer(object):
     """docstring for OSCServer"""
@@ -46,7 +46,7 @@ class OSCServer(object):
     
     def register_callback(self,sdRef, flags, errorCode, name, regtype, domain):
         if errorCode == pybonjour.kDNSServiceErr_NoError:
-            print 'Registered zeroconf service' , name , regtype , domain
+            print ('Registered zeroconf service' , name , regtype , domain)
 
     def zeroconf(self):
         hostname = socket.gethostname()

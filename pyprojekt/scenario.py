@@ -24,9 +24,9 @@ class Scenario(object):
     def __init__(self,project,name='',description = '',output=None):
         """create an scenario"""
         if debug == 2:
-            print
-            print "........... SCENARIO created ..........."
-            print
+            print ()
+            print ("........... SCENARIO created ...........")
+            print ()
         if output == '':
             output = ['OSC' , 1]
         if description == '':
@@ -73,7 +73,7 @@ class Scenario(object):
         """play a scenario from the beginning"""
         """play an scenario
         Started from the first event if an index has not been provided"""
-        if debug : print '------ PLAY SCENARIO :' , self.name , 'FROM INDEX' , index , '-----'
+        if debug : print ('------ PLAY SCENARIO :' , self.name , 'FROM INDEX' , index , '-----')
         for event in self.events()[index:]:
             event.play()
         return self.name , 'play done'
@@ -109,9 +109,9 @@ class Event(object):
     a loop process or everything you can imagine """
     def __init__(self, scenario,content=[],name='',description='',output=''):
         if debug == 2:
-            print
-            print "........... Event created ..........."
-            print
+            print ()
+            print ("........... Event created ...........")
+            print ()
         if description == '':
             description = "event's description"
         if name == '':
@@ -134,7 +134,7 @@ class Event(object):
         if type(self.content) is int or type(self.content) is float:
             wait = float(self.content)
             wait = wait/1000
-            if debug : print 'waiting' , wait
+            if debug : print ('waiting' , wait)
             sleep(wait)
         else:
             out = self.getoutput()
@@ -147,7 +147,7 @@ class Event(object):
                     for arg in args:
                         try:
                             if debug : 
-                                print 'connecting to : ' + ip + ':' + str(port)
+                                print ('connecting to : ' + ip + ':' + str(port))
                             client.connect((ip , int(port)))
                             msg = OSCMessage()
                             msg.setAddress(address)
@@ -155,7 +155,7 @@ class Event(object):
                             client.send(msg)
                             msg.clearData()
                         except OSCClientError :
-                            print 'Connection refused'
+                            print ('Connection refused')
                 elif out.getprotocol() == 'PJLINK':
                     try:
                         sock = socket()
@@ -172,13 +172,13 @@ class Event(object):
                         elif command == 'AVMT':
                             proj.set_mute(value)
                         else:
-                            'print PJLINK command' , command , 'is not implemented ('+value+')'
+                            'print (PJLINK command' , command , 'is not implemented ('+value+')')
                     except socket_error:
-                        print 'Connection refused'
+                        print ('Connection refused')
                 else:
-                    print 'protocol' , out.getprotocol() , 'is not yet implemented'
+                    print ('protocol' , out.getprotocol() , 'is not yet implemented')
             else:
-                print 'there is no output for this event / scenario'
+                print ('there is no output for this event / scenario')
 
     def getoutput(self):
         """rerurn the current output for this event.

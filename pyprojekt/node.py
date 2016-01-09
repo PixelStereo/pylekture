@@ -12,15 +12,15 @@ class Node(object):
 	def __new__(self,*args,**kwargs):
 		_new = object.__new__(self)
 		Node.instances[_new] = None
-		if debug : print "........... NODE %s created ..........." %args[0]
+		if debug : print ("........... NODE %s created ..........." %args[0])
 		return _new
 	def __init__(self, name,parent='root',tags=None,priority=None):
 		self.name = name
 		self.__parent = parent
 		self.__tags = tags
 		self.__priority = priority
-		print 'PARENT : ' , parent
-		if debug : print "........... NODE %s Inited  ..........." %name
+		print ('PARENT : ' , parent)
+		if debug : print ("........... NODE %s Inited  ..........." %name)
 		
 	# ----------- NAME -------------
 	@property

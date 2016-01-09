@@ -12,8 +12,8 @@ from pyprojekt.parameter import Parameter
 
 def headerprint(args):
 	print
-	print args
-	print '-----------------------'
+	print (args)
+	print ('-----------------------')
 	
 headerprint('create the main application')
 model_1 = Application('My App')
