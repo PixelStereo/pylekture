@@ -121,7 +121,7 @@ a_float = u'122.2'
 an_int = u'122'
 print ('a_string' , checkType(a_string))
 print ('a_float' , checkType(a_float))
-print ('an_int' , checkType(an_int)""")
+print ('an_int' , checkType(an_int))"""
 
 
 

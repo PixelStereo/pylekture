@@ -172,7 +172,7 @@ class Event(object):
                         elif command == 'AVMT':
                             proj.set_mute(value)
                         else:
-                            'print (PJLINK command' , command , 'is not implemented ('+value+')')
+                            print ('PJLINK command' , command , 'is not implemented ('+value+')')
                     except socket_error:
                         print ('Connection refused')
                 else:
