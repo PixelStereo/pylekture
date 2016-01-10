@@ -4,3 +4,4 @@ doc/_build
 test_project.json
 test.json
 *.pyc
+*.pyo

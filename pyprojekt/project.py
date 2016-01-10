@@ -3,9 +3,7 @@
 import os
 import sys
 import json
-import random
 import weakref
-from time import sleep
 from functions import timestamp
 from functions import unicode2_list
 from functions import unicode2string_dict

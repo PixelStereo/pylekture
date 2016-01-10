@@ -3,8 +3,6 @@
 """This file contains usefull functions for a project"""
 import time
 
-debug = False
-
 def timestamp(format='raw'):
     """Return a time stamp. Used to tag lastopened or to create unique ID"""
     timestamp = int(time.time())
@@ -151,7 +149,7 @@ def string2dict(content):
     content = content.split('\n')
     toto = {}
     print ('CALLLL string2dict function in lekture main module')
-    if debug :  'content' , content
+    print ('content' , content)
     for scenario in content:
         scenario = scenario.split(" ",1)
         toto.setdefault(scenario[0],scenario[1:])
