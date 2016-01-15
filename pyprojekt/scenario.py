@@ -44,7 +44,7 @@ class Scenario(object):
 
     def play(self,index=0):
         """shortcut to run thread"""
-        play_once = self.Play(self,index)
+        self.Play(self,index)
 
 
     class Play(threading.Thread):
@@ -152,71 +152,82 @@ class Event(object):
         return scenario.event_list
 
     def play(self):
-        """play the current event"""
-        if type(self.content) is int or type(self.content) is float:
-            wait = float(self.content)
-            wait = wait/1000
-            if debug : print ('waiting' , wait)
-            sleep(wait)
-        else:
-            out = self.getoutput()
-            if out:
-                if out.getprotocol() == 'OSC':
-                    address = self.content[0]
-                    args = self.content[1:]
-                    args = args[0]
-                    ip = out.ip
-                    port = out.udp
-                    try:
-                        if debug : 
-                            print ('connecting to : ' + ip + ':' + str(port))
-                        client.connect((ip , int(port)))
-                        if 'ramp' in args:
-                            index = args.index('ramp')
-                            ramp = args[index+1]
-                            dest = args[index-1]
-                            value = 0
-                            delta = dest - value
-                            delta = float(delta)
-                            step = delta / ramp
-                            for millisec in range(ramp):
-                                value += step
-                                sleep(0.0008)
+        """shortcut to run thread"""
+        self.Play(self)
+
+    class Play(threading.Thread):
+        """Instanciate a thread for Playing an event
+        Allow to start twice or more each event in the same time"""
+        def __init__(self, event):
+            threading.Thread.__init__(self)
+            self.event = event
+            self.start()
+
+        def run(self):
+            if type(self.event.content) is int or type(self.event.content) is float:
+                wait = float(self.event.content)
+                wait = wait/1000
+                if debug : print ('waiting' , wait)
+                sleep(wait)
+            else:
+                out = self.event.getoutput()
+                if out:
+                    if out.getprotocol() == 'OSC':
+                        address = self.event.content[0]
+                        args = self.event.content[1:]
+                        args = args[0]
+                        ip = out.ip
+                        port = out.udp
+                        try:
+                            if debug : 
+                                print ('connecting to : ' + ip + ':' + str(port))
+                            client.connect((ip , int(port)))
+                            if 'ramp' in args:
+                                index = args.index('ramp')
+                                ramp = args[index+1]
+                                dest = args[index-1]
+                                value = 0
+                                delta = dest - value
+                                delta = float(delta)
+                                step = delta / ramp
+                                for millisec in range(ramp):
+                                    value += step
+                                    sleep(0.0008)
+                                    msg = OSCMessage()
+                                    msg.setAddress(address)
+                                    msg.append(value)
+                                    client.send(msg)
+                            else:
                                 msg = OSCMessage()
                                 msg.setAddress(address)
-                                msg.append(value)
+                                msg.append(args)
                                 client.send(msg)
-                        else:
-                            msg = OSCMessage()
-                            msg.setAddress(address)
-                            msg.append(args)
-                            client.send(msg)
-                        msg.clearData()
-                    except OSCClientError :
-                        print ('Connection refused')
-                elif out.getprotocol() == 'PJLINK':
-                    try:
-                        sock = socket()
-                        sock.connect((out.ip, out.udp))
-                        f = sock.makefile()
-                        proj = Projector(f)
-                        proj.authenticate(lambda:'admin')
-                        command = self.content[0]
-                        value = self.content[1:]
-                        if command == 'POWR':
-                            proj.set_power(value)
-                        elif command == 'INPT':
-                            proj.set_input(value)
-                        elif command == 'AVMT':
-                            proj.set_mute(value)
-                        else:
-                            print ('PJLINK command' , command , 'is not implemented ('+value+')')
-                    except socket_error:
-                        print ('Connection refused')
+                            msg.clearData()
+                        except OSCClientError :
+                            print ('Connection refused')
+                    elif out.getprotocol() == 'PJLINK':
+                        try:
+                            sock = socket()
+                            sock.connect((out.ip, out.udp))
+                            f = sock.makefile()
+                            proj = Projector(f)
+                            proj.authenticate(lambda:'admin')
+                            command = self.event.content[0]
+                            value = self.event.content[1:]
+                            if command == 'POWR':
+                                proj.set_power(value)
+                            elif command == 'INPT':
+                                proj.set_input(value)
+                            elif command == 'AVMT':
+                                proj.set_mute(value)
+                            else:
+                                print ('PJLINK command' , command , 'is not implemented ('+value+')')
+                        except socket_error:
+                            print ('Connection refused')
+                    else:
+                        print ('protocol' , out.getprotocol() , 'is not yet implemented')
                 else:
-                    print ('protocol' , out.getprotocol() , 'is not yet implemented')
-            else:
-                print ('there is no output for this event / scenario')
+                    print ('there is no output for this event / scenario')
 
     def getoutput(self):
         """rerurn the current output for this event.
