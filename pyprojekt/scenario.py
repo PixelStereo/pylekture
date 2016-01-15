@@ -48,7 +48,8 @@ class Scenario(object):
 
 
     class Play(threading.Thread):
-        """docstring for Play"""
+        """Instanciate a thread for Playing a scenario
+        Allow to start twice or more each scenario in the same time"""
         def __init__(self, scenario, index):
             threading.Thread.__init__(self)
             self.scenario = scenario
@@ -163,20 +164,36 @@ class Event(object):
                 if out.getprotocol() == 'OSC':
                     address = self.content[0]
                     args = self.content[1:]
+                    args = args[0]
                     ip = out.ip
                     port = out.udp
-                    for arg in args:
-                        try:
-                            if debug : 
-                                print ('connecting to : ' + ip + ':' + str(port))
-                            client.connect((ip , int(port)))
+                    try:
+                        if debug : 
+                            print ('connecting to : ' + ip + ':' + str(port))
+                        client.connect((ip , int(port)))
+                        if 'ramp' in args:
+                            index = args.index('ramp')
+                            ramp = args[index+1]
+                            dest = args[index-1]
+                            value = 0
+                            delta = dest - value
+                            delta = float(delta)
+                            step = delta / ramp
+                            for millisec in range(ramp):
+                                value += step
+                                sleep(0.0008)
+                                msg = OSCMessage()
+                                msg.setAddress(address)
+                                msg.append(value)
+                                client.send(msg)
+                        else:
                             msg = OSCMessage()
                             msg.setAddress(address)
-                            msg.append(arg)
+                            msg.append(args)
                             client.send(msg)
-                            msg.clearData()
-                        except OSCClientError :
-                            print ('Connection refused')
+                        msg.clearData()
+                    except OSCClientError :
+                        print ('Connection refused')
                 elif out.getprotocol() == 'PJLINK':
                     try:
                         sock = socket()
