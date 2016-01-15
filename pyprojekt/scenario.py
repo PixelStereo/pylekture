@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import threading
 import random
 import weakref
 import devicemanager
@@ -18,6 +19,7 @@ from devicemanager import OSCClient as OSCClient
 client = OSCClient()
 
 debug = True
+
 
 class Scenario(object):
     """Create a new scenario"""
@@ -38,6 +40,34 @@ class Scenario(object):
         self.output=output
         self.description=description
         self.event_list = []
+        self.index = 0
+
+    def play(self,index=0):
+        """shortcut to run thread"""
+        play_once = self.Play(self,index)
+
+
+    class Play(threading.Thread):
+        """docstring for Play"""
+        def __init__(self, scenario, index):
+            threading.Thread.__init__(self)
+            self.scenario = scenario
+            self.index = index
+            self.start()
+
+        def run(self):
+            """play a scenario from the beginning"""
+            """play an scenario
+            Started from the first event if an index has not been provided"""
+            if not self.index:
+                index = 0
+            else:
+                index = self.index
+            if debug : print ('------ PLAY SCENARIO :' , self.scenario.name , 'FROM INDEX' , index , '-----')
+            for event in self.scenario.events()[index:]:
+                event.play()
+            return self.scenario.name , 'play done'
+
 
     def getinstances(self):
         """return a list of all scenarios for this project""" 
@@ -68,15 +98,6 @@ class Scenario(object):
         """play scenario from a given index"""
         index = self.event_list.index(index)
         self.play(index)
-
-    def play(self,index=0):
-        """play a scenario from the beginning"""
-        """play an scenario
-        Started from the first event if an index has not been provided"""
-        if debug : print ('------ PLAY SCENARIO :' , self.name , 'FROM INDEX' , index , '-----')
-        for event in self.events()[index:]:
-            event.play()
-        return self.name , 'play done'
 
     def getoutput(self):
         """get the output object for this scenario"""
