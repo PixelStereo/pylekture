@@ -41,7 +41,7 @@ class Project(object):
         self.author = None
         self.version = None
         self.path = None
-        self.lastopened = timestamp()
+        self.lastopened = timestamp('nice')
         self.output_list = []
         self.scenario_list = []
 
@@ -123,7 +123,7 @@ class Project(object):
                                     self.author = value
                                 if attribute == 'version':
                                     self.version = value
-                            self.lastopened = timestamp()
+                            self.lastopened = timestamp('nice')
                         elif key == 'outputs' :
                             for protocol in loaded['outputs']:
                                 for out in loaded['outputs'][protocol]:
