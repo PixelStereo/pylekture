@@ -1,15 +1,15 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """This file contains usefull functions for a project"""
-import time
+import datetime
 
 def timestamp(format='raw'):
     """Return a time stamp. Used to tag lastopened or to create unique ID"""
-    timestamp = int(time.time())
-    if format == 'nice':
-        return time.ctime(timestamp)
+    timestamp = datetime.datetime.now()
+    if format != 'nice':
+        return timestamp
     else:
-        return str(timestamp*1000)
+        return str(timestamp)
 
 def unicode2string_dict(data):
     """convert a unicode dict to a stringed dict"""
