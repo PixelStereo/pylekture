@@ -6,7 +6,6 @@ import random
 import weakref
 import devicemanager
 from time import sleep
-from functions import timestamp
 from functions import unicode2_list
 from functions import unicode2string_dict
 from functions import unicode2string_list
