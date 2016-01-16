@@ -6,7 +6,6 @@ import weakref
 
 debug = True
 
-from node import Node
 from model import Model
 
 class Application(Model):
