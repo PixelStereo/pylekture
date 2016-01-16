@@ -5,8 +5,7 @@ import unittest
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-print lib_path
-lib_path = os.path.abspath('./../pyprojekt')
+lib_path = os.path.abspath('./../PyProjekt')
 sys.path.append(lib_path)
 print lib_path
 
