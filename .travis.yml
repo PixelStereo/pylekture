@@ -5,4 +5,4 @@ python:
 install:
   - pip install pyosc
   - pip install pjlink
-script: test/tests.py
+script: tests/tests.py
