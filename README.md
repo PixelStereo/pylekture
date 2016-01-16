@@ -28,6 +28,7 @@ For the moment, **PyProjekt** is capable of:
 [![Code Climate](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/gpa.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt)
 [![Test Coverage](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/coverage.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt/coverage)
 [![Issue Count](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/issue_count.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt)
+[![Build Status](https://travis-ci.org/PixelStereo/PyProjekt.svg?branch=master)](https://travis-ci.org/PixelStereo/PyProjekt)
 
 Build Documentation
 =======================
