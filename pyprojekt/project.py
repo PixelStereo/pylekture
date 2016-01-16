@@ -187,7 +187,9 @@ class Project(object):
     def getprotocols(self):
         protocols = []
         for out in self.outputs():
-            protocols.append(out.getprotocol())
+            proto = out.getprotocol()
+            if not proto in protocols: 
+                protocols.append(proto)
         if protocols == []:
             return None
         else:
