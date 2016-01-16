@@ -1,20 +1,5 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
-import sys
-import random
-import weakref
-import devicemanager
-from time import sleep
-from functions import unicode2_list
-from functions import unicode2string_dict
-from functions import unicode2string_list
-from OSC import OSCMessage , OSCClientError
-from socket import socket
-from socket import error as socket_error
-from pjlink import Projector
-from devicemanager import OSCClient as OSCClient
-client = OSCClient()
 
 debug = True
 

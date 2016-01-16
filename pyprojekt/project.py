@@ -1,13 +1,10 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import sys
 import json
 import weakref
 from functions import timestamp
-from functions import unicode2_list
 from functions import unicode2string_dict
-from functions import unicode2string_list
 
 from scenario import Scenario
 from output import Output
