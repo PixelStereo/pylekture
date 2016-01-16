@@ -182,7 +182,7 @@ class Event(object):
                             if debug : 
                                 print ('connecting to : ' + ip + ':' + str(port))
                             client.connect((ip , int(port)))
-                            if 'ramp' in args:
+                            if type(args) == list and 'ramp' in args:
                                 index = args.index('ramp')
                                 ramp = args[index+1]
                                 dest = args[index-1]
