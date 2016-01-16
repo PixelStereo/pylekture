@@ -6,6 +6,7 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
+from pyprojekt import project
 from pyprojekt.project import new_project, projects
 
 # create a project
