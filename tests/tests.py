@@ -3,11 +3,14 @@
 
 import unittest
 import os,sys
+
+# for 
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
+
+# for Travis CI
 lib_path = os.path.abspath('./../PyProjekt')
 sys.path.append(lib_path)
-print lib_path
 
 from pyprojekt import project
 from pyprojekt.project import new_project, projects
