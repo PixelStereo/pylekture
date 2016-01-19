@@ -5,6 +5,8 @@ python:
   - "2.7"
 install:
   - sudo apt-get update
-  - sudo apt-get -y install liblo-tools python-liblo 
+  - sudo apt-get -y install liblo-tools python-liblo
+  - pip install pyliblo
+  - C_INCLUDE_PATH=/usr/local/include LIBRARY_PATH=/usr/local/lib python setup.py install
   - pip install pjlink
 script: tests/tests.py
