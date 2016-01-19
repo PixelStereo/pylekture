@@ -5,8 +5,6 @@ python:
   - "2.7"
 install:
   - sudo apt-get update
-  - sudo apt-get -y install liblo-tools
-  - sudo pip install Cython
-  - pip install pyliblo
+  - sudo apt-get -y install liblo-tools python-liblo 
   - pip install pjlink
 script: tests/tests.py
