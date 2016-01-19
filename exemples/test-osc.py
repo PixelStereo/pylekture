@@ -16,7 +16,7 @@ def headerprint(args):
 	print ('--------' , args , '--------')
 	
 # create the main application
-my_app = Application('test_App',author='Pixel Stereo',version='0.0.1',project='my first project')
+my_app = Application('test_App',author='Pixel Stereo',version='0.0.1',project='my first application')
 
 # create two models
 model_1 = Model('model.1')
@@ -76,6 +76,26 @@ import time
 
 st = liblo.ServerThread(22222)
 print("Created Server Thread on Port", st.port)
+
+
+def print_handler():
+	pass
+
+print '-----'
+
+for var in vars(my_app):
+	var = var.split('__')
+	var = var[1]
+	root = getattr(my_app,'name')
+	if var != 'name':
+		print '/'+root+'/'+var
+		st.add_method('/baz', 'f', print_handler, 456)
+	print var , ':' , getattr(my_app,var)
+
+
+quit()
+
+
 
 class Blah:
     def __init__(self, x):
