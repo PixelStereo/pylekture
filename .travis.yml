@@ -4,7 +4,7 @@ language: python
 python:
   - "2.7"
 install:
-  - sudo apt-get install liblo
+  - sudo apt-get install liblo7
   - sudo pip install Cython
   - pip install pyliblo
   - pip install pjlink
