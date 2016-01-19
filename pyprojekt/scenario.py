@@ -3,13 +3,10 @@
 import threading
 from time import sleep
 from functions import timestamp
-from OSC import OSCMessage , OSCClientError
+import liblo
 from socket import socket
 from socket import error as socket_error
 from pjlink import Projector
-import devicemanager
-from devicemanager import OSCClient as OSCClient
-client = OSCClient()
 
 debug = True
 
@@ -171,32 +168,30 @@ class Event(object):
                         ip = out.ip
                         port = out.udp
                         try:
+                            target = liblo.Address(ip,int(port))
                             if debug : 
                                 print ('connecting to : ' + ip + ':' + str(port))
-                            client.connect((ip , int(port)))
-                            if type(args) == list and 'ramp' in args:
-                                index = args.index('ramp')
-                                ramp = args[index+1]
-                                dest = args[index-1]
-                                value = 0
-                                delta = dest - value
-                                delta = float(delta)
-                                step = delta / ramp
-                                for millisec in range(ramp):
-                                    value += step
-                                    sleep(0.0008)
-                                    msg = OSCMessage()
-                                    msg.setAddress(address)
-                                    msg.append(value)
-                                    client.send(msg)
-                            else:
-                                msg = OSCMessage()
-                                msg.setAddress(address)
-                                msg.append(args)
-                                client.send(msg)
-                            msg.clearData()
-                        except OSCClientError :
-                            print ('Connection refused')
+                        except liblo.AddressError as err:
+                            print(err)
+
+                        if type(args) == list and 'ramp' in args:
+                            index = args.index('ramp')
+                            ramp = args[index+1]
+                            dest = args[index-1]
+                            value = 0
+                            delta = dest - value
+                            delta = float(delta)
+                            step = delta / ramp
+                            for millisec in range(ramp):
+                                value += step
+                                sleep(0.0008)
+                                msg = liblo.Message(address)
+                                msg.add(value)
+                                liblo.send(target,msg)
+                        else:
+                            msg = liblo.Message(address)
+                            msg.add(args)
+                            liblo.send(target,msg)
                     elif out.getprotocol() == 'PJLINK':
                         try:
                             sock = socket()
