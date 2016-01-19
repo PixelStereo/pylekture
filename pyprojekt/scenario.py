@@ -141,80 +141,72 @@ class Event(object):
         return scenario.event_list
 
     def play(self):
-        """shortcut to run thread"""
-        self.Play(self)
-
-    class Play(threading.Thread):
-        """Instanciate a thread for Playing an event
-        Allow to start twice or more each event in the same time"""
-        def __init__(self, event):
-            threading.Thread.__init__(self)
-            self.event = event
-            self.start()
-
-        def run(self):
-            if type(self.event.content) is int or type(self.event.content) is float:
-                wait = float(self.event.content)
-                wait = wait/1000
-                if debug : print ('waiting' , wait)
-                sleep(wait)
-            else:
-                out = self.event.getoutput()
-                if out:
-                    if out.getprotocol() == 'OSC':
-                        address = self.event.content[0]
-                        args = self.event.content[1:]
-                        args = args[0]
-                        ip = out.ip
-                        port = out.udp
-                        try:
-                            target = liblo.Address(ip,int(port))
-                            if debug : 
-                                print ('connecting to : ' + ip + ':' + str(port))
-                        except liblo.AddressError as err:
-                            print(err)
-
-                        if type(args) == list and 'ramp' in args:
-                            index = args.index('ramp')
-                            ramp = args[index+1]
-                            dest = args[index-1]
-                            value = 0
-                            delta = dest - value
-                            delta = float(delta)
-                            step = delta / ramp
-                            for millisec in range(ramp):
-                                value += step
-                                sleep(0.0008)
-                                msg = liblo.Message(address)
-                                msg.add(value)
-                                liblo.send(target,msg)
-                        else:
+        if type(self.content) is int or type(self.content) is float:
+            wait = float(self.content)
+            wait = wait/1000
+            if debug : print ('waiting' , wait)
+            sleep(wait)
+        else:
+            out = self.getoutput()
+            if out:
+                if out.getprotocol() == 'OSC':
+                    address = self.content[0]
+                    args = self.content[1:]
+                    args = args[0]
+                    ip = out.ip
+                    port = out.udp
+                    try:
+                        target = liblo.Address(ip,int(port))
+                        if debug : 
+                            print ('connecting to : ' + ip + ':' + str(port))
+                    except liblo.AddressError as err:
+                        print(err)
+                    if type(args) == list and 'ramp' in args:
+                        index = args.index('ramp')
+                        ramp = args[index+1]
+                        dest = args[index-1]
+                        value = 0
+                        delta = dest - value
+                        delta = float(delta)
+                        step = delta / ramp
+                        for millisec in range(ramp):
                             msg = liblo.Message(address)
-                            msg.add(args)
+                            value += step
+                            sleep(0.0008)
+                            msg.add(value)
                             liblo.send(target,msg)
-                    elif out.getprotocol() == 'PJLINK':
-                        try:
-                            sock = socket()
-                            sock.connect((out.ip, out.udp))
-                            f = sock.makefile()
-                            proj = Projector(f)
-                            proj.authenticate(lambda:'admin')
-                            command = self.event.content[0]
-                            value = self.event.content[1:]
-                            if command == 'POWR':
-                                proj.set_power(value)
-                            elif command == 'INPT':
-                                proj.set_input(value)
-                            elif command == 'AVMT':
-                                proj.set_mute(value)
-                            else:
-                                print ('PJLINK command' , command , 'is not implemented ('+value+')')
-                        except socket_error:
-                            print ('Connection refused')
+                    elif type(args) == list:
+                        msg = liblo.Message(address)
+                        for arg in args:
+                            msg.add(arg)
+                        liblo.send(target,msg)
                     else:
-                        print ('protocol' , out.getprotocol() , 'is not yet implemented')
+                        msg = liblo.Message(address)
+                        msg.add(args)
+                        liblo.send(target,msg)
+                elif out.getprotocol() == 'PJLINK':
+                    try:
+                        sock = socket()
+                        sock.connect((out.ip, out.udp))
+                        f = sock.makefile()
+                        proj = Projector(f)
+                        proj.authenticate(lambda:'admin')
+                        command = self.content[0]
+                        value = self.content[1:]
+                        if command == 'POWR':
+                            proj.set_power(value)
+                        elif command == 'INPT':
+                            proj.set_input(value)
+                        elif command == 'AVMT':
+                            proj.set_mute(value)
+                        else:
+                            print ('PJLINK command' , command , 'is not implemented ('+value+')')
+                    except socket_error:
+                        print ('Connection refused')
                 else:
-                    print ('there is no output for this event / scenario')
+                    print ('protocol' , out.getprotocol() , 'is not yet implemented')
+            else:
+                print ('there is no output for this event / scenario')
 
     def getoutput(self):
         """rerurn the current output for this event.
