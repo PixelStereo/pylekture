@@ -13,14 +13,12 @@ my_project = project.new_project()
 my_output = my_project.new_output('OSC')
 my_scenario = my_project.new_scenario()
 my_scenario.output = ['OSC' , 1]
-first_event = my_scenario.new_event(content=['/previous',232])
-second_event = my_scenario.new_event(content=1000)
-third_event = my_scenario.new_event(content=['/zob',232])
-first_event.play()
-#second_event.play()
-#third_event.play()
+my_output.udp = 1234
+first_event = my_scenario.new_event(content=['/float',232.232])
+second_event = my_scenario.new_event(content=['/int',232])
+third_event = my_scenario.new_event(content=['/string','a string'])
+forth_event = my_scenario.new_event(content=['/list',[1,2.2,'trois']])
+
+"""NEED TO IMPLEMENT BLOB,DOUBLE,64bit int, colorn Boolean, TileTag and Bundle"""
 
 my_scenario.play()
-
-#for event in my_scenario.events():
-#	print event.content
