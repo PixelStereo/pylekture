@@ -69,34 +69,25 @@ for child in get_app_child():
 	
 
 
-
-"""NEED TO CREATE REQUEST FOR PARAMETERS NOW"""
-
-
-
-quit()
-
-
-
-
-
 headerprint('registering osc callback')
-# create OSC server
-from pydevicemanager.devicemanager import OSCServer
-osc = OSCServer(22222,'span')
-osc = osc.serverThread.oscServer
+#from __future__ import print_function
+import liblo
+import time
 
+st = liblo.ServerThread(22222)
+print("Created Server Thread on Port", st.port)
 
-import Queue
-queue = Queue.Queue()
+class Blah:
+    def __init__(self, x):
+        self.x = x
+    def baz_cb(self, path, args, types, src, user_data):
+        print("baz_cb():")
+        print(args)
+        print("self.x is", self.x, ", user data was", user_data)
 
-def osc_handler( addr, tags, stuff, source):
-    global queue
-    print (addr,tags,stuff,source)
-    queue.put( stuff[0] )
-
-osc.addMsgHandler("/OSC", osc_handler) # adding our function
-
+b = Blah(123)
+st.add_method('/baz', 'f', b.baz_cb, 456)
+st.start()
 
 
 try :
@@ -104,6 +95,7 @@ try :
 		pass
 except KeyboardInterrupt :
 	print ("\nClosing OSCClient and OSCServer")
-	osc.close()
-	st.join()
+	st.stop()
 	print ("Done")
+
+
