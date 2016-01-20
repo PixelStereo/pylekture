@@ -11,5 +11,7 @@ install:
   - pip install pyliblo
   - pip install pjlink
   - pip install coveralls
-script: tests/tests.py
+script:
+  - coverage run tests/tests.py
+  - coverage report
 after_success: coveralls
