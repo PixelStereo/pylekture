@@ -10,15 +10,15 @@ import pyprojekt
 from pyprojekt.application import Application
 from pyprojekt.functions import timestamp
 
-print timestamp()
-print type(timestamp())
-print timestamp().year
-print timestamp().month
-print timestamp().day
-print timestamp().hour
-print timestamp().minute
-print timestamp().second
-print timestamp().microsecond
+print (timestamp())
+print (type(timestamp()))
+print (timestamp().year)
+print (timestamp().month)
+print (timestamp().day)
+print (timestamp().hour)
+print (timestamp().minute)
+print (timestamp().second)
+print (timestamp().microsecond)
 
 print ('---------------------')
-print timestamp('nice')
+print (timestamp('nice'))

@@ -81,7 +81,7 @@ print("Created Server Thread on Port", st.port)
 def print_handler():
 	pass
 
-print '-----'
+print ('-----')
 
 for var in vars(my_app):
 	var = var.split('__')
