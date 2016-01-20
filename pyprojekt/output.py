@@ -54,7 +54,7 @@ class Output(object):
 
 class OSC(Output):
     """Create an OSC output"""
-    def __init__(self,ip='127.0.0.1',udp =10000):
+    def __init__(self,ip='127.0.0.1',udp =1234):
         if debug == 2:
             print ()
             print ("........... OSC OUTPUT created ...........")
