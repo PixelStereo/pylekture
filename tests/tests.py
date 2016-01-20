@@ -25,7 +25,7 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(my_project.getprotocols(),['OSC', 'PJLINK'])
         self.assertEqual(my_scenario.getoutput().getprotocol(),'OSC')
         self.assertEqual(my_scenario.getoutput().ip,'127.0.0.1')
-        self.assertEqual(my_scenario.getoutput().udp,10000)
+        self.assertEqual(my_scenario.getoutput().udp,1234)
         self.assertEqual(my_scenario.getoutput().name,'no-name')
         self.assertEqual(len(my_project.outputs()),3)
         self.assertEqual(len(my_project.outputs('PJLINK')),1)
