@@ -90,7 +90,7 @@ for var in vars(my_app):
 	if var != 'name':
 		print ('/'+root+'/'+var)
 		st.add_method('/baz', 'f', print_handler, 456)
-	print var , ':' , getattr(my_app,var)
+	print (var , ':' , getattr(my_app,var))
 
 
 quit()
