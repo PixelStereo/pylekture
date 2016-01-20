@@ -34,7 +34,8 @@ class Output(object):
 
     @staticmethod
     def protocols():
-        return ['OSC','MIDI','PJLINK']
+        #return ['OSC','MIDI','PJLINK']
+        return ['OSC']
 
     def getprotocol(self):
         return self._protocol
