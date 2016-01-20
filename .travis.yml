@@ -5,8 +5,11 @@ python:
   - "2.7"
 install:
   - sudo apt-get update
-  - sudo apt-get -y install liblo-tools python-liblo
+  - sudo apt-get -y install python-setuptools
+  - sudo apt-get -y install liblo-dev
+  - sudo apt-get -y install liblo-tools #python-liblo
   - pip install pyliblo
-  - C_INCLUDE_PATH=/usr/local/include LIBRARY_PATH=/usr/local/lib python setup.py install
   - pip install pjlink
+  - pip install coveralls
 script: tests/tests.py
+after_success: coveralls
