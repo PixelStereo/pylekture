@@ -67,6 +67,17 @@ class Scenario(object):
             if debug : print ('SCENARIO DONE' , self.scenario.name)
             return True
 
+    def getduration(self):
+        duration = 0
+        for event in self.events():
+            if type(event.content) is int or type(event.content) is float:
+                duration += event.content
+            if type(event.content) == list and 'ramp' in event.content[1]:
+                index = event.content[1].index('ramp')
+                ramp = event.content[1][index+1]
+                duration += ramp
+        return duration
+
 
     def getinstances(self):
         """return a list of all scenarios for this project""" 
