@@ -1,6 +1,7 @@
 sudo: required
 dist: trusty
-language: python
+language: generic 
+#language: python
 python:
   - "2.7"
 install:
