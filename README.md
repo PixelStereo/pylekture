@@ -26,7 +26,7 @@ For the moment, **PyProjekt** is capable of:
 -  Save projects to json files
 
 [![Code Climate](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/gpa.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt)
-[![Test Coverage](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/coverage.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt/coverage)
+[![Coverage Status](https://coveralls.io/repos/github/PixelStereo/PyProjekt/badge.svg?branch=master)](https://coveralls.io/github/PixelStereo/PyProjekt?branch=master)
 [![Issue Count](https://codeclimate.com/github/PixelStereo/PyProjekt/badges/issue_count.svg)](https://codeclimate.com/github/PixelStereo/PyProjekt)
 [![Build Status](https://travis-ci.org/PixelStereo/PyProjekt.svg?branch=master)](https://travis-ci.org/PixelStereo/PyProjekt)
 
