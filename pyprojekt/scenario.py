@@ -4,9 +4,6 @@ import threading
 from time import sleep
 from functions import timestamp
 import liblo
-from socket import socket
-from socket import error as socket_error
-from pjlink import Projector
 
 debug = True
 
@@ -204,25 +201,6 @@ class Event(object):
                         msg = liblo.Message(address)
                         msg.add(args)
                         liblo.send(target,msg)
-                elif out.getprotocol() == 'PJLINK':
-                    try:
-                        sock = socket()
-                        sock.connect((out.ip, out.udp))
-                        f = sock.makefile()
-                        proj = Projector(f)
-                        proj.authenticate(lambda:'admin')
-                        command = self.content[0]
-                        value = self.content[1:]
-                        if command == 'POWR':
-                            proj.set_power(value)
-                        elif command == 'INPT':
-                            proj.set_input(value)
-                        elif command == 'AVMT':
-                            proj.set_mute(value)
-                        else:
-                            print ('PJLINK command' , command , 'is not implemented ('+value+')')
-                    except socket_error:
-                        print ('Connection refused')
                 else:
                     print ('protocol' , out.getprotocol() , 'is not yet implemented')
             else:
