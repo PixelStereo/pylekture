@@ -12,7 +12,7 @@ debug = True
 
 class Scenario(object):
     """Create a new scenario"""
-    def __init__(self,project,name='',description = '',output=None):
+    def __init__(self,project,name='',description = '',output=None,wait=0,post_wait=0):
         """create an scenario"""
         if debug == 2:
             print ()
@@ -28,6 +28,8 @@ class Scenario(object):
         self._project = project
         self.output=output
         self.description=description
+        self.wait=0
+        self.post_wait=0
         self.event_list = []
         self.index = 0
 
@@ -51,12 +53,19 @@ class Scenario(object):
             Started from the first event if an index has not been provided"""
             if not self.index:
                 index = 0
+                if self.scenario.wait:
+                    if debug : print ('-- WAIT BEFORE SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.wait , 'SECONDS')
+                    sleep(self.scenario.wait)
             else:
                 index = self.index
             if debug : print ('------ PLAY SCENARIO :' , self.scenario.name , 'FROM INDEX' , index , '-----')
             for event in self.scenario.events()[index:]:
                 event.play()
-            return self.scenario.name , 'play done'
+            if self.scenario.post_wait:
+                if debug : print ('-- WAIT AFTER SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.post_wait , 'SECONDS')
+                sleep(self.scenario.post_wait)
+            if debug : print ('SCENARIO DONE' , self.scenario.name)
+            return True
 
 
     def getinstances(self):
