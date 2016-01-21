@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import json
 import weakref
+import simplejson as json
 from functions import timestamp
 from functions import unicode2string_dict
 
