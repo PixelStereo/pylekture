@@ -6,8 +6,8 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
-import pyprojekt
-from pyprojekt.application import Application
+import pydular
+from pydular.application import Application
 
 import pprint
 pp = pprint.PrettyPrinter(indent=4)

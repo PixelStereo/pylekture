@@ -5,11 +5,11 @@
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-import pyprojekt
-from pyprojekt.application import Application
-from pyprojekt.node import Node
-from pyprojekt.model import Model
-from pyprojekt.parameter import Parameter
+import pydular
+from pydular.application import Application
+from pydular.node import Node
+from pydular.model import Model
+from pydular.parameter import Parameter
 
 import pprint
 

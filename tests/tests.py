@@ -9,12 +9,12 @@ lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
 # for Travis CI
-lib_path = os.path.abspath('./../PyProjekt')
+lib_path = os.path.abspath('./../pydular')
 sys.path.append(lib_path)
 
-from pyprojekt import project
-from pyprojekt.project import new_project, projects
-from pyprojekt.functions import timestamp, unicode2string_dict, unicode2string_list, checkType, isString, isList, isUnicode
+from pydular import project
+from pydular.project import new_project, projects
+from pydular.functions import timestamp, unicode2string_dict, unicode2string_list, checkType, isString, isList, isUnicode
 import datetime
 
 project.debug = 2

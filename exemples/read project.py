@@ -3,7 +3,7 @@
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-from pyprojekt import project
+from pydular import project
 
 # create a project
 my_project = project.new_project()

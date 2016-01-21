@@ -5,7 +5,7 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 print (lib_path)
-from pyprojekt import project
+from pydular import project
 
 debug = True
 project.debug = True

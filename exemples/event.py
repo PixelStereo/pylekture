@@ -4,7 +4,7 @@ from time import sleep
 import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
-from pyprojekt import project
+from pydular import project
 
 debug = True
 project.debug = True

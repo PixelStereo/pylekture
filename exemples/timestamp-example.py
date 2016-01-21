@@ -6,9 +6,9 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
-import pyprojekt
-from pyprojekt.application import Application
-from pyprojekt.functions import timestamp
+import pydular
+from pydular.application import Application
+from pydular.functions import timestamp
 
 print (timestamp())
 print (type(timestamp()))

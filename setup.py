@@ -4,14 +4,14 @@
 from distutils.core import setup
 
 setup(
-  name = 'pyprojekt',
-  packages = ['pyprojekt'], 
-  version = '0.1.6',
+  name = 'pydular',
+  packages = ['pydular'], 
+  version = '0.1.7',
   description = 'A projekt management library',
   author = 'Pixel Stereo',
   install_requires=['PyOSC','pjlink','json'],
-  url='https://github.com/PixelStereo/PyProjekt', 
-  download_url = 'https://github.com/PixelStereo/PyProjekt/tarball/0.1.6', 
+  url='https://github.com/PixelStereo/pydular', 
+  download_url = 'https://github.com/PixelStereo/pydular/tarball/0.1.7', 
   classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',

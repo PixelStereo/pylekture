@@ -4,7 +4,7 @@
 This module contains a project manager for writing inter/multi-media scenario.
 
 ===============================================================================
-pyprojekt
+pydular
 ===============================================================================
 
 First, you create a project. In this project you can add Scenario and Outputs.
