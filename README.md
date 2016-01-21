@@ -17,7 +17,7 @@ OK, I think I get the idea, but what is it good for?
 For the moment, **pydular** is capable of:
 
 -  Creating application with parameters organised hierarchicaly
--  Navigate and access your app through OSC prootocol
+-  Navigate and access your app through OSC protocol
 -  Create dynamic scenario and events
 -  Save projects to json files
 
