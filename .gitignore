@@ -5,3 +5,5 @@ test_project.json
 test.json
 *.pyc
 *.pyo
+.coverage
+my_file.json
