@@ -3,3 +3,4 @@ omit =
     */python?.?/*
     */site-packages/simplejson/*
     *__init__*
+    */tests.py
