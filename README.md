@@ -12,7 +12,7 @@ It offers a way to organise your application hierarchicaly and creating events a
 
 ----------------------------------------------------
 
-For the moment, **pydular** is capable of:
+~~For the moment~~ Soon, **pydular** ~~is~~ will be capable of:
 
 -  Creating application with parameters organised hierarchicaly
 -  Navigate and access your app through OSC protocol
