@@ -22,6 +22,10 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
+- v0.1.7  -  Feb. 2016
+    new name. Now known as pydular, for python modular implementation
+    enhance tests
+
 - v0.1.4  -  Jan. 2016
     Split Modular file into Node, Application, Model and Parameter different files
     Split Projekt file into Project, Output and Scenario different files
