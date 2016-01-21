@@ -44,32 +44,29 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(project.Output.protocols(),['OSC'])
         self.assertEqual(len(project.Output.getinstances(my_project)),4)
         self.assertEqual(my_output.getproject().version,'0.1.0')
+        #test scenario file
+        self.assertEqual(my_scenario.getduration(),1)
+        self.assertEqual(len(my_scenario.events()),3)
         # test project file
         self.assertEqual(len(projects()),2)
-
         self.assertEqual(my_project.author, "Renaud Rubiano")
         self.assertEqual(my_project.version, "0.1.0")
         self.assertEqual(my_project.getprotocols(),['OSC', 'PJLINK','MIDI'])
-
         self.assertEqual(my_project.scenarios()[0].name,'the scenario test')
         my_project.scenarios_set(0,1)
         self.assertEqual(my_project.scenarios()[0].name,'the other scenario')
-
-        print my_project.scenarios()
         my_project.del_scenario(my_scenario)
         self.assertEqual(len(my_project.scenarios()),1)
-        
         self.assertEqual(len(my_project.outputs()),4)
         self.assertEqual(len(my_project.outputs('PJLINK')),1)
         self.assertEqual(len(my_project.outputs('OSC')),2)
-        
         my_project.path = 'my_file'
         my_project.write()
         my_project.read('my_file.json')
-
         my_project.reset()
         self.assertEqual(my_project.outputs(),[])
         self.assertEqual(my_project.scenarios(),[])
+
 
 
 if __name__ == '__main__':
@@ -92,6 +89,14 @@ if __name__ == '__main__':
 
     # Attribute output to scenario
     my_scenario.output = ['OSC' , 1]
+
+    # fill in scenario with events
+    first_event = my_scenario.new_event(content=['/previous',232])
+    second_event = my_scenario.new_event(content=1)
+    third_event = my_scenario.new_event(content=['/zob',232])
+
+    # play the scenario
+    my_scenario.play()
 
     # create another output with another protocol
     second_out = my_project.new_output('PJLINK')
