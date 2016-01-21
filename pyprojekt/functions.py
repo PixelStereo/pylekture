@@ -43,11 +43,22 @@ def checkType(data):
     """Transform an unicode into its original type"""
     if isinstance(data, unicode):
         data = data.encode('utf-8')
+    if isinstance(data,list):
+        for item in data:
+            index = data.index(item)
+            item = checkType(item)
+            data[index] = item
     if isinstance(data,str):
         if data.isdigit():
             data = int(data)
-        elif isFloat(data):
-            data = float(data)
+        elif isList(data):
+            print '-'
+            data = list(data)
+        else:
+            try:
+                data = float(data)
+            except:
+                pass
     elif isFloat(data):
         data = float(data)
     elif isInt(data):
@@ -57,44 +68,26 @@ def checkType(data):
 def isString(value):
     """Check if value is a string.
     Return True or False""" 
-    try:
-        str(value)
-        return True
-    except:
-        return False
+    return isinstance(value,str)
 
 def isList(value):
     """Check if value is a list.
     Return True or False"""
-    try:
-        list(value)
-        return True
-    except:
-        return False
+    return isinstance(value,list)
 
 def isUnicode(value):
     """Check if value is a unicode string.
     Return True or False"""
-    try:
-        unicode(value)
-        return True
-    except:
-        return False
+    return isinstance(value,unicode)
 
 def isFloat(value):
     """Check if value is a float.
     Return True or False"""
-    try:
-        float(value)
-        return True
-    except:
-        return False
+    return isinstance(value,float)
 
 def isInt(value):
     """Check if value is an int.
     Return True or False"""
-    try:
-        int(value)
-        return True
-    except:
-        return False
+    return isinstance(value,int)
+
+

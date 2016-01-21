@@ -3,7 +3,7 @@
 
 import unittest
 import os,sys
-
+from time import sleep
 # for 
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
@@ -14,7 +14,7 @@ sys.path.append(lib_path)
 
 from pyprojekt import project
 from pyprojekt.project import new_project, projects
-from pyprojekt.functions import timestamp, unicode2string_dict, unicode2string_list, checkType
+from pyprojekt.functions import timestamp, unicode2string_dict, unicode2string_list, checkType, isString, isList, isUnicode
 import datetime
 
 project.debug = 2
@@ -33,8 +33,17 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(type(string_list[0]),str)
         self.assertEqual(type(a_string),str)
         self.assertEqual(type(an_int),int)
+        self.assertEqual(type(a_list),list)
+        self.assertEqual(type(a_list[0]),float)
+        self.assertEqual(type(a_list[0]),float)
+        self.assertEqual(type(a_list[1]),str)
+        self.assertEqual(type(a_list[2]),int)
         self.assertEqual(type(a_float),float)
         self.assertEqual(type(the_none),type(None))
+        self.assertEqual(test_unicode,True)
+        self.assertEqual(test_unicode2,False)
+        self.assertEqual(test_list,True)
+        self.assertEqual(test_list2,False)
         # test output file
         self.assertEqual(my_output.vars_(),['ip', 'udp', 'name'])
         self.assertEqual(my_output.getprotocol(),'OSC')
@@ -45,7 +54,7 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(len(project.Output.getinstances(my_project)),4)
         self.assertEqual(my_output.getproject().version,'0.1.0')
         #test scenario file
-        self.assertEqual(my_scenario.getduration(),1)
+        self.assertEqual(my_scenario.getduration(),700)
         self.assertEqual(len(my_scenario.events()),3)
         # test project file
         self.assertEqual(len(projects()),2)
@@ -68,8 +77,15 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(my_project.scenarios(),[])
 
 
-
 if __name__ == '__main__':
+
+    import liblo
+    import time
+
+    st = liblo.ServerThread(1235)
+    print("Created Server Thread on Port", st.port)
+
+
     # create a project
     my_project = new_project()
     my_project.author = 'Renaud Rubiano'
@@ -89,14 +105,12 @@ if __name__ == '__main__':
 
     # Attribute output to scenario
     my_scenario.output = ['OSC' , 1]
+    my_other_scenario.output = ['MIDI' , 1]
 
     # fill in scenario with events
-    first_event = my_scenario.new_event(content=['/previous',232])
-    second_event = my_scenario.new_event(content=1)
+    first_event = my_scenario.new_event(content=['/previous',[232,'ramp',500]])
+    second_event = my_scenario.new_event(content=200)
     third_event = my_scenario.new_event(content=['/zob',232])
-
-    # play the scenario
-    my_scenario.play()
 
     # create another output with another protocol
     second_out = my_project.new_output('PJLINK')
@@ -107,6 +121,16 @@ if __name__ == '__main__':
     third_out.udp = 22222
 
     forth_out = my_project.new_output('MIDI')
+
+    # play the scenario
+    my_scenario.play()
+
+    sleep(1)
+
+    midi_event = my_other_scenario.new_event(content=['CC',[16,1,64]])
+    my_other_scenario.play()
+
+    sleep(0.01)
 
     # test functions file
     the_timestamp = timestamp()
@@ -121,11 +145,17 @@ if __name__ == '__main__':
 
     a_string = u'popo2'
     a_float = u'122.2'
+    a_list = [u'2.2', u'renaud', u'22']
     an_int = u'122'
     the_none = None
     a_string = checkType(a_string)
     a_float = checkType(a_float)
+    a_list = checkType(a_list)
     an_int = checkType(an_int)
     the_none = checkType(the_none)
+    test_unicode = isUnicode(u'test')
+    test_unicode2 = isUnicode('toto')
+    test_list = isList([1,2])
+    test_list2 = isList(u'[1,2]')
 
     unittest.main()
