@@ -9,7 +9,7 @@ from functions import unicode2string_dict
 from scenario import Scenario
 from output import Output
 
-debug = True
+debug = False
 
 def new_project():
     """Create a new project"""
@@ -31,7 +31,8 @@ class Project(object):
     def __init__(self):
         super(Project, self).__init__()
         self._instances.append(weakref.ref(self))
-        if debug == 2:
+        self.debug = debug
+        if self.debug == 2:
             print ()
             print ("........... PROJECT created ...........")
             print ()
@@ -80,7 +81,7 @@ class Project(object):
                 with open(path) as in_file :
                     # clear the project
                     self.reset()
-                    if debug : print ('file reading : ' , path)
+                    if self.debug : print ('file reading : ' , path)
                     loaded = json.load(in_file,object_hook=unicode2string_dict)
                     in_file.close()
                     for key,val in loaded.items():
@@ -132,11 +133,11 @@ class Project(object):
                                         if attribute == 'udp':
                                             udp = value
                                     self.new_output(protocol,name=name,ip=address_ip,udp=udp)
-                    if debug : print ('project loaded')
+                    if self.debug : print ('project loaded')
                     self.path = path
             # catch error if file is not valid or if file is not a lekture project
             except (IOError , ValueError):
-                if debug : print ('error : project not loaded')
+                if self.debug : print ('error : project not loaded')
                 return False
             return True
 
@@ -155,7 +156,7 @@ class Project(object):
             project.setdefault('attributes',self.export_attributes())
             project.setdefault('outputs',self.export_outputs())
             out_file.write(json.dumps(project,sort_keys = True, indent = 4,ensure_ascii=False).encode('utf8'))
-            if debug : print ("file has been written : " , savepath)
+            if self.debug : print ("file has been written : " , savepath)
             return True
         else:
             return False
@@ -217,10 +218,10 @@ class Project(object):
                 scenario.del_event(event)
             # delete the scenario itself
             self.scenario_list.remove(scenario)
-            if debug == 2:
+            if self.debug == 2:
                 print ('delete scenario' , scenario , len(self.scenario_list))
         else:
-            if debug == 2:
+            if self.debug == 2:
                 print ('ERROR - trying to delete a scenario which not exists in self.scenario_list' , scenario)
 
     def export_attributes(self):
