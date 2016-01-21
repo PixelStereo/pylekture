@@ -4,14 +4,12 @@ Python Modular framework for real-time inter-media applications
 
 **This is an alpha version - Do not use it for production, because API must changes a lot before release**
 
-A framework for creating applications managed through OSC
----------------------------------------------------------
+----------------------------------------------------
 
 **pydular** can be defined as a framework for creating applications for real-time intermedia
 that can be easily accessed through OSC (Open Sound Control) messages.
 It offers a way to organise your application hierarchicaly and creating events and scenario.
 
-OK, I think I get the idea, but what is it good for?
 ----------------------------------------------------
 
 For the moment, **pydular** is capable of:
