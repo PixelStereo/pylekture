@@ -17,25 +17,23 @@ def unicode2string_dict(data):
     for key, value in data.iteritems():
         if isinstance(key, unicode):
             key = key.encode('utf-8')
-        if isinstance(value, unicode):
-            value = value.encode('utf-8')
-        elif isinstance(value, list):
-            value = unicode2string_list(value)
-        elif isinstance(value, dict):
-            value = unicode2string_dict(value)
-        rv[key] = value
+        rv[key] = fromUnicode(value)
     return rv
+
+def fromUnicode(item):
+    if isinstance(item, unicode):
+        item = item.encode('utf-8')
+    elif isinstance(item, list):
+        item = unicode2string_list(item)
+    elif isinstance(item, dict):
+        item = unicode2string_dict(item)
+    return item
 
 def unicode2string_list(data):
     """convert a unicode list to a string list"""
     rv = []
     for item in data:
-        if isinstance(item, unicode):
-            item = item.encode('utf-8')
-        elif isinstance(item, list):
-            item = unicode2string_list(item)
-        elif isinstance(item, dict):
-            item = unicode2string_dict(item)
+        item = fromUnicode(item)
         rv.append(item)
     return rv
 

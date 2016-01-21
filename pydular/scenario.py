@@ -51,15 +51,15 @@ class Scenario(object):
             if not self.index:
                 index = 0
                 if self.scenario.wait:
-                    if self.project.debug : print ('-- WAIT BEFORE SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.wait , 'SECONDS')
+                    if self.project.debug : print ('WAIT' , self.scenario.name , 'DURING' , self.scenario.wait , 'SECONDS')
                     sleep(self.scenario.wait)
             else:
                 index = self.index
-            if self.project.debug : print ('------ PLAY SCENARIO :' , self.scenario.name , 'FROM INDEX' , index , '-----')
+            if self.project.debug : print ('PLAY' , self.scenario.name , 'FROM INDEX' , index)
             for event in self.scenario.events()[index:]:
                 event.play()
             if self.scenario.post_wait:
-                if self.project.debug : print ('-- WAIT AFTER SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.post_wait , 'SECONDS')
+                if self.project.debug : print ('POST_WAIT' , self.scenario.name , 'DURING' , self.scenario.post_wait , 'SECONDS')
                 sleep(self.scenario.post_wait)
             if self.project.debug : print ('SCENARIO DONE' , self.scenario.name)
             return True
