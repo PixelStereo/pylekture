@@ -22,12 +22,12 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(my_project.author, "Renaud Rubiano")
         self.assertEqual(my_project.version, "0.1.0")
         self.assertEqual(len(projects()),2)
-        self.assertEqual(my_project.getprotocols(),['OSC', 'PJLINK'])
+        self.assertEqual(my_project.getprotocols(),['OSC', 'PJLINK','MIDI'])
         self.assertEqual(my_scenario.getoutput().getprotocol(),'OSC')
         self.assertEqual(my_scenario.getoutput().ip,'127.0.0.1')
         self.assertEqual(my_scenario.getoutput().udp,1234)
         self.assertEqual(my_scenario.getoutput().name,'no-name')
-        self.assertEqual(len(my_project.outputs()),3)
+        self.assertEqual(len(my_project.outputs()),4)
         self.assertEqual(len(my_project.outputs('PJLINK')),1)
         self.assertEqual(len(my_project.outputs('OSC')),2)
         # test functions file
@@ -40,6 +40,9 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(type(an_int),int)
         self.assertEqual(type(a_float),float)
         self.assertEqual(type(the_none),type(None))
+        self.assertEqual(project.Output.protocols(),['OSC'])
+        self.assertEqual(len(project.Output.getinstances(my_project)),4)
+        self.assertEqual(my_output.getproject().version,'0.1.0')
 
 
 if __name__ == '__main__':
@@ -67,6 +70,8 @@ if __name__ == '__main__':
 
     third_out = my_project.new_output('OSC')
     third_out.udp = 22222
+
+    forth_out = my_project.new_output('MIDI')
 
     # test functions file
     the_timestamp = timestamp()
