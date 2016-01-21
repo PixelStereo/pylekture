@@ -10,7 +10,6 @@ install:
   - sudo apt-get -y install liblo-tools
   - pip install simplejson
   - pip install pyliblo
-  - pip install pjlink
   - pip install coveralls
 script:
   - coverage run tests/tests.py
