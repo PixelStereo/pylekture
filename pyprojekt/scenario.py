@@ -69,10 +69,11 @@ class Scenario(object):
         for event in self.events():
             if type(event.content) is int or type(event.content) is float:
                 duration += event.content
-            if type(event.content) == list and 'ramp' in event.content[1]:
-                index = event.content[1].index('ramp')
-                ramp = event.content[1][index+1]
-                duration += ramp
+            if type(event.content) == list:
+                if type(event.content[1]) == list and 'ramp' in event.content[1]:
+                    index = event.content[1].index('ramp')
+                    ramp = event.content[1][index+1]
+                    duration += ramp
         return duration
 
 
