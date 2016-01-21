@@ -174,8 +174,9 @@ class Project(object):
             return Output.getinstances(self)
         else:
             for out in self.output_list:
-                if protocol == out.getprotocol():
-                    outs.append(out)
+                if out:
+                    if protocol == out.getprotocol():
+                        outs.append(out)
             return outs
 
     def getprotocols(self):
