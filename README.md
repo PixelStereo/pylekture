@@ -1,22 +1,18 @@
-# PyProjekt
+# pydular
 =====
+Python Modular framework for real-time inter-media applications
 
-Alpha version - Do not use it for production
-============================================
-
+**This is an alpha version - Do not use it for production, because API must changes a lot before release**
 
 A framework for creating applications managed through OSC
 ---------------------------------------------------------
 
-**PyProjekt** can be defined as a project manager for creating applications
+**pydular** can be defined as a framework for creating applications for real-time intermedia
 that can be easily accessed through OSC (Open Sound Control) messages.
 It offers a way to organise your application hierarchicaly and creating events and scenario.
 
 OK, I think I get the idea, but what is it good for?
 ----------------------------------------------------
-
-**PyProjekt**'s purpose in life is to make your life a little bit easier by
-allowing you organise an application.
 
 For the moment, **PyProjekt** is capable of:
 
