@@ -62,13 +62,9 @@ class Project(object):
         self.version = None
         self.path = None
         # reset outputs
-        for output in self.outputs():
-            self.output_list.remove(output)
+        self.output_list = []
         # reset scenarios and events
-        for scenario in self.scenarios():
-            for event in scenario.events():
-                scenario.event_list.remove(event)
-            self.scenario_list.remove(scenario)
+        self.scenario_list = []
 
     def read(self,path) : 
         """open a lekture project"""
