@@ -90,7 +90,8 @@ if __name__ == '__main__':
     import time
 
     st = liblo.ServerThread(1235)
-    print("Created Server Thread on Port", st.port)
+    if project.debug :
+        print("Created Server Thread on Port", st.port)
 
 
     # create a project
