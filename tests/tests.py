@@ -17,19 +17,14 @@ from pyprojekt.project import new_project, projects
 from pyprojekt.functions import timestamp, unicode2string_dict, unicode2string_list, checkType
 import datetime
 
+project.debug = 2
+
 class TestMethods(unittest.TestCase):
     def test_add(self):
-        self.assertEqual(my_project.author, "Renaud Rubiano")
-        self.assertEqual(my_project.version, "0.1.0")
-        self.assertEqual(len(projects()),2)
-        self.assertEqual(my_project.getprotocols(),['OSC', 'PJLINK','MIDI'])
         self.assertEqual(my_scenario.getoutput().getprotocol(),'OSC')
         self.assertEqual(my_scenario.getoutput().ip,'127.0.0.1')
         self.assertEqual(my_scenario.getoutput().udp,1234)
         self.assertEqual(my_scenario.getoutput().name,'no-name')
-        self.assertEqual(len(my_project.outputs()),4)
-        self.assertEqual(len(my_project.outputs('PJLINK')),1)
-        self.assertEqual(len(my_project.outputs('OSC')),2)
         # test functions file
         self.assertEqual(type(the_timestamp),datetime.datetime)
         self.assertEqual(type(the_raw_timestamp),datetime.datetime)
@@ -40,9 +35,41 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(type(an_int),int)
         self.assertEqual(type(a_float),float)
         self.assertEqual(type(the_none),type(None))
+        # test output file
+        self.assertEqual(my_output.vars_(),['ip', 'udp', 'name'])
+        self.assertEqual(my_output.getprotocol(),'OSC')
+        self.assertEqual(second_out.getprotocol(),'PJLINK')
+        self.assertEqual(third_out.getprotocol(),'OSC')
+        self.assertEqual(forth_out.getprotocol(),'MIDI')
         self.assertEqual(project.Output.protocols(),['OSC'])
         self.assertEqual(len(project.Output.getinstances(my_project)),4)
         self.assertEqual(my_output.getproject().version,'0.1.0')
+        # test project file
+        self.assertEqual(len(projects()),2)
+
+        self.assertEqual(my_project.author, "Renaud Rubiano")
+        self.assertEqual(my_project.version, "0.1.0")
+        self.assertEqual(my_project.getprotocols(),['OSC', 'PJLINK','MIDI'])
+
+        self.assertEqual(my_project.scenarios()[0].name,'the scenario test')
+        my_project.scenarios_set(0,1)
+        self.assertEqual(my_project.scenarios()[0].name,'the other scenario')
+
+        print my_project.scenarios()
+        my_project.del_scenario(my_scenario)
+        self.assertEqual(len(my_project.scenarios()),1)
+        
+        self.assertEqual(len(my_project.outputs()),4)
+        self.assertEqual(len(my_project.outputs('PJLINK')),1)
+        self.assertEqual(len(my_project.outputs('OSC')),2)
+        
+        my_project.path = 'my_file'
+        my_project.write()
+        my_project.read('my_file.json')
+
+        my_project.reset()
+        self.assertEqual(my_project.outputs(),[])
+        self.assertEqual(my_project.scenarios(),[])
 
 
 if __name__ == '__main__':
@@ -56,6 +83,9 @@ if __name__ == '__main__':
 
     # create a scenario
     my_scenario = my_project.new_scenario()
+    my_other_scenario = my_project.new_scenario()
+    my_scenario.name = 'the scenario test'
+    my_other_scenario.name = 'the other scenario'
 
     # create an output
     my_output = my_project.new_output('OSC')
