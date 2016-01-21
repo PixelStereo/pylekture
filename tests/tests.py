@@ -44,6 +44,11 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(test_unicode2,False)
         self.assertEqual(test_list,True)
         self.assertEqual(test_list2,False)
+        self.assertEqual(type(string_float),float)
+        self.assertEqual(type(string_int),int)
+        self.assertEqual(type(simple_float),float)
+        self.assertEqual(type(simple_int),int)
+        self.assertEqual(a_string_Bool,True)
         # test output file
         self.assertEqual(my_output.vars_(),['ip', 'udp', 'name'])
         self.assertEqual(my_output.getprotocol(),'OSC')
@@ -71,7 +76,9 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(len(my_project.outputs('OSC')),2)
         my_project.path = 'my_file'
         my_project.write()
-        my_project.read('my_file.json')
+        self.assertEqual(my_project.read('my_file.json'),True)
+        self.assertEqual(my_project.read('tests.py'),False)
+        self.assertEqual(my_project.read('bogus'),False)
         my_project.reset()
         self.assertEqual(my_project.outputs(),[])
         self.assertEqual(my_project.scenarios(),[])
@@ -122,6 +129,10 @@ if __name__ == '__main__':
 
     forth_out = my_project.new_output('MIDI')
 
+
+    my_scenario.wait = 0.1
+    my_scenario.post_wait = 0.05
+    
     # play the scenario
     my_scenario.play()
 
@@ -147,8 +158,17 @@ if __name__ == '__main__':
     a_float = u'122.2'
     a_list = [u'2.2', u'renaud', u'22']
     an_int = u'122'
+    string_int = '2'
+    string_float = '2.2'
+    simple_int = 2
+    simple_float = 2.2
+    simple_int = checkType(simple_int)
+    simple_float = checkType(simple_float)
+    string_int = checkType(string_int)
+    string_float = checkType(string_float)
     the_none = None
     a_string = checkType(a_string)
+    a_string_Bool = isString(a_string)
     a_float = checkType(a_float)
     a_list = checkType(a_list)
     an_int = checkType(an_int)
@@ -159,3 +179,5 @@ if __name__ == '__main__':
     test_list2 = isList(u'[1,2]')
 
     unittest.main()
+
+    del my_project

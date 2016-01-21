@@ -5,13 +5,12 @@ from time import sleep
 from functions import timestamp
 import liblo
 
-debug = True
-
 class Scenario(object):
     """Create a new scenario"""
     def __init__(self,project,name='',description = '',output=None,wait=0,post_wait=0):
         """create an scenario"""
-        if debug == 2:
+        self.project = project
+        if self.project.debug == 2:
             print ()
             print ("........... SCENARIO created ...........")
             print ()
@@ -39,6 +38,7 @@ class Scenario(object):
         """Instanciate a thread for Playing a scenario
         Allow to start twice or more each scenario in the same time"""
         def __init__(self, scenario, index):
+            self.project = scenario.project
             threading.Thread.__init__(self)
             self.scenario = scenario
             self.index = index
@@ -51,17 +51,17 @@ class Scenario(object):
             if not self.index:
                 index = 0
                 if self.scenario.wait:
-                    if debug : print ('-- WAIT BEFORE SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.wait , 'SECONDS')
+                    if self.project.debug : print ('-- WAIT BEFORE SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.wait , 'SECONDS')
                     sleep(self.scenario.wait)
             else:
                 index = self.index
-            if debug : print ('------ PLAY SCENARIO :' , self.scenario.name , 'FROM INDEX' , index , '-----')
+            if self.project.debug : print ('------ PLAY SCENARIO :' , self.scenario.name , 'FROM INDEX' , index , '-----')
             for event in self.scenario.events()[index:]:
                 event.play()
             if self.scenario.post_wait:
-                if debug : print ('-- WAIT AFTER SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.post_wait , 'SECONDS')
+                if self.project.debug : print ('-- WAIT AFTER SCENARIO :' , self.scenario.name , 'DURING' , self.scenario.post_wait , 'SECONDS')
                 sleep(self.scenario.post_wait)
-            if debug : print ('SCENARIO DONE' , self.scenario.name)
+            if self.project.debug : print ('SCENARIO DONE' , self.scenario.name)
             return True
 
     def getduration(self):
@@ -137,7 +137,8 @@ class Event(object):
     It could be a delay, a goto value, a random process,
     a loop process or everything you can imagine """
     def __init__(self, scenario,content=[],name='',description='',output=''):
-        if debug == 2:
+        self.project = scenario.project
+        if self.project.debug == 2:
             print ()
             print ("........... Event created ...........")
             print ()
@@ -162,7 +163,7 @@ class Event(object):
         if type(self.content) is int or type(self.content) is float:
             wait = float(self.content)
             wait = wait/1000
-            if debug : print ('waiting' , wait)
+            if self.project.debug : print ('waiting' , wait)
             sleep(wait)
         else:
             out = self.getoutput()
@@ -175,7 +176,7 @@ class Event(object):
                     port = out.udp
                     try:
                         target = liblo.Address(ip,int(port))
-                        if debug : 
+                        if self.project.debug : 
                             print ('connecting to : ' + ip + ':' + str(port))
                     except liblo.AddressError as err:
                         print(err)

@@ -71,6 +71,7 @@ class Project(object):
         path = os.path.abspath(path)
         if not os.path.exists(path):
             print ("ERROR - THIS PATH IS NOT VALID" , path)
+            return False
         else :
             print ('loading' , path)
             try:

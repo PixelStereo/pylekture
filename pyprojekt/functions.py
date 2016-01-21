@@ -51,9 +51,6 @@ def checkType(data):
     if isinstance(data,str):
         if data.isdigit():
             data = int(data)
-        elif isList(data):
-            print '-'
-            data = list(data)
         else:
             try:
                 data = float(data)
