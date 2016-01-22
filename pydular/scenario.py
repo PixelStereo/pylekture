@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import threading
 from time import sleep
-from functions import timestamp
+from pydular.functions import timestamp
 import liblo
 
 class Scenario(object):
@@ -14,8 +14,8 @@ class Scenario(object):
             print ()
             print ("........... SCENARIO created ...........")
             print ()
-        if output == '':
-            output = ['OSC' , 1]
+
+
         if description == '':
             description = "write a comment"
         if name == '':
@@ -77,9 +77,9 @@ class Scenario(object):
         return duration
 
 
-    def getinstances(self):
-        """return a list of all scenarios for this project""" 
-        return self.project.scenario_list
+
+
+
 
     def events(self):
         """return a list of events for this scenario"""
@@ -91,7 +91,7 @@ class Scenario(object):
         the_event = None
         self.event_list.append(the_event)
         self.event_list[taille] = Event(self)
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(self.event_list[taille], key, value)
         return self.event_list[taille]
 

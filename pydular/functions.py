@@ -14,16 +14,17 @@ def timestamp(format='raw'):
 def unicode2string_dict(data):
     """convert a unicode dict to a stringed dict"""
     rv = {}
-    for key, value in data.iteritems():
-        if isinstance(key, unicode):
-            key = key.encode('utf-8')
+    for key, value in data.items():
+        key = fromUnicode(key)
         rv[key] = fromUnicode(value)
     return rv
 
 def fromUnicode(item):
-    if isinstance(item, unicode):
+    try:
         item = item.encode('utf-8')
-    elif isinstance(item, list):
+    except:
+        pass
+    if isinstance(item, list):
         item = unicode2string_list(item)
     elif isinstance(item, dict):
         item = unicode2string_dict(item)
@@ -39,14 +40,13 @@ def unicode2string_list(data):
 
 def checkType(data):
     """Transform an unicode into its original type"""
-    if isinstance(data, unicode):
-        data = data.encode('utf-8')
+    data = fromUnicode(data)
     if isinstance(data,list):
         for item in data:
             index = data.index(item)
             item = checkType(item)
             data[index] = item
-    if isinstance(data,str):
+    try:
         if data.isdigit():
             data = int(data)
         else:
@@ -54,7 +54,9 @@ def checkType(data):
                 data = float(data)
             except:
                 pass
-    elif isFloat(data):
+    except:
+        pass
+    if isFloat(data):
         data = float(data)
     elif isInt(data):
         data = int(data)
@@ -63,17 +65,16 @@ def checkType(data):
 def isString(value):
     """Check if value is a string.
     Return True or False""" 
-    return isinstance(value,str)
+    try:
+        isinstance(value,unicode)
+        return isinstance(value,str)
+    except:
+        return isinstance(value,bytes)
 
 def isList(value):
     """Check if value is a list.
     Return True or False"""
     return isinstance(value,list)
-
-def isUnicode(value):
-    """Check if value is a unicode string.
-    Return True or False"""
-    return isinstance(value,unicode)
 
 def isFloat(value):
     """Check if value is a float.
@@ -84,5 +85,3 @@ def isInt(value):
     """Check if value is an int.
     Return True or False"""
     return isinstance(value,int)
-
-

@@ -6,7 +6,7 @@ import weakref
 
 debug = True
 
-from model import Model
+from pydular.model import Model
 
 class Application(Model):
 	instances = weakref.WeakKeyDictionary()

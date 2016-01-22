@@ -3,7 +3,7 @@
 # -*- coding: utf-8 -*-
 #
 
-from node import Node
+from pydular.node import Node
 import weakref
 
 debug = True
