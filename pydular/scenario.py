@@ -98,13 +98,15 @@ class Scenario(object):
     def del_event(self,index):
         """delete an event, by index or with object instance"""
         if type(index) == int:
+            index -= 1
             self.event_list.pop(index)
         else:
             self.event_list.remove(index)
 
     def play_from_here(self,index):
         """play scenario from a given index"""
-        index = self.event_list.index(index)
+        if type(index) != int:
+            index = self.event_list.index(index)
         self.play(index)
 
     def getoutput(self):

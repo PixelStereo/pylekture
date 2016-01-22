@@ -60,7 +60,7 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(my_output.getproject().version,'0.1.0')
         #test scenario file
         self.assertEqual(my_scenario.getduration(),700)
-        self.assertEqual(len(my_scenario.events()),3)
+        self.assertEqual(len(my_scenario.events()),2)
         # test project file
         self.assertEqual(len(projects()),2)
         self.assertEqual(my_project.author, "Renaud Rubiano")
@@ -77,6 +77,7 @@ class TestMethods(unittest.TestCase):
         my_project.path = 'my_file'
         my_project.write()
         self.assertEqual(my_project.read('my_file.json'),True)
+        sleep(0.5)
         self.assertEqual(my_project.read('tests.py'),False)
         self.assertEqual(my_project.read('bogus'),False)
         my_project.reset()
@@ -118,7 +119,7 @@ if __name__ == '__main__':
     # fill in scenario with events
     first_event = my_scenario.new_event(content=['/previous',[232,'ramp',500]])
     second_event = my_scenario.new_event(content=200)
-    third_event = my_scenario.new_event(content=['/zob',232])
+    third_event = my_scenario.new_event(content=['/zob',[232,'list']])
 
     # create another output with another protocol
     second_out = my_project.new_output('PJLINK')
@@ -135,14 +136,18 @@ if __name__ == '__main__':
     my_scenario.post_wait = 0.05
     
     # play the scenario
-    my_scenario.play(index=1)
-
+    my_scenario.play()
     sleep(1)
+    my_scenario.play_from_here(third_event)
+    sleep(0.5)
+    my_scenario.play_from_here(2)
 
     midi_event = my_other_scenario.new_event(content=['CC',[16,1,64]])
-    my_other_scenario.play()
+    my_other_scenario.play(index=1)
 
     sleep(0.01)
+
+    my_scenario.del_event(3)
 
     # test functions file
     the_timestamp = timestamp()
@@ -170,6 +175,7 @@ if __name__ == '__main__':
     the_none = None
     a_string = checkType(a_string)
     a_string_Bool = isString(a_string)
+    another_string_Bool = isString(string_int)
     a_float = checkType(a_float)
     a_list = checkType(a_list)
     an_int = checkType(an_int)
