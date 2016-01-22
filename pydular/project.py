@@ -147,11 +147,12 @@ class Project(object):
         if savepath:
             if not savepath.endswith('.json'):
                 savepath = savepath + '.json'
-            out_file = open(str(savepath), 'w')
+            out_file = open(str(savepath), 'wb')
             project = {}
             project.setdefault('scenario',self.export_scenario())
             project.setdefault('attributes',self.export_attributes())
             project.setdefault('outputs',self.export_outputs())
+
             out_file.write(json.dumps(project,sort_keys = True, indent = 4,ensure_ascii=False).encode('utf8'))
             if self.debug : print ("file has been written : " , savepath)
             return True
