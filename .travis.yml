@@ -6,7 +6,7 @@ python:
 install:
   - sudo apt-get update
   - sudo apt-get -qq install python-setuptools liblo-dev liblo-tools
-  - pip install requirements.txt
+  - pip install -r requirements.txt
 script:
   - coverage run tests/tests.py
   - coverage report
