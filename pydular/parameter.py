@@ -9,13 +9,13 @@
 # Pixel Stereo - 2015
 ################################
 
-from modular_functions import *
+from pydular.modular_functions import *
 import weakref
 
 debug = True
 
-from node import Node
-from model import Model
+from pydular.node import Node
+from pydular.model import Model
 
 
 class Parameter(Node):

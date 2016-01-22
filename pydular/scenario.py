@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import threading
 from time import sleep
-from functions import timestamp
+from pydular.functions import timestamp
 import liblo
 
 class Scenario(object):

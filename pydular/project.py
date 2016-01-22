@@ -3,11 +3,11 @@
 import os
 import weakref
 import simplejson as json
-from functions import timestamp
-from functions import unicode2string_dict
+from pydular.functions import timestamp
+from pydular.functions import unicode2string_dict
 
-from scenario import Scenario
-from output import Output
+from pydular.scenario import Scenario
+from pydular.output import Output
 
 debug = False
 
