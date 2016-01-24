@@ -8,6 +8,7 @@ install:
   - sudo apt-get update
   - sudo apt-get -qq install python-setuptools liblo-dev liblo-tools
   - pip install -r requirements.txt
+  - pip install travis-sphinx
 script:
   - coverage run tests/tests.py
   - coverage report -m
