@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# lekture documentation build configuration file, created by
+# pydular documentation build configuration file, created by
 # sphinx-quickstart on Tue Dec 22 10:31:37 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -53,7 +53,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'lekture'
+project = u'pydular'
 copyright = u'2015, Pixel Stereo'
 author = u'Pixel Stereo'
 
@@ -115,7 +115,8 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
+html_theme = "sphinx_rtd_theme"
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -207,7 +208,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'lekturedoc'
+htmlhelp_basename = 'pydulardoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -229,7 +230,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'lekture.tex', u'lekture Documentation',
+  (master_doc, 'pydular.tex', u'pydular Documentation',
    u'Pixel Stereo', 'manual'),
 ]
 
@@ -259,7 +260,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'lekture', u'lekture Documentation',
+    (master_doc, 'pydular', u'pydular Documentation',
      [author], 1)
 ]
 
@@ -273,8 +274,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'lekture', u'lekture Documentation',
-   author, 'lekture', 'One line description of project.',
+  (master_doc, 'pydular', u'pydular Documentation',
+   author, 'pydular', 'One line description of project.',
    'Miscellaneous'),
 ]
 
