@@ -23,7 +23,13 @@ def projects():
     return project_list
 
 class Project(object):
-    """docstring for Project"""
+    """
+    A project handles everything you need. Ouputs and scenarios are all project-relative
+
+    :param <author>: Name of the project author. Default is None
+    :param <version>: Name of the project author. Default is None
+    :param <lastopened>: Datetime of the last opened date of this project. Default is None
+    """
 
     # used  to make a list of projects 
     _instances = []
@@ -39,7 +45,8 @@ class Project(object):
         self.author = None
         self.version = None
         self.path = None
-        self.lastopened = timestamp('nice')
+        self.lastopened = None
+        self.created = timestamp('nice')
         self.output_list = []
         self.scenario_list = []
 
