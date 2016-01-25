@@ -25,7 +25,7 @@ Development is made on OSX with python 2.7.11
 Continious integration is made on linux for python 2 and 3, and on appveyor too.    
 
 ####Roadmap
-Roadmap is available [on this page]((../../wiki/roadmap)
+Roadmap is available [on this page](../../wiki/roadmap)
 
 ####Tests & Continious Integration
 [![Code Climate](https://codeclimate.com/github/PixelStereo/pydular/badges/gpa.svg)](https://codeclimate.com/github/PixelStereo/pydular)
