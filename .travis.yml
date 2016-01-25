@@ -9,6 +9,8 @@ install:
   - sudo apt-get -qq install python-setuptools liblo-dev liblo-tools
   - pip install https://github.com/PixelStereo/pydular/archive/master.zip
   - pip install -r requirements.txt
+  - pip install coverage
+  - pip install coveralls
   - pip install https://github.com/Syntaf/travis-sphinx/archive/master.zip
 script:
   - cd tests
@@ -17,9 +19,5 @@ script:
   - cd ../
   - travis-sphinx build
 after_success: 
-- coveralls
-  if (["$TRAVIS_TAG"] && [$TRAVIS_PYTHON_VERSION < 3.0]); then
-    - travis-sphinx deploy
-  else
-    echo "This will not deploy!"
-  fi
+  - coveralls
+  - travis-sphinx deploy
