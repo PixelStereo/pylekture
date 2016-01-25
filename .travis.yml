@@ -11,8 +11,10 @@ install:
   - pip install -r requirements.txt
   - pip install travis-sphinx
 script:
-  - coverage run tests/tests.py
+  - cd tests
+  - coverage run tests.py
   - coverage report -m
+  - cd ../
   - travis-sphinx build
 after_success: 
   - coveralls
