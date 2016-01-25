@@ -9,7 +9,6 @@ setup(
   version = '0.1.7',
   description = 'A projekt management library',
   author = 'Pixel Stereo',
-  install_requires=['PyOSC','pjlink','json'],
   url='https://github.com/PixelStereo/pydular', 
   download_url = 'https://github.com/PixelStereo/pydular/tarball/0.1.7', 
   classifiers = [
