@@ -17,5 +17,9 @@ script:
   - cd ../
   - travis-sphinx build
 after_success: 
-  - coveralls
-  - travis-sphinx deploy
+- coveralls
+  if (["$TRAVIS_TAG"] && [$TRAVIS_PYTHON_VERSION < 3.0]); then
+    - travis-sphinx deploy
+  else
+    echo "This will not deploy!"
+  fi
