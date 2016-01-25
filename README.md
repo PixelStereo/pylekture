@@ -22,9 +22,6 @@ For the moment, **pydular** is will be capable of:
 ---
 Development is made on OSX with python 2.7.11    
 Continious integration is made on linux for python 2 and 3, and on appveyor too.    
-
-####Tests & Continious Integration
----
 [![Code Climate](https://codeclimate.com/github/PixelStereo/pydular/badges/gpa.svg)](https://codeclimate.com/github/PixelStereo/pydular)
 [![Coverage Status](https://coveralls.io/repos/github/PixelStereo/pydular/badge.svg?branch=master)](https://coveralls.io/github/PixelStereo/pydular?branch=master)
 [![Issue Count](https://codeclimate.com/github/PixelStereo/pydular/badges/issue_count.svg)](https://codeclimate.com/github/PixelStereo/pydular)
