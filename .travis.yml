@@ -7,6 +7,7 @@ python:
 install:
   - sudo apt-get update
   - sudo apt-get -qq install python-setuptools liblo-dev liblo-tools
+  - pip install https://github.com/PixelStereo/pydular/archive/master.zip
   - pip install -r requirements.txt
   - pip install travis-sphinx
 script:
