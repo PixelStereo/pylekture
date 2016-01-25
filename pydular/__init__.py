@@ -18,27 +18,27 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
-- v0.1.7  -  Feb. 2016
+- v0.1.7  -  Jan. 25th 2016
     - new name. Now known as pydular, for python modular implementation
     - enhance tests
 
-- v0.1.4  -  6 Jan. 2016
+- v0.1.4  -  Jan. 6th 2016
     - Split Modular file into Node, Application, Model and Parameter different files
     - Split Projekt file into Project, Output and Scenario different files
     - Rename projekt into project
 
-- v0.1.3  - 3 Jan. 2016
+- v0.1.3  - Jan. 3th 2016
 	- Revamp projects() and scenarios() method
 	- Remove a few horribles global variables that existed
 	- same attributes are now private and must be change only with dedicated methods such as output.getprotocol() 
 
-- v0.1.2  - 31 Dec. 2015
+- v0.1.2  - Dec. 31th 2015
     - New design for Outputs
     - various fixes
     
-- v0.1.1  - 27 Dec. 2015
+- v0.1.1  - Dec. 27th 2015
     - ADD new Class Design. Project / Scenario / Event
     - FIX output 
     
-- v0.1  - 25 Dec. 2015
+- v0.1  - Dec. 25th 2015
     - First draft"""
