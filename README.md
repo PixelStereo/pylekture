@@ -30,7 +30,8 @@ Continious integration is made on linux for python 2 and 3.
 
 ####Documentation
 ---
-Documentation is available online [on this page](http://pixelstereo.github.io/pydular) thanks to @Syntaf for [his nice script](https://github.com/Syntaf/travis-sphinx)
+Documentation is available online [on this page](http://pixelstereo.github.io/pydular)    
+(thanks to @Syntaf for [his nice script](https://github.com/Syntaf/travis-sphinx))
 
 If you need/want to build the documentation from the repo, here are the steps : 
 
