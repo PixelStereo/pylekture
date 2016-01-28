@@ -20,17 +20,13 @@ script:
   - travis-sphinx build
 after_success: 
   - coveralls
+  - travis-sphinx deploy
 deploy:
   - provider: script
     script: scripts/tag.sh
     skip_cleanup: true
     on:
       tags: true
-  - provider: script
-    script: travis-sphinx deploy
-    skip_cleanup: true
-    on:
-      condition: $TRAVIS_PYTHON_VERSION < 3
   - provider: pypi
     user: $PYPIUSER
     password: $PYPIPASSWORD
