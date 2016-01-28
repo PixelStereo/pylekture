@@ -18,6 +18,9 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
+- v0.1.8  -  
+    - nice and robust utf-8 encoding everywhere. That means using unicode for any string.
+
 - v0.1.7  -  Jan. 25th 2016
     - new name. Now known as pydular, for python modular implementation
     - enhance tests

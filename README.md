@@ -18,6 +18,10 @@ For the moment, **pydular** is will be capable of:
 -  Create dynamic scenario and events
 -  Save projects to json files
 
+####QuickStart
+---
+The tests.py contains a nice exemple to understand what you can do with pydular package.
+
 ####Development
 ---
 Development is made on OSX with python 2.7.11    
@@ -31,7 +35,6 @@ Continious integration is made on linux for python 2 and 3.
 ####Documentation
 ---
 Documentation is available online [on this page](http://pixelstereo.github.io/pydular)    
-(thanks to @Syntaf for [his nice script](https://github.com/Syntaf/travis-sphinx))
 
 If you need/want to build the documentation from the repo, here are the steps : 
 

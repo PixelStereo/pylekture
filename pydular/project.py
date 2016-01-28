@@ -4,7 +4,6 @@ import os
 import weakref
 import simplejson as json
 from pydular.functions import timestamp
-from pydular.functions import unicode2string_dict
 
 from pydular.scenario import Scenario
 from pydular.output import Output
@@ -86,7 +85,7 @@ class Project(object):
                     # clear the project
                     self.reset()
                     if self.debug : print ('file reading : ' , path)
-                    loaded = json.load(in_file,object_hook=unicode2string_dict)
+                    loaded = json.load(in_file)
                     in_file.close()
                     for key,val in loaded.items():
                         if key == 'scenario' :
@@ -154,7 +153,7 @@ class Project(object):
         if savepath:
             if not savepath.endswith('.json'):
                 savepath = savepath + '.json'
-            out_file = open(str(savepath), 'wb')
+            out_file = open(unicode(savepath), 'wb')
             project = {}
             project.setdefault('scenario',self.export_scenario())
             project.setdefault('attributes',self.export_attributes())
