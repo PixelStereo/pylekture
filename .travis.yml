@@ -19,7 +19,14 @@ script:
 after_success: 
 - coveralls
   if (["$TRAVIS_TAG"] && [$TRAVIS_PYTHON_VERSION < 3.0]); then
+    - echo "This will deploy!"
     - travis-sphinx deploy
   else
-    echo "This will not deploy!"
+    - echo "This will not deploy!"
   fi
+deploy:
+  provider: pypi
+  user: $PYPIUSER
+  password: $PYPIPASSWORD
+  on:
+    tags: true
