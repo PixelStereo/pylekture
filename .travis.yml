@@ -29,7 +29,8 @@ deploy:
   - provider: script
     script: travis-sphinx deploy
     skip_cleanup: true
-    on: $TRAVIS_PYTHON_VERSION < 3
+    on:
+      condition: $TRAVIS_PYTHON_VERSION < 3
   - provider: pypi
     user: $PYPIUSER
     password: $PYPIPASSWORD
