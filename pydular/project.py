@@ -153,7 +153,7 @@ class Project(object):
         if savepath:
             if not savepath.endswith('.json'):
                 savepath = savepath + '.json'
-            out_file = open(unicode(savepath), 'wb')
+            out_file = open(str(savepath), 'wb')
             project = {}
             project.setdefault('scenario',self.export_scenario())
             project.setdefault('attributes',self.export_attributes())
