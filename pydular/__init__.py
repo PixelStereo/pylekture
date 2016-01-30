@@ -18,7 +18,7 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
-- v0.1.8  -  
+- v0.1.8  -
     - nice and robust utf-8 encoding everywhere. That means using unicode for any string.
 
 - v0.1.7  -  Jan. 25th 2016
@@ -33,15 +33,15 @@ Changelog:
 - v0.1.3  - Jan. 3th 2016
 	- Revamp projects() and scenarios() method
 	- Remove a few horribles global variables that existed
-	- same attributes are now private and must be change only with dedicated methods such as output.getprotocol() 
+	- same attributes are now private and must be change only with dedicated methods such as output.getprotocol()
 
 - v0.1.2  - Dec. 31th 2015
     - New design for Outputs
     - various fixes
-    
+
 - v0.1.1  - Dec. 27th 2015
     - ADD new Class Design. Project / Scenario / Event
-    - FIX output 
-    
+    - FIX output
+
 - v0.1  - Dec. 25th 2015
     - First draft"""
