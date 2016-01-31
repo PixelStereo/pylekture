@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+
+"""implements a Scenario Class that contains events"""
+
 import threading
 from time import sleep
 from pydular.functions import timestamp
@@ -7,31 +10,29 @@ import liblo
 
 class Scenario(object):
     """Create a new scenario"""
-    def __init__(self,project,name='',description = '',output=None,wait=0,post_wait=0):
+    def __init__(self, project, name='', description='', output=None, wait=0, post_wait=0):
         """create an scenario"""
         self.project = project
         if self.project.debug == 2:
-            print ()
-            print ("........... SCENARIO created ...........")
-            print ()
-
-
+            print()
+            print("........... SCENARIO created ...........")
+            print()
         if description == '':
             description = "write a comment"
         if name == '':
             name = timestamp(format='nice')
-        self.name=name
+        self.name = name
         self._project = project
-        self.output=output
-        self.description=description
-        self.wait=0
-        self.post_wait=0
+        self.output = output
+        self.description = description
+        self.wait = wait
+        self.post_wait = post_wait
         self.event_list = []
         self.index = 0
 
-    def play(self,index=0):
+    def play(self, index=0):
         """shortcut to run thread"""
-        self.Play(self,index)
+        self.Play(self, index)
 
 
     class Play(threading.Thread):
@@ -45,32 +46,40 @@ class Scenario(object):
             self.start()
 
         def run(self):
-            """play a scenario from the beginning"""
-            """play an scenario
+            """play a scenario from the beginning
+            play an scenario
             Started from the first event if an index has not been provided"""
             if not self.index:
                 index = 0
                 if self.scenario.wait:
-                    if self.project.debug : print ('WAIT' , self.scenario.name , 'DURING' , self.scenario.wait , 'SECONDS')
+                    if self.project.debug:
+                        print('WAIT', self.scenario.name, \
+                              'DURING', self.scenario.wait, 'SECONDS')
                     sleep(self.scenario.wait)
             else:
                 index = self.index
-            if self.project.debug : print ('PLAY' , self.scenario.name , 'FROM INDEX' , index)
+            if self.project.debug:
+                print('PLAY', self.scenario.name, 'FROM INDEX', index)
             for event in self.scenario.events()[index:]:
                 event.play()
             if self.scenario.post_wait:
-                if self.project.debug : print ('POST_WAIT' , self.scenario.name , 'DURING' , self.scenario.post_wait , 'SECONDS')
+                if self.project.debug:
+                    print('POST_WAIT', self.scenario.name, \
+                          'DURING', self.scenario.post_wait, 'SECONDS')
                 sleep(self.scenario.post_wait)
-            if self.project.debug : print ('SCENARIO DONE' , self.scenario.name)
+            if self.project.debug:
+                print('SCENARIO DONE', self.scenario.name)
             return True
 
     def getduration(self):
+        """return the duration of the scenario
+        Addition the ramp flags with the wait events"""
         duration = 0
         for event in self.events():
-            if type(event.content) is int or type(event.content) is float:
+            if isinstance(event.content, int) or isinstance(event.content, float):
                 duration += event.content
-            if type(event.content) == list:
-                if type(event.content[1]) == list and 'ramp' in event.content[1]:
+            if isinstance(event.content, list):
+                if isinstance(event.content[1], list) and 'ramp' in event.content[1]:
                     index = event.content[1].index('ramp')
                     ramp = event.content[1][index+1]
                     duration += ramp
@@ -85,27 +94,27 @@ class Scenario(object):
         """return a list of events for this scenario"""
         return Event.getinstances(self)
 
-    def new_event(self,*args,**kwargs):
+    def new_event(self, *args, **kwargs):
         """create a new event for this scenario"""
         taille = len(self.event_list)
         the_event = None
         self.event_list.append(the_event)
-        self.event_list[taille] = Event(self)
+        self.event_list[taille] = Event(self, args)
         for key, value in kwargs.items():
             setattr(self.event_list[taille], key, value)
         return self.event_list[taille]
 
-    def del_event(self,index):
+    def del_event(self, index):
         """delete an event, by index or with object instance"""
-        if type(index) == int:
+        if isinstance(index, int):
             index -= 1
             self.event_list.pop(index)
         else:
             self.event_list.remove(index)
 
-    def play_from_here(self,index):
+    def play_from_here(self, index):
         """play scenario from a given index"""
-        if type(index) != int:
+        if not isinstance(index, int):
             index = self.event_list.index(index)
         self.play(index)
 
@@ -130,7 +139,11 @@ class Scenario(object):
         """export events of the project"""
         events = []
         for event in self.events():
-            events.append({'attributes':{'output':event.output,'name':event.name,'description':event.description,'content':event.content}})
+            events.append({'attributes':{'output':event.output,\
+                                         'name':event.name,\
+                                         'description':event.description,\
+                                         'content':event.content\
+                                         }})
         return events
 
 class Event(object):
@@ -138,34 +151,37 @@ class Event(object):
     an Event is like a step of a Scenario.
     It could be a delay, a goto value, a random process,
     a loop process or everything you can imagine """
-    def __init__(self, scenario,content=[],name='',description='',output=''):
+    def __init__(self, scenario, content=None, name='', description='', output=None):
         self.project = scenario.project
         if self.project.debug == 2:
-            print ()
-            print ("........... Event created ...........")
-            print ()
+            print()
+            print("........... Event created ...........")
+            print()
         if description == '':
             description = "event's description"
         if name == '':
             name = 'untitled event'
-        if content == []:
-            content = ['no content for this event']
-        self.name=name
+        if not content:
+            content = "no content for this event"
+        self.name = name
         self.scenario = scenario
-        self.description=description
+        self.description = description
         self.content = content
-        self.output = 'parent'
-        
+        if not output:
+            self.output = 'parent'
+
     @staticmethod
     def getinstances(scenario):
         """return a list of events for a given scenario"""
         return scenario.event_list
 
     def play(self):
-        if type(self.content) is int or type(self.content) is float:
+        """play an event"""
+        if isinstance(self.content, int) or isinstance(self.content, float):
             wait = float(self.content)
             wait = wait/1000
-            if self.project.debug : print ('waiting' , wait)
+            if self.project.debug:
+                print('waiting', wait)
             sleep(wait)
         else:
             out = self.getoutput()
@@ -177,12 +193,12 @@ class Event(object):
                     ip = out.ip
                     port = out.udp
                     try:
-                        target = liblo.Address(ip,int(port))
-                        if self.project.debug : 
-                            print ('connecting to : ' + ip + ':' + str(port))
+                        target = liblo.Address(ip, int(port))
+                        if self.project.debug:
+                            print('connecting to : ' + ip + ':' + str(port))
                     except liblo.AddressError as err:
                         print(err)
-                    if type(args) == list and 'ramp' in args:
+                    if isinstance(args, list) and 'ramp' in args:
                         index = args.index('ramp')
                         ramp = args[index+1]
                         dest = args[index-1]
@@ -195,20 +211,20 @@ class Event(object):
                             value += step
                             sleep(0.0008)
                             msg.add(value)
-                            liblo.send(target,msg)
-                    elif type(args) == list:
+                            liblo.send(target, msg)
+                    elif isinstance(args, list):
                         msg = liblo.Message(address)
                         for arg in args:
                             msg.add(arg)
-                        liblo.send(target,msg)
+                        liblo.send(target, msg)
                     else:
                         msg = liblo.Message(address)
                         msg.add(args)
-                        liblo.send(target,msg)
+                        liblo.send(target, msg)
                 else:
-                    print ('protocol' , out.getprotocol() , 'is not yet implemented')
+                    print('protocol', out.getprotocol(), 'is not yet implemented')
             else:
-                print ('there is no output for this event / scenario')
+                print('there is no output for this event / scenario')
 
     def getoutput(self):
         """rerurn the current output for this event.

@@ -33,7 +33,7 @@ Changelog:
 - v0.1.3  - Jan. 3th 2016
 	- Revamp projects() and scenarios() method
 	- Remove a few horribles global variables that existed
-	- same attributes are now private and must be change only with dedicated methods such as output.getprotocol()
+	- same attributes are now private and use methods for access. e.g. such as output.getprotocol()
 
 - v0.1.2  - Dec. 31th 2015
     - New design for Outputs

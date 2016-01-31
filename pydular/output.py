@@ -1,13 +1,15 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""implements output for scenario-events"""
+
 class Output(object):
     """Create a new output"""
-    def __init__(self,project,protocol='OSC',name='no-name'):
+    def __init__(self, project, protocol='OSC', name='no-name'):
         if project.debug == 2:
-            print ()
-            print ("........... OUTPUT created ...........")
-            print ()
+            print()
+            print("........... OUTPUT created ...........")
+            print()
         self._protocol = protocol
         self._project = project
         self.name = name
@@ -32,16 +34,20 @@ class Output(object):
 
     @staticmethod
     def protocols():
+        """return a list of protocols available"""
         #return ['OSC','MIDI','PJLINK']
         return ['OSC']
 
     def getprotocol(self):
+        """get the protocol for this output"""
         return self._protocol
 
     def getproject(self):
+        """return the project of this output"""
         return self._project
 
     def vars_(self):
+        """return a list of attributes for this output"""
         # make a copy
         attrs = list(vars(self).keys())
         for attr in attrs:
@@ -52,19 +58,22 @@ class Output(object):
 
 class OSC(Output):
     """Create an OSC output"""
-    def __init__(self,ip='127.0.0.1',udp =1234):
+    def __init__(self, ip='127.0.0.1', udp=1234):
+        super(OSC, self).__init__()
         self.udp = udp
-        self.ip=ip
+        self.ip = ip
 
 class PJLINK(Output):
     """Create a PJLINK output"""
-    def __init__(self,ip='10.0.0.10',udp =4352):
+    def __init__(self, ip='10.0.0.10', udp=4352):
+        super(PJLINK, self).__init__()
         self.udp = udp
-        self.ip=ip
+        self.ip = ip
 
 class MIDI(Output):
     """Create a MIDI output"""
-    def __init__(self,port=0,channel=0,midi_type='CC'):
+    def __init__(self, port=0, channel=0, midi_type='CC'):
+        super(MIDI, self).__init__()
         self.port = port
-        self.channel=channel
+        self.channel = channel
         self.type = midi_type

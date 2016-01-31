@@ -182,7 +182,8 @@ class Project(object):
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\
                                       ensure_ascii=False).encode('utf8'))
 
-            if self.debug: print("file has been written : ", savepath)
+            if self.debug:
+                print("file has been written : ", savepath)
             return True
         else:
             return False
