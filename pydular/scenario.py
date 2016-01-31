@@ -20,7 +20,7 @@ class Scenario(object):
         if description == '':
             description = "write a comment"
         if name == '':
-            name = timestamp(format='nice')
+            name = timestamp(display='nice')
         self.name = name
         self._project = project
         self.output = output

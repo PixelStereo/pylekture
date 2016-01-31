@@ -48,7 +48,7 @@ class Project(object):
         self.version = None
         self.path = None
         self.lastopened = None
-        self.created = timestamp('nice')
+        self.created = timestamp(display='nice')
         self.output_list = []
         self.scenario_list = []
 
@@ -129,7 +129,7 @@ class Project(object):
                                     self.author = value
                                 if attribute == 'version':
                                     self.version = value
-                            self.lastopened = timestamp('nice')
+                            self.lastopened = timestamp(display='nice')
                         elif key == 'outputs':
                             for protocol in loaded['outputs']:
                                 if protocol == 'OSC' or protocol == 'PJLINK':
