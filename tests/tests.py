@@ -30,24 +30,21 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(type(the_timestamp),datetime.datetime)
         self.assertEqual(type(the_raw_timestamp),datetime.datetime)
         self.assertEqual(type(the_nice_timestamp),str)
-        self.assertEqual(type(list(string_dict)[0]),bytes)
-        self.assertEqual(type(string_list[0]),bytes)
-        self.assertEqual(type(a_string),bytes)
+        self.assertEqual(type(list(string_dict)[0]),unicode)
+        self.assertEqual(type(string_list[0]),unicode)
+        self.assertEqual(type(a_string),unicode)
         self.assertEqual(type(an_int),int)
         self.assertEqual(type(a_list),list)
-        self.assertEqual(type(a_list[0]),float)
-        self.assertEqual(type(a_list[0]),float)
-        self.assertEqual(type(a_list[1]),bytes)
-        self.assertEqual(type(a_list[2]),int)
+        self.assertEqual(type(a_list[0]),unicode)
+        self.assertEqual(type(a_list[0]),unicode)
+        self.assertEqual(type(a_list[1]),unicode)
+        self.assertEqual(type(a_list[2]),unicode)
         self.assertEqual(type(a_float),float)
         self.assertEqual(type(the_none),type(None))
-        self.assertEqual(test_list,True)
-        self.assertEqual(test_list2,False)
         self.assertEqual(type(string_float),float)
         self.assertEqual(type(string_int),int)
         self.assertEqual(type(simple_float),float)
         self.assertEqual(type(simple_int),int)
-        self.assertEqual(a_string_Bool,True)
         # test output file
         # failed in poython3
         #self.assertEqual(my_output.vars_(),['ip', 'udp', 'name'])
@@ -151,7 +148,7 @@ if __name__ == '__main__':
 
     # test functions file
     the_timestamp = timestamp()
-    the_raw_timestamp = timestamp(format='raw')
+    the_raw_timestamp = timestamp(display='raw')
     the_nice_timestamp = timestamp('nice')
 
     unicode_dict = { u'spam': u'eggs', u'foo': True, u'bar': { u'baz': 97 } }
@@ -173,15 +170,10 @@ if __name__ == '__main__':
     string_int = checkType(string_int)
     string_float = checkType(string_float)
     the_none = None
-    a_string = checkType(a_string)
-    a_string_Bool = isString(a_string)
-    another_string_Bool = isString(string_int)
     a_float = checkType(a_float)
     a_list = checkType(a_list)
     an_int = checkType(an_int)
     the_none = checkType(the_none)
-    test_list = isList([1,2])
-    test_list2 = isList(u'[1,2]')
 
     unittest.main()
 
