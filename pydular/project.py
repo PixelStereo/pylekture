@@ -131,15 +131,28 @@ class Project(object):
                             self.lastopened = timestamp('nice')
                         elif key == 'outputs':
                             for protocol in loaded['outputs']:
-                                for out in loaded['outputs'][protocol]:
-                                    for attribute, value in out['attributes'].items():
-                                        if attribute == 'name':
-                                            name = value
-                                        if attribute == 'ip':
-                                            address_ip = value
-                                        if attribute == 'udp':
-                                            udp = value
+                                if protocol == 'OSC' or protocol == 'PJLINK':
+                                    for out in loaded['outputs'][protocol]:
+                                        for attribute, value in out['attributes'].items():
+                                            if attribute == 'name':
+                                                name = value
+                                            if attribute == 'ip':
+                                                address_ip = value
+                                            if attribute == 'udp':
+                                                udp = value
                                     self.new_output(protocol, name=name, ip=address_ip, udp=udp)
+                                elif protocol == 'MIDI':
+                                    for out in loaded['outputs'][protocol]:
+                                        for attribute, value in out['attributes'].items():
+                                            if attribute == 'name':
+                                                name = value
+                                            if attribute == 'channel':
+                                                channel = value
+                                            if attribute == 'port':
+                                                port = value
+                                            if attribute == 'type':
+                                                midi_type = value
+                                    self.new_output(protocol, name=name, type=midi_type, port=port, channel=channel)
                     if self.debug:
                         print('project loaded')
                     self.path = path
