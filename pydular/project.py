@@ -54,6 +54,7 @@ class Project(object):
 
     @classmethod
     def getinstances(cls):
+        """retuurn a list with all project instances"""
         dead = set()
         for ref in cls._instances:
             obj = ref()
@@ -61,8 +62,8 @@ class Project(object):
                 yield obj
             else:
                 dead.add(ref)
-        for d in dead:
-            cls._instances.remove(dead)
+        for de in dead:
+            cls._instances.remove(de)
 
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
@@ -91,7 +92,7 @@ class Project(object):
                         print('file reading : ', path)
                     loaded = json.load(in_file)
                     in_file.close()
-                    for key, val in loaded.items():
+                    for key in loaded.keys():
                         if key == 'scenario':
                             for scenar_list in loaded['scenario']:
                                 for attribute, value in scenar_list['attributes'].items():
@@ -209,6 +210,7 @@ class Project(object):
             return outs
 
     def getprotocols(self):
+        """return the protocols available for this project"""
         protocols = []
         for out in self.outputs():
             proto = out.getprotocol()
@@ -221,7 +223,7 @@ class Project(object):
 
     def new_scenario(self, *args, **kwargs):
         """create a new scenario"""
-        scenario = Scenario(self)
+        scenario = Scenario(self, args, kwargs)
         self.scenario_list.append(scenario)
         return scenario
 
