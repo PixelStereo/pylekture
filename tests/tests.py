@@ -27,9 +27,6 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(my_scenario.getoutput().udp,1234)
         self.assertEqual(my_scenario.getoutput().name,'no-name')
         # test functions file
-        self.assertEqual(type(the_timestamp),datetime.datetime)
-        self.assertEqual(type(the_raw_timestamp),datetime.datetime)
-        self.assertEqual(type(the_nice_timestamp),str)
         self.assertEqual(type(list(string_dict)[0]),unicode)
         self.assertEqual(type(string_list[0]),unicode)
         self.assertEqual(type(a_string),unicode)
@@ -148,8 +145,6 @@ if __name__ == '__main__':
 
     # test functions file
     the_timestamp = timestamp()
-    the_raw_timestamp = timestamp(display='raw')
-    the_nice_timestamp = timestamp('nice')
 
     unicode_dict = { u'spam': u'eggs', u'foo': True, u'bar': { u'baz': 97 } }
     string_dict = unicode2string_dict(unicode_dict)
