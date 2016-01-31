@@ -8,10 +8,7 @@ import datetime
 def timestamp(display='raw'):
     """Return a time stamp. Used to tag lastopened or to create unique ID"""
     timestamp = datetime.datetime.now()
-    if display != 'nice':
-        return timestamp
-    else:
-        return str(timestamp)
+    return str(timestamp)
 
 def unicode2string_dict(data):
     """convert a unicode dict to a stringed dict"""
