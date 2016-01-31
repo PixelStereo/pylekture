@@ -15,7 +15,7 @@ sys.path.append(lib_path)
 
 from pydular import project
 from pydular.project import new_project, projects
-from pydular.functions import timestamp, unicode2string_dict, unicode2string_list, checkType, isString, isList
+from pydular.functions import timestamp, unicode2string_dict, unicode2string_list, checkType, isString
 import datetime
 
 project.debug = 2

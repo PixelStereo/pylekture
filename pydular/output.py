@@ -59,21 +59,18 @@ class Output(object):
 class OSC(Output):
     """Create an OSC output"""
     def __init__(self, ip='127.0.0.1', udp=1234):
-        super(OSC, self).__init__()
         self.udp = udp
         self.ip = ip
 
 class PJLINK(Output):
     """Create a PJLINK output"""
     def __init__(self, ip='10.0.0.10', udp=4352):
-        super(PJLINK, self).__init__()
         self.udp = udp
         self.ip = ip
 
 class MIDI(Output):
     """Create a MIDI output"""
     def __init__(self, port=0, channel=0, midi_type='CC'):
-        super(MIDI, self).__init__()
         self.port = port
         self.channel = channel
         self.type = midi_type
