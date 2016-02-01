@@ -79,9 +79,9 @@ class Scenario(object):
             if isinstance(event.content, int) or isinstance(event.content, float):
                 duration += event.content
             if isinstance(event.content, list):
-                if isinstance(event.content[1], list) and 'ramp' in event.content[1]:
-                    index = event.content[1].index('ramp')
-                    ramp = event.content[1][index+1]
+                if 'ramp' in event.content:
+                    index = event.content.index('ramp')
+                    ramp = event.content[index+1]
                     duration += ramp
         return duration
 
@@ -187,9 +187,14 @@ class Event(object):
             out = self.getoutput()
             if out:
                 if out.getprotocol() == 'OSC':
-                    # found a space to separate address from args
-                    address = self.content.split()[0]
-                    args = self.content.split()[1:]
+                    args = self.content
+                    if isinstance(self.content, list):
+                        address = args[0]
+                        args = args[1:]
+                    else:
+                        # found a space to separate address from args
+                        address = args.split()[0]
+                        args = args.split()[1:]
                     ip = out.ip
                     port = out.udp
                     try:
@@ -216,6 +221,7 @@ class Event(object):
                         msg = liblo.Message(address)
                         for arg in args:
                             arg = checkType(arg)
+                            print '----' , arg , type(arg)
                             msg.add(arg)
                         liblo.send(target, msg)
                     else:

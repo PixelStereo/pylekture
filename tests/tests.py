@@ -111,9 +111,9 @@ if __name__ == '__main__':
     my_other_scenario.output = ['MIDI' , 1]
 
     # fill in scenario with events
-    first_event = my_scenario.new_event(content=['/previous',[232,'ramp',500]])
+    first_event = my_scenario.new_event(content=['/previous', 232,'ramp',500])
     second_event = my_scenario.new_event(content=200)
-    third_event = my_scenario.new_event(content=['/zob',[232,'list']])
+    third_event = my_scenario.new_event(content=['/zob', 232,'list'])
 
     # create another output with another protocol
     second_out = my_project.new_output('PJLINK')
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     sleep(0.5)
     my_scenario.play_from_here(2)
 
-    midi_event = my_other_scenario.new_event(content=['CC',[16,1,64]])
+    midi_event = my_other_scenario.new_event(content=['CC', 16,1,64])
     my_other_scenario.play(index=1)
 
     sleep(0.01)
