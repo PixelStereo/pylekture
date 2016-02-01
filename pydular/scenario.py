@@ -221,7 +221,6 @@ class Event(object):
                         msg = liblo.Message(address)
                         for arg in args:
                             arg = checkType(arg)
-                            print '----' , arg , type(arg)
                             msg.add(arg)
                         liblo.send(target, msg)
                     else:
