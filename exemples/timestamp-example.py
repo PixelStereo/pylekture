@@ -7,18 +7,22 @@ lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
 import pydular
-from pydular.application import Application
-from pydular.functions import timestamp
+from pydular.project import new_project
 
-print (timestamp())
-print (type(timestamp()))
-print (timestamp().year)
-print (timestamp().month)
-print (timestamp().day)
-print (timestamp().hour)
-print (timestamp().minute)
-print (timestamp().second)
-print (timestamp().microsecond)
+import datetime
 
-print ('---------------------')
-print (timestamp('nice'))
+def timestamp():
+	return datetime.datetime.now()
+
+print(type(timestamp()))
+print(timestamp().year)
+print(timestamp().month)
+print(timestamp().day)
+print(timestamp().hour)
+print(timestamp().minute)
+print(timestamp().second)
+print(timestamp().microsecond)
+
+project = new_project()
+scenario = project.new_scenario()
+print scenario.name
