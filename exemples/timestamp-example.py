@@ -25,4 +25,4 @@ print(timestamp().microsecond)
 
 project = new_project()
 scenario = project.new_scenario()
-print scenario.name
+print(scenario.name)
