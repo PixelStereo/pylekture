@@ -26,10 +26,6 @@ def unicode2string_list(data):
 
 def checkType(data):
     """Transform an unicode into its original type"""
-    if isinstance(data, list):
-        for item in data:
-            index = data.index(item)
-            data[index] = item
     try:
         if data.isdigit():
             data = int(data)
