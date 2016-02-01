@@ -222,9 +222,9 @@ class Project(object):
         else:
             return protocols
 
-    def new_scenario(self, *args, **kwargs):
+    def new_scenario(self):
         """create a new scenario"""
-        scenario = Scenario(self, args, kwargs)
+        scenario = Scenario(self)
         self.scenario_list.append(scenario)
         return scenario
 

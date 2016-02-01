@@ -5,12 +5,12 @@
 
 import threading
 from time import sleep
-from pydular.functions import timestamp
+from pydular.functions import timestamp, checkType
 import liblo
 
 class Scenario(object):
     """Create a new scenario"""
-    def __init__(self, project, name='', description='', output=None, wait=0, post_wait=0):
+    def __init__(self, project, name=None, description='', output=None, wait=0, post_wait=0):
         """create an scenario"""
         self.project = project
         if self.project.debug == 2:
@@ -19,7 +19,7 @@ class Scenario(object):
             print()
         if description == '':
             description = "write a comment"
-        if name == '':
+        if not name:
             name = timestamp()
         self.name = name
         self._project = project
@@ -187,15 +187,15 @@ class Event(object):
             out = self.getoutput()
             if out:
                 if out.getprotocol() == 'OSC':
-                    address = self.content[0]
-                    args = self.content[1:]
-                    args = args[0]
+                    # found a space to separate address from args
+                    address = self.content.split()[0]
+                    args = self.content.split()[1:]
                     ip = out.ip
                     port = out.udp
                     try:
                         target = liblo.Address(ip, int(port))
                         if self.project.debug:
-                            print('connecting to : ' + ip + ':' + str(port))
+                            print('connect to : ' + ip + ':' + str(port))
                     except liblo.AddressError as err:
                         print(err)
                     if isinstance(args, list) and 'ramp' in args:
@@ -215,6 +215,7 @@ class Event(object):
                     elif isinstance(args, list):
                         msg = liblo.Message(address)
                         for arg in args:
+                            arg = checkType(arg)
                             msg.add(arg)
                         liblo.send(target, msg)
                     else:
