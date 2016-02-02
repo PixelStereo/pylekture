@@ -10,20 +10,6 @@ def timestamp(display='raw'):
     timestamp = datetime.datetime.now()
     return str(timestamp)
 
-def unicode2string_dict(data):
-    """convert a unicode dict to a stringed dict"""
-    rv = {}
-    for key, value in data.items():
-        rv[key] = value
-    return rv
-
-def unicode2string_list(data):
-    """convert a unicode list to a string list"""
-    rv = []
-    for item in data:
-        rv.append(item)
-    return rv
-
 def checkType(data):
     """Transform an unicode into its original type"""
     try:

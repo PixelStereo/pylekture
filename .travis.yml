@@ -14,7 +14,7 @@ install:
   - pip install travis-sphinx
 script:
   - cd tests
-  - coverage run tests.py
+  - coverage run test_.py
   - coverage report -m
   - cd ../
   - travis-sphinx build

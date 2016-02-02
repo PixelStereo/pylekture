@@ -7,3 +7,4 @@ test.json
 *.pyo
 .coverage
 my_file.json
+lastfailed
