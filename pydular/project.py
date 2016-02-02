@@ -5,6 +5,7 @@
 
 import os
 import weakref
+from time import sleep
 import simplejson as json
 from pydular.functions import timestamp
 
@@ -191,6 +192,15 @@ class Project(object):
     def scenarios(self):
         """return a list of available scenario for this project"""
         return self.scenario_list
+
+    def play(self):
+        """play a whole project (play all scearios"""
+        for scenario in self.scenarios():
+            wait = scenario.getduration() / 1000
+            wait = wait + scenario.wait + scenario.post_wait
+            print('play', scenario, 'during', wait, 'seconds')
+            scenario.play()
+            sleep(wait)
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
