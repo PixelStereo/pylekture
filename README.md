@@ -2,7 +2,6 @@
 =====
 ####Python Modular framework for real-time inter-media applications
 ---
-
 **This is an alpha version - Do not use it for production, because API must changes a lot before release**
 ---
 
