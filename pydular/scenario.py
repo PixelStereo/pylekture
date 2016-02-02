@@ -175,6 +175,48 @@ class Event(object):
         """return a list of events for a given scenario"""
         return scenario.event_list
 
+    def play_osc(self):
+        args = self.content
+        if isinstance(self.content, list):
+            address = args[0]
+            args = args[1:]
+        else:
+            # found a space to separate address from args
+            address = args.split()[0]
+            args = args.split()[1:]
+        ip = out.ip
+        port = out.udp
+        try:
+            target = liblo.Address(ip, int(port))
+            if self.project.debug:
+                print('connect to : ' + ip + ':' + str(port))
+        except liblo.AddressError as err:
+            print(err)
+        if isinstance(args, list) and 'ramp' in args:
+            index = args.index('ramp')
+            ramp = args[index+1]
+            dest = args[index-1]
+            value = 0
+            delta = dest - value
+            delta = float(delta)
+            step = delta / ramp
+            for millisec in range(ramp):
+                msg = liblo.Message(address)
+                value += step
+                sleep(0.0008)
+                msg.add(value)
+                liblo.send(target, msg)
+        elif isinstance(args, list):
+            msg = liblo.Message(address)
+            for arg in args:
+                arg = checkType(arg)
+                msg.add(arg)
+            liblo.send(target, msg)
+        else:
+            msg = liblo.Message(address)
+            msg.add(args)
+            liblo.send(target, msg)
+
     def play(self):
         """play an event"""
         if isinstance(self.content, int) or isinstance(self.content, float):
@@ -187,46 +229,7 @@ class Event(object):
             out = self.getoutput()
             if out:
                 if out.getprotocol() == 'OSC':
-                    args = self.content
-                    if isinstance(self.content, list):
-                        address = args[0]
-                        args = args[1:]
-                    else:
-                        # found a space to separate address from args
-                        address = args.split()[0]
-                        args = args.split()[1:]
-                    ip = out.ip
-                    port = out.udp
-                    try:
-                        target = liblo.Address(ip, int(port))
-                        if self.project.debug:
-                            print('connect to : ' + ip + ':' + str(port))
-                    except liblo.AddressError as err:
-                        print(err)
-                    if isinstance(args, list) and 'ramp' in args:
-                        index = args.index('ramp')
-                        ramp = args[index+1]
-                        dest = args[index-1]
-                        value = 0
-                        delta = dest - value
-                        delta = float(delta)
-                        step = delta / ramp
-                        for millisec in range(ramp):
-                            msg = liblo.Message(address)
-                            value += step
-                            sleep(0.0008)
-                            msg.add(value)
-                            liblo.send(target, msg)
-                    elif isinstance(args, list):
-                        msg = liblo.Message(address)
-                        for arg in args:
-                            arg = checkType(arg)
-                            msg.add(arg)
-                        liblo.send(target, msg)
-                    else:
-                        msg = liblo.Message(address)
-                        msg.add(args)
-                        liblo.send(target, msg)
+                    self.play_osc()
                 else:
                     print('protocol', out.getprotocol(), 'is not yet implemented')
             else:
