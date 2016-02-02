@@ -5,7 +5,7 @@ python:
   - "2.7"
   - "3.5"
 install:
-  - sudo apt-get --fix-missing update
+  - sudo apt-get update
   - sudo apt-get -qq install python-setuptools liblo-dev liblo-tools
   - pip install https://github.com/PixelStereo/pydular/archive/master.zip
   - pip install -r requirements.txt
