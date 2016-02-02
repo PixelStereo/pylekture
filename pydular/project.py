@@ -95,73 +95,29 @@ class Project(object):
                     in_file.close()
                     for key in loaded.keys():
                         if key == 'scenario':
-                            for scenar_list in loaded['scenario']:
-                                for attribute, value in scenar_list['attributes'].items():
-                                    if attribute == 'name':
-                                        name = value
-                                    elif attribute == 'description':
-                                        description = value
-                                    elif attribute == 'output':
-                                        output = value
-                                    elif attribute == 'events':
-                                        events = value
-                                scenario = self.new_scenario()
-                                scenario.name = name
-                                scenario.description = description
-                                scenario.output = output
+                            for scenario in loaded['scenario']:
+                                events = scenario['attributes'].pop('events')
+                                scenar = self.new_scenario(**scenario['attributes'])
                                 for event in events:
-                                    for attribute, value in event['attributes'].items():
-                                        if attribute == 'name':
-                                            name = value
-                                        elif attribute == 'description':
-                                            description = value
-                                        elif attribute == 'output':
-                                            output = value
-                                        elif attribute == 'content':
-                                            content = value
-                                    event = scenario.new_event()
-                                    event.name = name
-                                    event.description = description
-                                    event.output = output
-                                    event.content = content
+                                    scenar.new_event(**event['attributes'])
                         elif key == 'attributes':
                             for attribute, value in loaded['attributes'].items():
                                 if attribute == 'author':
                                     self.author = value
                                 if attribute == 'version':
                                     self.version = value
-                            self.lastopened = timestamp(display='nice')
+                            self.lastopened = timestamp()
                         elif key == 'outputs':
                             for protocol in loaded['outputs']:
-                                if protocol == 'OSC' or protocol == 'PJLINK':
-                                    for out in loaded['outputs'][protocol]:
-                                        for attribute, value in out['attributes'].items():
-                                            if attribute == 'name':
-                                                name = value
-                                            if attribute == 'ip':
-                                                address_ip = value
-                                            if attribute == 'udp':
-                                                udp = value
-                                    self.new_output(protocol, name=name, ip=address_ip, udp=udp)
-                                elif protocol == 'MIDI':
-                                    for out in loaded['outputs'][protocol]:
-                                        for attribute, value in out['attributes'].items():
-                                            if attribute == 'name':
-                                                name = value
-                                            if attribute == 'channel':
-                                                channel = value
-                                            if attribute == 'port':
-                                                port = value
-                                            if attribute == 'type':
-                                                midi_type = value
-                                    self.new_output(protocol, name=name, type=midi_type, port=port, channel=channel)
+                                for out in loaded['outputs'][protocol]:
+                                    self.new_output(protocol, **out['attributes'])
                     if self.debug:
                         print('project loaded')
                     self.path = path
             # catch error if file is not valid or if file is not a lekture project
             except (IOError, ValueError):
                 if self.debug:
-                    print('error : project not loaded')
+                    print('error : project not loaded, this is not a lekture project file')
                 return False
             return True
 
@@ -232,10 +188,13 @@ class Project(object):
         else:
             return protocols
 
-    def new_scenario(self):
+    def new_scenario(self, **kwargs):
         """create a new scenario"""
+        taille = len(self.scenario_list)
         scenario = Scenario(self)
         self.scenario_list.append(scenario)
+        for key, value in kwargs.items():
+            setattr(self.scenario_list[taille], key, value)
         return scenario
 
     def new_output(self, protocol, **kwargs):
