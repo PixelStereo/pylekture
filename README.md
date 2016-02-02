@@ -45,9 +45,9 @@ If you need/want to build the documentation from the repo, here are the steps :
 #####0.1 - Dec. 2015 -> March. 2016
 * ~~Scenario and events sends OSC commands~~
 * ~~multiple projects architecture~~
-* ~~Python 2 and 3 compatibility~~~
+* ~~Python 2 and 3 compatibility~~
 * ~~Unit tests and Continious integration~~
-* Nice and solid UTF8 Encoding everywhere
+* ~~Nice and solid UTF8 Encoding everywhere~~
 * Scenario behavior creates nice sequence (auto-cue / auto-follow)
 * project commands (auto-play / loop)
 
