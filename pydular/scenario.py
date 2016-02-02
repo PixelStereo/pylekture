@@ -85,11 +85,6 @@ class Scenario(object):
                     duration += ramp
         return duration
 
-
-
-
-
-
     def events(self):
         """return a list of events for this scenario"""
         return Event.getinstances(self)
@@ -146,6 +141,7 @@ class Scenario(object):
                                          }})
         return events
 
+
 class Event(object):
     """Create an Event
     an Event is like a step of a Scenario.
@@ -175,37 +171,21 @@ class Event(object):
         """return a list of events for a given scenario"""
         return scenario.event_list
 
-    def play_osc(self):
+    def play_osc(self,out):
+        """play an OSC event"""
         args = self.content
-        if isinstance(self.content, list):
-            address = args[0]
-            args = args[1:]
-        else:
-            # found a space to separate address from args
-            address = args.split()[0]
-            args = args.split()[1:]
-        ip = out.ip
-        port = out.udp
+        # found a space to separate address from args
+        address = args.split()[0]
+        args = args.split()[1:]
         try:
-            target = liblo.Address(ip, int(port))
+            target = liblo.Address(out.ip, int(out.udp))
             if self.project.debug:
-                print('connect to : ' + ip + ':' + str(port))
+                print('connect to : ' + out.ip + ':' + str(out.udp))
         except liblo.AddressError as err:
             print(err)
         if isinstance(args, list) and 'ramp' in args:
-            index = args.index('ramp')
-            ramp = args[index+1]
-            dest = args[index-1]
-            value = 0
-            delta = dest - value
-            delta = float(delta)
-            step = delta / ramp
-            for millisec in range(ramp):
-                msg = liblo.Message(address)
-                value += step
-                sleep(0.0008)
-                msg.add(value)
-                liblo.send(target, msg)
+            # this is a ramp, make it in a separate thread
+            self.Ramp(target, address, args)
         elif isinstance(args, list):
             msg = liblo.Message(address)
             for arg in args:
@@ -216,6 +196,35 @@ class Event(object):
             msg = liblo.Message(address)
             msg.add(args)
             liblo.send(target, msg)
+
+
+    class Ramp(threading.Thread):
+        """Instanciate a thread for Playing a ramp
+        Allow to do several ramps in a same scenario"""
+        def __init__(self, target, address, args):
+            threading.Thread.__init__(self)
+            self.args = args
+            self.address = address
+            self.target = target
+            self.start()
+
+        def run(self):
+            index = self.args.index('ramp')
+            ramp = self.args[index+1]
+            dest = self.args[index-1]
+            dest = checkType(dest)
+            ramp = checkType(ramp)
+            value = 0
+            delta = dest - value
+            delta = float(delta)
+            step = delta / ramp
+            for millisec in range(ramp):
+                msg = liblo.Message(self.address)
+                value += step
+                sleep(0.0008)
+                msg.add(value)
+                liblo.send(self.target, msg)
+        
 
     def play(self):
         """play an event"""
@@ -229,7 +238,7 @@ class Event(object):
             out = self.getoutput()
             if out:
                 if out.getprotocol() == 'OSC':
-                    self.play_osc()
+                    self.play_osc(out)
                 else:
                     print('protocol', out.getprotocol(), 'is not yet implemented')
             else:
