@@ -75,12 +75,13 @@ assert(my_scenario.getoutput().name=='no-name')
 """fill in scenario with events"""
 first_event = my_scenario.new_event(content=['/previous', 232, 'ramp', 500])
 second_event = my_scenario.new_event(content=200)
-third_event = my_scenario.new_event(content=['/zob', 232, 'list'])
+third_event = my_scenario.new_event(content=['/zob', 232, 'list', 'uno', 2])
+fourth_event = my_scenario.new_event(content='/address_only')
 midi_event = my_other_scenario.new_event(content=['CC', 16, 1, 64])
 
 """test scenario file"""
 assert(my_scenario.getduration()==700)
-assert(len(my_scenario.events())==3)
+assert(len(my_scenario.events())==4)
 my_scenario.play()
 sleep(1)
 my_scenario.play_from_here(third_event)

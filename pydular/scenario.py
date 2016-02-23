@@ -174,9 +174,14 @@ class Event(object):
     def play_osc(self,out):
         """play an OSC event"""
         args = self.content
-        # found a space to separate address from args
-        address = args.split()[0]
-        args = args.split()[1:]
+        if isinstance(args, list):
+            # address is the first item of the list
+            address = args[0]
+            args = args[1:]
+        else:
+            # this is a adress_only without arguments
+            address = args
+            args = None
         try:
             target = liblo.Address(out.ip, int(out.udp))
             if self.project.debug:
@@ -194,7 +199,8 @@ class Event(object):
             liblo.send(target, msg)
         else:
             msg = liblo.Message(address)
-            msg.add(args)
+            if args:
+                msg.add(args)
             liblo.send(target, msg)
 
 
