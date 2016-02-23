@@ -89,7 +89,9 @@ sleep(0.5)
 my_scenario.play_from_here(2)
 my_other_scenario.play(index=1)
 sleep(0.01)
-my_scenario.del_event(3)
+my_project.play()
+sleep(0.5)
+my_scenario.del_event(4)
 
 """test_timestamp"""
 the_timestamp = timestamp()
