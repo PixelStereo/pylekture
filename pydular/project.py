@@ -111,9 +111,10 @@ class Project(object):
                             for protocol in loaded['outputs']:
                                 for out in loaded['outputs'][protocol]:
                                     self.new_output(protocol, **out['attributes'])
-                    if self.debug:
-                        print('project loaded')
-                    self.path = path
+                if self.debug:
+                    print('project loaded')
+                self.path = path
+                self.write()
             # catch error if file is not valid or if file is not a lekture project
             except (IOError, ValueError):
                 if self.debug:
