@@ -49,6 +49,7 @@ class Project(object):
         self.version = None
         self.path = None
         self.lastopened = None
+        self.autoplay = None
         self.created = timestamp(display='nice')
         self.output_list = []
         self.scenario_list = []
@@ -115,6 +116,8 @@ class Project(object):
                     print('project loaded')
                 self.path = path
                 self.write()
+                if self.autoplay:
+                    self.play()
             # catch error if file is not valid or if file is not a lekture project
             except (IOError, ValueError):
                 if self.debug:
@@ -226,7 +229,7 @@ class Project(object):
 
     def export_attributes(self):
         """export attributes of the project"""
-        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened}
+        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'autoplay':self.autoplay}
         return attributes
 
     def export_scenario(self):
