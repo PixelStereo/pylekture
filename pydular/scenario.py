@@ -50,25 +50,31 @@ class Scenario(object):
             play an scenario
             Started from the first event if an index has not been provided"""
             if not self.index:
+                # start from the begining
                 index = 0
                 if self.scenario.wait:
+                    # if there is a wait, please wait!!
                     if self.project.debug:
                         print('WAIT', self.scenario.name, \
                               'DURING', self.scenario.wait, 'SECONDS')
                     sleep(self.scenario.wait)
             else:
+                # start from the index
                 index = self.index
             if self.project.debug:
                 print('PLAY', self.scenario.name, 'FROM INDEX', index)
             for event in self.scenario.events()[index:]:
+                # play each event
                 event.play()
             if self.scenario.post_wait:
+                # if there is a wait after the scenario, please wait!!
                 if self.project.debug:
                     print('POST_WAIT', self.scenario.name, \
                           'DURING', self.scenario.post_wait, 'SECONDS')
                 sleep(self.scenario.post_wait)
             if self.project.debug:
                 print('SCENARIO DONE', self.scenario.name)
+            # scenario is now finish
             return True
 
     def getduration(self):
