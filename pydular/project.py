@@ -58,9 +58,17 @@ class Project(object):
     def path(self):
         return self._path
 
+    @path.setter
+    def path(self, value):
+        self._path = value
+
     @property
     def autoplay(self):
         return self._autoplay
+
+    @autoplay.setter
+    def autoplay(self, value):
+        self._autoplay = value
 
     @classmethod
     def getinstances(cls):
@@ -142,7 +150,7 @@ class Project(object):
         else:
             savepath = self._path
         if savepath:
-            # make sure we will write a file with json extension 
+            # make sure we will write a file with json extension
             if not savepath.endswith('.json'):
                 savepath = savepath + '.json'
             try:
