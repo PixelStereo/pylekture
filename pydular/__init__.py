@@ -20,6 +20,8 @@ Changelog:
 -------------------------------------------------------------------------------
 - v0.1.8  -
     - nice and robust utf-8 encoding everywhere. That means using unicode for any string.
+    - add project.play() method (bunch of scenario)
+    - add project.autoplay attribute
 
 - v0.1.7  -  Jan. 25th 2016
     - new name. Now known as pydular, for python modular implementation
