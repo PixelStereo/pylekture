@@ -82,12 +82,17 @@ class Scenario(object):
         Addition the ramp flags with the wait events"""
         duration = 0
         for event in self.events():
-            if len(event.content) == 1:
-                for letter in event.content:
-                    if '0' <= letter <= '9':
-                        duration += int(event.content[0])
-            if isinstance(event.content, list):
+            if isinstance(event.content, int) or isinstance(event.content, float):
+                # this is a wait
+                duration += event.content
+            elif isinstance(event.content, list):
+                # this is a wait in unicode
+                if len(event.content) == 1:
+                    for letter in event.content:
+                        if '0' <= letter <= '9':
+                            duration += int(event.content[0])
                 if 'ramp' in event.content:
+                    # this is a ramp
                     index = event.content.index('ramp')
                     ramp = event.content[index+1]
                     duration += int(ramp)
