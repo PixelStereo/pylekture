@@ -82,13 +82,15 @@ class Scenario(object):
         Addition the ramp flags with the wait events"""
         duration = 0
         for event in self.events():
-            if isinstance(event.content, int) or isinstance(event.content, float):
-                duration += event.content
+            if len(event.content) == 1:
+                for letter in event.content:
+                    if '0' <= letter <= '9':
+                        duration += int(event.content[0])
             if isinstance(event.content, list):
                 if 'ramp' in event.content:
                     index = event.content.index('ramp')
                     ramp = event.content[index+1]
-                    duration += ramp
+                    duration += int(ramp)
         return duration
 
     def events(self):
