@@ -23,12 +23,3 @@ def checkType(data):
     except:
         pass
     return data
-
-def isString(value):
-    """Check if value is a string.
-    Return True or False"""
-    try:
-        isinstance(value, unicode)
-        return isinstance(value, str)
-    except:
-        return isinstance(value, bytes)
