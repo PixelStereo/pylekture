@@ -126,15 +126,25 @@ class Project(object):
             return True
 
     def write(self, path=None):
-        """write a project on the hard drive"""
+        """
+        Write a project on the hard drive.
+        """
         if path:
             savepath = path
         else:
             savepath = self.path
         if savepath:
+            # make sure we will write a file with json extension 
             if not savepath.endswith('.json'):
                 savepath = savepath + '.json'
-            out_file = open((savepath), 'wb')
+            try:
+                # create / open the file
+                out_file = open((savepath), 'wb')
+            except IOError:
+                # path does not exists
+                if debug:
+                    print('path is not valid, could not write to disk on :', savepath)
+                return False
             project = {}
             project.setdefault('scenario', self.export_scenario())
             project.setdefault('attributes', self.export_attributes())

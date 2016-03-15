@@ -4,7 +4,7 @@
 import unittest
 import os,sys
 from time import sleep
-# for 
+# for running locally
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
@@ -51,5 +51,6 @@ third_event = my_scenario.new_event(content=['/zob', 232, 'list'])
 midi_event = my_other_scenario.new_event(content=['/lolo', 232, 'list'])
 
 print my_project.scenarios()
+my_project.write("/path/that/does/not/exist")
 my_project.play()
 #my_scenario.play()
