@@ -47,12 +47,20 @@ class Project(object):
             print()
         self.author = None
         self.version = None
-        self.path = None
+        self._path = None
         self.lastopened = None
-        self.autoplay = None
+        self._autoplay = None
         self.created = timestamp(display='nice')
         self.output_list = []
         self.scenario_list = []
+
+    @property
+    def path(self):
+        return self._path
+
+    @property
+    def autoplay(self):
+        return self._autoplay
 
     @classmethod
     def getinstances(cls):
@@ -72,7 +80,7 @@ class Project(object):
         # reset project attributes
         self.author = None
         self.version = None
-        self.path = None
+        self._path = None
         # reset outputs
         self.output_list = []
         # reset scenarios and events
@@ -114,9 +122,9 @@ class Project(object):
                                     self.new_output(protocol, **out['attributes'])
                 if self.debug:
                     print('project loaded')
-                self.path = path
+                self._path = path
                 self.write()
-                if self.autoplay:
+                if self._autoplay:
                     self.play()
             # catch error if file is not valid or if file is not a lekture project
             except (IOError, ValueError):
@@ -132,7 +140,7 @@ class Project(object):
         if path:
             savepath = path
         else:
-            savepath = self.path
+            savepath = self._path
         if savepath:
             # make sure we will write a file with json extension 
             if not savepath.endswith('.json'):
@@ -239,7 +247,7 @@ class Project(object):
 
     def export_attributes(self):
         """export attributes of the project"""
-        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'autoplay':self.autoplay}
+        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'autoplay':self._autoplay}
         return attributes
 
     def export_scenario(self):
