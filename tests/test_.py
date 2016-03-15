@@ -90,7 +90,9 @@ my_scenario.play_from_here(2)
 my_other_scenario.play(index=1)
 sleep(0.01)
 my_project.autoplay = 1
+my_project.loop= 1
 my_scenario.del_event(4)
+my_project.loop= 0
 
 """test_timestamp"""
 the_timestamp = timestamp()

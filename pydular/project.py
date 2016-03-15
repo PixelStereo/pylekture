@@ -48,11 +48,20 @@ class Project(object):
         self.author = None
         self.version = None
         self._path = None
+        self._loop = None
         self.lastopened = None
         self._autoplay = None
         self.created = timestamp(display='nice')
         self.output_list = []
         self.scenario_list = []
+
+    @property
+    def loop(self):
+        return self._loop
+
+    @loop.setter
+    def loop(self, value):
+        self._loop = value
 
     @property
     def path(self):
@@ -184,9 +193,17 @@ class Project(object):
         for scenario in self.scenarios():
             wait = scenario.getduration() / 1000
             wait = wait + scenario.wait + scenario.post_wait
-            print('play', scenario, 'during', wait, 'seconds')
+            if self.debug:
+                print('play', scenario, 'during', wait, 'seconds')
             scenario.play()
             sleep(wait)
+        if self.debug:
+            print('end of the project !!!!')
+        if self.loop:
+            sleep(10)
+            self.play()
+            if self.debug:
+                print('loop enable : please play the project again')
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
@@ -255,7 +272,7 @@ class Project(object):
 
     def export_attributes(self):
         """export attributes of the project"""
-        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'autoplay':self._autoplay}
+        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'autoplay':self._autoplay, 'loop':self._loop}
         return attributes
 
     def export_scenario(self):
