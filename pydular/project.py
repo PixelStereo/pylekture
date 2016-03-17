@@ -227,6 +227,9 @@ class Project(object):
                 scenario.play()
                 # wait during the scenario
                 sleep(wait)
+            # all scenario have been played
+            if self.project.loop:
+                self.project.play()
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
@@ -291,7 +294,7 @@ class Project(object):
         else:
             if self.debug == 2:
                 print('ERROR - trying to delete a scenario which not exists \
-                    in self._scenario_list', scenario)
+                      in self._scenario_list', scenario)
 
     def export_attributes(self):
         """export attributes of the project"""
