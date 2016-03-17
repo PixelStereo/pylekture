@@ -57,6 +57,13 @@ class Project(object):
         self._scenario_list = []
 
     @property
+    def scenarios(self):
+        """
+        Return a list of scenarios for this project
+        """
+        return self._scenario_list
+        
+    @property
     def path(self):
         return self._path
 
@@ -176,9 +183,9 @@ class Project(object):
                     print('path is not valid, could not write to disk on :', savepath)
                 return False
             project = {}
-            project.setdefault('scenario', self.export_scenario())
-            project.setdefault('attributes', self.export_attributes())
-            project.setdefault('outputs', self.export_outputs())
+            project.setdefault('scenario', self._export_scenario())
+            project.setdefault('attributes', self._export_attributes())
+            project.setdefault('outputs', self._export_outputs())
 
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\
                                       ensure_ascii=False).encode('utf8'))
@@ -188,12 +195,6 @@ class Project(object):
             return True
         else:
             return False
-
-    def scenarios(self):
-        """
-        Return a list of available scenario for this project
-        """
-        return self._scenario_list
 
     def play(self):
         """
@@ -228,6 +229,7 @@ class Project(object):
             # all scenario have been played
             if self.project.loop:
                 self.project.play()
+
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
@@ -294,12 +296,12 @@ class Project(object):
                 print('ERROR - trying to delete a scenario which not exists \
                       in self._scenario_list', scenario)
 
-    def export_attributes(self):
+    def _export_attributes(self):
         """export attributes of the project"""
         attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'loop':self._loop, 'autoplay':self._autoplay}
         return attributes
 
-    def export_scenario(self):
+    def _export_scenario(self):
         """export scenario of the project"""
         scenarios = []
         for scenario in self.scenarios():
@@ -309,7 +311,7 @@ class Project(object):
                                             'events':scenario.export_events()}})
         return scenarios
 
-    def export_outputs(self):
+    def _export_outputs(self):
         """export outputs of the project"""
         outputs = {}
         for output in self.outputs():
