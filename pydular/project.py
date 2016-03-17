@@ -208,7 +208,11 @@ class Project(object):
         """
         shortcut to run thread
         """
-        self.Play(self)
+        if self.scenarios:
+            self.Play(self)
+        else:
+            if self.debug:
+                print('This project is empty')
 
 
     class Play(threading.Thread):
