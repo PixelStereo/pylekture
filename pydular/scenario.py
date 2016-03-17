@@ -247,8 +247,8 @@ class Event(object):
 
     def play(self):
         """play an event"""
-        if isinstance(self.content, int) or isinstance(self.content, float):
-            wait = float(self.content)
+        if len(self.content) == 1 and self.content[0].isdigit():
+            wait = float(self.content[0])
             wait = wait/1000
             if self.project.debug:
                 print('waiting', wait)
