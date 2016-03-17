@@ -135,10 +135,8 @@ class Project(object):
                                     self.version = value
                                 if attribute == 'autoplay':
                                     self.autoplay = value
-                                    print value
                                 if attribute == 'loop':
                                     self.loop = value
-                                    print value
                             self.lastopened = timestamp()
                         elif key == 'outputs':
                             for protocol in loaded['outputs']:
