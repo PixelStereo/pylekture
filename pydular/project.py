@@ -5,6 +5,7 @@
 
 import os
 import weakref
+import threading
 from time import sleep
 import simplejson as json
 from pydular.functions import timestamp
@@ -48,20 +49,12 @@ class Project(object):
         self.author = None
         self.version = None
         self._path = None
-        self._loop = None
         self.lastopened = None
-        self._autoplay = None
+        self._autoplay = False
+        self._loop = False
         self.created = timestamp(display='nice')
         self.output_list = []
-        self.scenario_list = []
-
-    @property
-    def loop(self):
-        return self._loop
-
-    @loop.setter
-    def loop(self, value):
-        self._loop = value
+        self._scenario_list = []
 
     @property
     def path(self):
@@ -78,6 +71,14 @@ class Project(object):
     @autoplay.setter
     def autoplay(self, value):
         self._autoplay = value
+
+    @property
+    def loop(self):
+        return self._loop
+
+    @loop.setter
+    def loop(self, value):
+        self._loop = value
 
     @classmethod
     def getinstances(cls):
@@ -101,7 +102,7 @@ class Project(object):
         # reset outputs
         self.output_list = []
         # reset scenarios and events
-        self.scenario_list = []
+        self._scenario_list = []
 
     def read(self, path):
         """open a lekture project"""
@@ -132,6 +133,12 @@ class Project(object):
                                     self.author = value
                                 if attribute == 'version':
                                     self.version = value
+                                if attribute == 'autoplay':
+                                    self.autoplay = value
+                                    print value
+                                if attribute == 'loop':
+                                    self.loop = value
+                                    print value
                             self.lastopened = timestamp()
                         elif key == 'outputs':
                             for protocol in loaded['outputs']:
@@ -185,31 +192,47 @@ class Project(object):
             return False
 
     def scenarios(self):
-        """return a list of available scenario for this project"""
-        return self.scenario_list
+        """
+        Return a list of available scenario for this project
+        """
+        return self._scenario_list
 
     def play(self):
-        """play a whole project (play all scearios"""
-        for scenario in self.scenarios():
-            wait = scenario.getduration() / 1000
-            wait = wait + scenario.wait + scenario.post_wait
-            if self.debug:
-                print('play', scenario, 'during', wait, 'seconds')
-            scenario.play()
-            sleep(wait)
-        if self.debug:
-            print('end of the project !!!!')
-        if self.loop:
-            sleep(10)
-            self.play()
-            if self.debug:
-                print('loop enable : please play the project again')
+        """
+        shortcut to run thread
+        """
+        self.Play(self)
+
+
+    class Play(threading.Thread):
+        """
+        Instanciate a thread for Playing a whole project
+        Allow to start twice or more each projects at the same time
+        """
+        def __init__(self, project):
+            self.project = project
+            self.debug = project.debug
+            threading.Thread.__init__(self)
+            self.start()
+
+        def run(self):
+            for scenario in self.project.scenarios():
+                # compute time in seconds (getduration is in milliseconds)
+                wait = scenario.getduration() / 1000
+                # add wait and post_wait to duration
+                wait = wait + scenario.wait + scenario.post_wait
+                if self.debug:
+                    print('play', scenario, 'during', wait, 'seconds')
+                # play the scenario
+                scenario.play()
+                # wait during the scenario
+                sleep(wait)
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
-        s_temp = self.scenario_list[old]
-        self.scenario_list.pop(old)
-        self.scenario_list.insert(new, s_temp)
+        s_temp = self._scenario_list[old]
+        self._scenario_list.pop(old)
+        self._scenario_list.insert(new, s_temp)
 
     def outputs(self, protocol='all'):
         """return a list of available output for this project"""
@@ -237,11 +260,11 @@ class Project(object):
 
     def new_scenario(self, **kwargs):
         """create a new scenario"""
-        taille = len(self.scenario_list)
+        taille = len(self._scenario_list)
         scenario = Scenario(self)
-        self.scenario_list.append(scenario)
+        self._scenario_list.append(scenario)
         for key, value in kwargs.items():
-            setattr(self.scenario_list[taille], key, value)
+            setattr(self._scenario_list[taille], key, value)
         return scenario
 
     def new_output(self, protocol, **kwargs):
@@ -262,17 +285,17 @@ class Project(object):
             for event in scenario.events():
                 scenario.del_event(event)
             # delete the scenario itself
-            self.scenario_list.remove(scenario)
+            self._scenario_list.remove(scenario)
             if self.debug == 2:
-                print('delete scenario', scenario, len(self.scenario_list))
+                print('delete scenario', scenario, len(self._scenario_list))
         else:
             if self.debug == 2:
                 print('ERROR - trying to delete a scenario which not exists \
-                    in self.scenario_list', scenario)
+                    in self._scenario_list', scenario)
 
     def export_attributes(self):
         """export attributes of the project"""
-        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'autoplay':self._autoplay, 'loop':self._loop}
+        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'loop':self._loop, 'autoplay':self._autoplay}
         return attributes
 
     def export_scenario(self):
