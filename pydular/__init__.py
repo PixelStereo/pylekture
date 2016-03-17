@@ -23,7 +23,8 @@ Changelog:
     - add project.play() method (bunch of scenario)
     - add project.autoplay attribute
     - add project.loop attribute
-    - transform project.path as attribute
+    - transform project.path as property
+    - transform scenarios from method to property
 
 - v0.1.7  -  Jan. 25th 2016
     - new name. Now known as pydular, for python modular implementation

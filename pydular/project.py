@@ -215,7 +215,7 @@ class Project(object):
             self.start()
 
         def run(self):
-            for scenario in self.project.scenarios():
+            for scenario in self.project.scenarios:
                 # compute time in seconds (getduration is in milliseconds)
                 wait = scenario.getduration() / 1000
                 # add wait and post_wait to duration
@@ -283,7 +283,7 @@ class Project(object):
     def del_scenario(self, scenario):
         """delete a scenario of this project
         This function will delete events of the scenario"""
-        if scenario in self.scenarios():
+        if scenario in self.scenarios:
             # delete events of this scenario
             for event in scenario.events():
                 scenario.del_event(event)
@@ -304,7 +304,7 @@ class Project(object):
     def _export_scenario(self):
         """export scenario of the project"""
         scenarios = []
-        for scenario in self.scenarios():
+        for scenario in self.scenarios:
             scenarios.append({'attributes':{'output':scenario.output, \
                                             'name':scenario.name, \
                                             'description':scenario.description, \

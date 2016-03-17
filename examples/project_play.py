@@ -50,7 +50,7 @@ second_event = my_scenario.new_event(content=2000)
 third_event = my_scenario.new_event(content=['/zob', 232, 'list'])
 midi_event = my_other_scenario.new_event(content=['/lolo', 232, 'list'])
 
-print my_project.scenarios()
+print my_project.scenarios
 my_project.write("/path/that/does/not/exist")
 my_project.play()
 #my_scenario.play()
