@@ -57,7 +57,7 @@ class Project(object):
         self._scenario_list = []
 
     def __repr__(self):
-        s = 'Project(path="{path}", autoplay={autoplay}, loop={loop}, ' \
+        s = 'Project (path="{path}", autoplay={autoplay}, loop={loop}, ' \
             'scenarios={scenarios}'
         return s.format(path=self.path,
                         autoplay=self.autoplay,
