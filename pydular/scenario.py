@@ -245,10 +245,15 @@ class Event(object):
 
     def play(self):
         """play an event"""
-        if len(self.content) == 1 and self.content[0].isdigit():
-            wait = float(self.content[0])
+        wait = 0
+        if isinstance(self.content, list):
+            if len(self.content) == 1 and str(self.content[0]).isdigit():
+                wait = float(self.content[0])
+        elif isinstance(self.content, int):
+            wait = float(self.content)
+        if wait:
             wait = wait/1000
-            if self.project.debug:
+            if debug:
                 print('waiting', wait)
             sleep(wait)
         else:
