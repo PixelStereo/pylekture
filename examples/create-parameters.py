@@ -5,25 +5,35 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 import pydular
-from pydular.application import Application
+from pydular.application import application_new, applications
 from pydular.node import Node
 from pydular.model import Model
 from pydular.parameter import Parameter
 
 def headerprint(args):
-	print
-	print (args)
-	print ('-----------------------')
+	print('')
+	print(args)
+	print('-----------------------')
 	
 headerprint('create the main application')
-model_1 = Application('My App')
+app = application_new('My App')
 
 headerprint('create two models')
-model_1 = Model('model.1')
-model_2 = Model('model.2')
+model_1 = app.model_new('model.1')
+model_2 = app.model_new('model.2')
 
 headerprint('create a parameter for model.1')
-param_1 = Parameter('param.1',value=-1,parent='model.1',datatype='decimal',tags=['uno','dos'],priority=-1,rangeBounds=[0,1],rangeClipmode='both',repetitionsFilter=1)
+param_1 = model_1.parameter_new('param.1', value=-1, datatype='decimal', tags=['uno','dos'], \
+                                 priority=-1, rangeBounds=[0,1], rangeClipmode='both', \
+                                 repetitionsFilter=1)
+headerprint('list app, models and parameters')
+for app in applications():
+    print('    ' +  str(app))
+    for model in app.models:
+        print('        ' +  str(model))
+        for parameter in model.parameters:
+            print('            ' +  str(parameter))
+
 
 headerprint('try rangeClipmode function')
 print ('rangeClipmode is : ' , param_1.rangeBounds)
@@ -54,18 +64,10 @@ print (param_1.priority)
 param_1.priority = 0
 print (param_1.priority)
 
-headerprint('model')
-print (param_1.parent)
-print ()
 headerprint('tags')
 print (param_1.tags)
 param_1.tags = ['ein','zwei']
 print (param_1.tags)
-
-headerprint('parent')
-print (param_1.parent)
-param_1.parent = model_2
-print (param_1.parent.name)
 
 headerprint('name')
 param_1.name = 22

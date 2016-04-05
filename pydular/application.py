@@ -6,28 +6,36 @@ Application Class hosted nodes and models
 An Application has some protocol/plugin for input/output
 """
 
-import weakref
-from pydular import debug
+from pydular import debug, _applications
 from pydular.model import Model
 from pydular.node import Node
 
+def application_new(*args, **kwargs):
+    """Create a new application
+        :return node object if successful
+        :return False if name is not valid (already exists or is not provided)"""
+    size = len(_applications)
+    _applications.append(Application(args[0]))
+    for key, value in kwargs.items():
+        setattr(_applications[size], key, value)
+    return _applications[size]
+
+def applications():
+    return _applications
+
+def export():
+    """Export Applications"""
+    apps = {'data':{}}
+    for app in applications():
+        apps['data'].setdefault(app.name, {'attributes': \
+            {'author':app.author, 'name':app.name, 'version':app.version}})
+    return apps
+
 
 class Application(Model):
-    """
-    Application Class
-    """
-    instances = weakref.WeakKeyDictionary()
-    def __new__(cls, *args, **kwargs):
-        Model.__new__(cls, *args, **kwargs)
-        _new = object.__new__(cls)
-        Application.instances[_new] = None
-        if debug:
-            if args:
-                print("........... APP %s created ..........." %args[0])
-        return _new
-
+    """Application Class"""
     def __init__(self, *args, **kwargs):
-        Model.__init__(self, args[0])
+        super(Application, self).__init__(*args, **kwargs)
         if 'author' in kwargs:
             self._author = kwargs['author']
         else:
@@ -36,7 +44,7 @@ class Application(Model):
             self._version = kwargs['version']
         else:
             self._version = 'unknown'
-        self.name = args[0]
+        self._name = args[0]
         self._nodes = []
         self._models = []
         if debug:
@@ -45,36 +53,6 @@ class Application(Model):
     def __repr__(self):
         printer = 'Application (name:{name}, author:{author}, version:{version})'
         return printer.format(name=self.name, author=self.author, version=self.version)
-
-    @staticmethod
-    def getinstances():
-        """return list of instances application"""
-        return Application.instances.keys()
-
-    @staticmethod
-    def export():
-        """Export Applications"""
-        apps = {'data':{}}
-        for app in Application.getinstances():
-            apps['data'].setdefault(app.name, {'attributes': \
-                {'author':app.author, 'name':app.name, 'version':app.version}})
-        return apps
-
-    def node_new(self, *args, **kwargs):
-        """
-        Create a new node in the parent node
-            :return node object if successful
-            :return False if name is not valid (already exists or is not provided)
-        """
-        size = len(self._nodes)
-        self._nodes.append(Node(args[0]))
-        for key, value in kwargs.items():
-            setattr(self._nodes[size], key, value)
-        return self._nodes[size]
-
-    def nodes(self):
-        """return all nodes"""
-        return self._nodes
 
     def model_new(self, *args, **kwargs):
         """
@@ -88,8 +66,8 @@ class Application(Model):
             setattr(self._models[size], key, value)
         return self._models[size]
 
+    @property
     def models(self):
-        """list all models"""
         return self._models
 
     # ----------- AUTHOR -------------

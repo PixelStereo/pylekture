@@ -3,135 +3,118 @@
 # -*- coding: utf-8 -*-
 #
 
-#################
-# Modular Module for Python
-# Create Models and Parameters
-# Pixel Stereo - 2015
-################################
+"""Parameters"""
 
-from pydular.modular_functions import *
-import weakref
-
-debug = True
 
 from pydular.node import Node
-from pydular.model import Model
+from pydular.modular_functions import *
+from pydular import debug
 
 
 class Parameter(Node):
-	instances = weakref.WeakKeyDictionary()
-	def __new__(self,*args,**kwargs):
-		Node.__new__(self,*args,**kwargs)
-		_new = object.__new__(self)
-		Parameter.instances[_new] = None
-		if debug : print ("........... PARAM %s created ..........." %args[0])
-		return _new
-	def __init__(self,*args,**kwargs):
-		"""ERROR NEED TO SEND ARGS TO NODE. E.G. : IF I DEFINE A PRIORITY OR TAG WHEN CREATING PARAMETER, IT NEED TO BE SEND TO THE NODE"""
+	def __init__(self, *args, **kwargs):
+		"""ERROR NEED TO SEND ARGS TO NODE. 
+		E.G. : IF I DEFINE A PRIORITY OR TAG WHEN CREATING PARAMETER, 
+		IT NEED TO BE SEND TO THE NODE"""
 		Node.__init__(self,args[0])
 		if 'value' in kwargs:
 			self.value = kwargs['value']
 		else:
 			self.value = None
 		if 'rangeClipmode' in kwargs:
-			self.rangeClipmode = kwargs['rangeClipmode']
+			self.clipmode = kwargs['clipmode']
 		else:
-			self.rangeClipmode = None
-		if 'rangeBounds' in kwargs:
-			self.rangeBounds = kwargs['rangeBounds']
+			self.clipmode = None
+		if 'domain' in kwargs:
+			self.domain = kwargs['domain']
 		else:
-			self.rangeBounds = None
+			self.domain = None
 		if 'repetitionsFilter' in kwargs:
-			self.repetitionsFilter = kwargs['repetitionsFilter']
+			self.repetitions = kwargs['repetitions']
 		else:
-			self.repetitionsFilter = 0
+			self.repetitions = 0
 		if 'datatype' in kwargs:
 			self.datatype = kwargs['datatype']
 		else:
 			self.datatype = 'generic'
 		if debug : print ("........... PARAM %s inited ..........." %args[0])
 
+	def __repr__(self):
+		"""represents the parameter class"""
+		printer = 'Parameter (name:{name}, value:{value}, datatype:{datatype}, domain:{domain}, clipmode:{clipmode}, repetitions:{repetitions}, priority:{priority}, tags:{tags})'
+		return printer.format(name=self.name, value=self.value, datatype=self.datatype, \
+        					  domain=self.domain, clipmode=self.clipmode, repetitions=self.repetitions, \
+        					  priority=self.priority, tags=self.tags)
 
 	# ----------- RAW VALUE -------------
 	@property
 	def raw(self):
 		"raw value without rangeClipmode or rangeBoundsneither than datatype"
-		return self.__value
+		return self._value
 
 	# ----------- VALUE -------------
 	@property
 	def value(self):
 		"Current value of the parameter"
 		if self.datatype == 'decimal':
-			value = float(self.__value)
+			value = float(self._value)
 			value = m_clip(self,value)
 		elif self.datatype == 'string':
-			value = str(self.__value)
+			value = str(self._value)
 		elif self.datatype == 'integer':
-			value = int(self.__value)
+			value = int(self._value)
 		return value
-
 	@value.setter
 	def value(self, value):
-		self.__value = value
-
+		self._value = value
 	@value.deleter
 	def value(self):
 		pass
 
-	# ----------- RANGEBOUNDS -------------
+	# ----------- DOMAIN -------------
 	@property
-	def rangeBounds(self):
-		"Current rangeBounds of the parameter"
-		return self.__rangeBounds
-
-	@rangeBounds.setter
-	def rangeBounds(self, rangeBounds):
-		self.__rangeBounds = rangeBounds
-
-	@rangeBounds.deleter
-	def rangeBounds(self):
+	def domain(self):
+		"Current domain of the parameter"
+		return self._domain
+	@domain.setter
+	def domain(self, domain):
+		self._domain = domain
+	@domain.deleter
+	def domain(self):
 		pass
 
-	# ----------- RANGECLIPMODE -------------
+	# ----------- CLIPMODE -------------
 	@property
-	def rangeClipmode(self):
-		"Current rangeClipmode of the parameter"
-		return self.__rangeClipmode
-
-	@rangeClipmode.setter
-	def rangeClipmode(self, rangeClipmode):
-		self.__rangeClipmode = rangeClipmode
-
-	@rangeClipmode.deleter
-	def rangeClipmode(self):
+	def clipmode(self):
+		"Current clipmode of the parameter"
+		return self._clipmode
+	@clipmode.setter
+	def clipmode(self, clipmode):
+		self._clipmode = clipmode
+	@clipmode.deleter
+	def clipmode(self):
 		pass
 
-	# ----------- DATATYPE -------------
+	# ----------- REPETITIONS -------------
 	@property
-	def repetitionsFilter(self):
+	def repetitions(self):
 		"Current repetitionsFilter of the parameter"
-		return self.__repetitionsFilter
-
-	@repetitionsFilter.setter
-	def repetitionsFilter(self, repetitionsFilter):
-		self.__repetitionsFilter = repetitionsFilter
-
-	@repetitionsFilter.deleter
-	def repetitionsFilter(self):
+		return self._repetitions
+	@repetitions.setter
+	def repetitions(self, repetitions):
+		self._repetitions = repetitions
+	@repetitions.deleter
+	def repetitions(self):
 		pass
-
 
 	# ----------- DATATYPE -------------
 	@property
 	def datatype(self):
 		"Current value of the parameter"
 		return self.__datatype
-
 	@datatype.setter
 	def datatype(self, datatype):
 		self.__datatype = datatype
-
 	@datatype.deleter
 	def datatype(self):
 		pass
