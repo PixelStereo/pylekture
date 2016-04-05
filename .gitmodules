@@ -1,0 +1,3 @@
+[submodule "3rdparty/pydular"]
+	path = 3rdparty/pydular
+	url = https://reno-@github.com/PixelStereo/pydular.git
