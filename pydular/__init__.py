@@ -52,3 +52,5 @@ Changelog:
     - First draft"""
 
 debug = False
+
+_applications = []
