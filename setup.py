@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from distutils.core import setup
+from pylekture import __version__
 
 setup(
   name = 'pylekture',
   packages = ['pylekture'],
-  version = pylekture.__version__,
+  version = __version__,
   description = 'A projekt management library',
   author = 'Pixel Stereo',
   url='https://github.com/PixelStereo/pylekture',
-  download_url = 'https://github.com/PixelStereo/pylekture/tarball/' + pylekture.__version__,
+  download_url = 'https://github.com/PixelStereo/pylekture/tarball/' + __version__,
   classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
