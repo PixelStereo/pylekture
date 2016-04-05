@@ -23,3 +23,13 @@ def checkType(data):
     except:
         pass
     return data
+
+def prop_list(the_class):
+        return [p for p in dir(the_class.__class__) if isinstance(getattr(the_class.__class__, p), property)]
+
+def prop_dict(the_class):
+        plist = prop_list(the_class)
+        pdict = {}
+        for prop in plist:
+            pdict.setdefault(prop, getattr(the_class, prop))
+        return pdict
