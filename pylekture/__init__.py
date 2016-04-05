@@ -61,7 +61,7 @@ __release__ = __version__
 import os, sys
 path = os.path.dirname(os.path.realpath(__file__))
 path = path.split('/')
-path = path[:-2]
-path = '/'.join(path) + '/lekture/3rdparty/pydular'
+path = path[:-1]
+path = '/'.join(path) + '/3rdparty/pydular'
 sys.path.append(path)
 import pydular
