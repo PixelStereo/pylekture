@@ -86,11 +86,10 @@ class Scenario(object):
                 # this is a wait
                 duration += event.content
             elif isinstance(event.content, list):
-                # this is a wait in unicode
+                # this is a wait in a list, unicode or string
                 if len(event.content) == 1:
-                    for letter in event.content:
-                        if '0' <= letter <= '9':
-                            duration += int(event.content[0])
+                    if isinstance(event.content[0], int) or isinstance(event.content[0], float):
+                        duration += int(event.content[0])
                 if 'ramp' in event.content:
                     # this is a ramp
                     index = event.content.index('ramp')

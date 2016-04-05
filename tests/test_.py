@@ -71,7 +71,7 @@ class TestAll(unittest.TestCase):
         fourth_event = my_scenario.new_event(content='/address_only')
         midi_event = my_other_scenario.new_event(content=['CC', 16, 1, 64])
         """test scenario file"""
-        assert(my_scenario.getduration()==700)
+        assert(my_scenario.getduration()==900)
         assert(len(my_scenario.events())==5)
         my_scenario.play()
         sleep(1)
