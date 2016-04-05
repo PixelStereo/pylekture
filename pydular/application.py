@@ -1,87 +1,117 @@
-
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Application Class hosted nodes and models
+An Application has some protocol/plugin for input/output
+"""
+
 import weakref
-
-debug = True
-
+from pydular import debug
 from pydular.model import Model
+from pydular.node import Node
+
 
 class Application(Model):
-	instances = weakref.WeakKeyDictionary()
-	def __new__(self,*args,**kwargs):
-		Model.__new__(self,*args,**kwargs)
-		_new = object.__new__(self)
-		Application.instances[_new] = None
-		if debug : print ("........... APP %s created ..........." %args[0])
-		return _new
-	def __init__(self,*args,**kwargs):
-		Model.__init__(self,args[0])
-		if 'author' in kwargs:
-			self.author = kwargs['author']
-		else:
-			self.author = 'unknown'
-		if 'project' in kwargs:
-			self.project = kwargs['project']
-		else:
-			self.project = 'unknown'
-		if 'version' in kwargs:
-			self.version = kwargs['version']
-		else:
-			self.version = 'unknown'
-		self.name = args[0]
-		if debug : print ("........... APP %s inited ..........." %args[0])
+    """
+    Application Class
+    """
+    instances = weakref.WeakKeyDictionary()
+    def __new__(cls, *args, **kwargs):
+        Model.__new__(cls, *args, **kwargs)
+        _new = object.__new__(cls)
+        Application.instances[_new] = None
+        if debug:
+            if args:
+                print("........... APP %s created ..........." %args[0])
+        return _new
 
-	@staticmethod
-	def getinstances():
-		return Application.instances.keys()
+    def __init__(self, *args, **kwargs):
+        Model.__init__(self, args[0])
+        if 'author' in kwargs:
+            self._author = kwargs['author']
+        else:
+            self._author = 'unknown'
+        if 'version' in kwargs:
+            self._version = kwargs['version']
+        else:
+            self._version = 'unknown'
+        self.name = args[0]
+        self._nodes = []
+        self._models = []
+        if debug:
+            print("........... APP %s inited ..........." %args[0])
 
-	@staticmethod
-	def export():
-		apps = {'data':{}}
-		for app in Application.getinstances():
-			apps['data'].setdefault(app.name,{'attributes':{'author':app.author,'project':app.project,'version':app.version}})
-		return apps
+    def __repr__(self):
+        printer = 'Application (name:{name}, author:{author}, version:{version})'
+        return printer.format(name=self.name, author=self.author, version=self.version)
 
-	# ----------- AUTHOR -------------
-	@property
-	def author(self):
-		"Current author of the model"
-		return self.__author
+    @staticmethod
+    def getinstances():
+        """return list of instances application"""
+        return Application.instances.keys()
 
-	@author.setter
-	def author(self, author):
-		self.__author = author
+    @staticmethod
+    def export():
+        """Export Applications"""
+        apps = {'data':{}}
+        for app in Application.getinstances():
+            apps['data'].setdefault(app.name, {'attributes': \
+                {'author':app.author, 'name':app.name, 'version':app.version}})
+        return apps
 
-	@author.deleter
-	def author(self):
-		pass
+    def node_new(self, *args, **kwargs):
+        """
+        Create a new node in the parent node
+            :return node object if successful
+            :return False if name is not valid (already exists or is not provided)
+        """
+        size = len(self._nodes)
+        self._nodes.append(Node(args[0]))
+        for key, value in kwargs.items():
+            setattr(self._nodes[size], key, value)
+        return self._nodes[size]
 
-	# ----------- PROJECT -------------
-	@property
-	def project(self):
-		"Current project of the model"
-		return self.__project
+    def nodes(self):
+        """return all nodes"""
+        return self._nodes
 
-	@project.setter
-	def project(self, project):
-		self.__project = project
+    def model_new(self, *args, **kwargs):
+        """
+        Create a new Model in the parent Model
+            :return node object if successful
+            :return False if name is not valid (already exists or is not provided)
+        """
+        size = len(self._models)
+        self._models.append(Model(args[0]))
+        for key, value in kwargs.items():
+            setattr(self._models[size], key, value)
+        return self._models[size]
 
-	@project.deleter
-	def project(self):
-		pass
+    def models(self):
+        """list all models"""
+        return self._models
 
-	# ----------- VERSION -------------
-	@property
-	def version(self):
-		"Current version of the model"
-		return self.__version
+    # ----------- AUTHOR -------------
+    @property
+    def author(self):
+        "Current author of the model"
+        return self._author
+    @author.setter
+    def author(self, author):
+        self._author = author
+    @author.deleter
+    def author(self):
+        pass
 
-	@version.setter
-	def version(self, version):
-		self.__version = version
-
-	@version.deleter
-	def version(self):
-		pass
+    # ----------- VERSION -------------
+    @property
+    def version(self):
+        "Current version of the model"
+        return self._version
+    @version.setter
+    def version(self, version):
+        self._version = version
+    @version.deleter
+    def version(self):
+        pass

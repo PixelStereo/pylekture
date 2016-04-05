@@ -13,7 +13,7 @@ If an output is given for an event, it will overwrite the scenario output for th
 
 -------------------------------------------------------------------------------
 
-    Copyright (c) 2015 Pixel Stereo
+    Copyright (c) 2015 - 2016 Pixel Stereo
 
 -------------------------------------------------------------------------------
 Changelog:
@@ -50,3 +50,5 @@ Changelog:
 
 - v0.1  - Dec. 25th 2015
     - First draft"""
+
+debug = False

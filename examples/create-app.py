@@ -2,7 +2,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-import os,sys
+import os, sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
@@ -10,18 +10,11 @@ import pydular
 from pydular.application import Application
 
 import pprint
-pp = pprint.PrettyPrinter(indent=4)
+pprint = pprint.PrettyPrinter(indent=4).pprint
 
-print ('--Creating an application--')
-print ('---------------------------')
 my_app = Application('My Python App',author='Renaud Rubiano',project='My Project',version='0.1.0')
-print ('app-name : ' , my_app.name)
-print ('app-author : ' , my_app.author)
-print ('app-project : ' , my_app.project)
-print ('app-version : ' , my_app.version)
-print ()
-print ('--Creating another App--')
-print ('------------------------')
+print(my_app)
 another_app = Application('Another Py App')
+print(another_app)
 
-pp.pprint(Application.export())
+pprint(Application.export())
