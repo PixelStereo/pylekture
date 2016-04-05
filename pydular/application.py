@@ -9,6 +9,7 @@ An Application has some protocol/plugin for input/output
 from pydular import debug, _applications
 from pydular.model import Model
 from pydular.node import Node
+from pydular.functions import prop_dict
 
 def application_new(*args, **kwargs):
     """Create a new application
@@ -23,12 +24,16 @@ def application_new(*args, **kwargs):
 def applications():
     return _applications
 
-def export():
+def applications_export():
     """Export Applications"""
-    apps = {'data':{}}
+    apps = {'applications':{}}
     for app in applications():
-        apps['data'].setdefault(app.name, {'attributes': \
+        apps['applications'].setdefault(app.name, {'attributes': \
             {'author':app.author, 'name':app.name, 'version':app.version}})
+        if app.models:
+            apps['applications'][app.name].setdefault('models', {})
+            for model in app.models:
+                apps['applications'][app.name]['models'].setdefault(model.name, prop_dict(model))
     return apps
 
 
@@ -45,30 +50,12 @@ class Application(Model):
         else:
             self._version = 'unknown'
         self._name = args[0]
-        self._nodes = []
-        self._models = []
         if debug:
             print("........... APP %s inited ..........." %args[0])
 
     def __repr__(self):
         printer = 'Application (name:{name}, author:{author}, version:{version})'
         return printer.format(name=self.name, author=self.author, version=self.version)
-
-    def model_new(self, *args, **kwargs):
-        """
-        Create a new Model in the parent Model
-            :return node object if successful
-            :return False if name is not valid (already exists or is not provided)
-        """
-        size = len(self._models)
-        self._models.append(Model(args[0]))
-        for key, value in kwargs.items():
-            setattr(self._models[size], key, value)
-        return self._models[size]
-
-    @property
-    def models(self):
-        return self._models
 
     # ----------- AUTHOR -------------
     @property

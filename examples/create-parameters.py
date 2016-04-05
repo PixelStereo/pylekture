@@ -5,7 +5,7 @@ import os,sys
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 import pydular
-from pydular.application import application_new, applications
+from pydular.application import application_new, applications, applications_export
 from pydular.node import Node
 from pydular.model import Model
 from pydular.parameter import Parameter
@@ -87,3 +87,9 @@ print ('raw value is : ' , param_1.raw , 'and rangeClipmode is : ' , param_1.ran
 print ('datatype is : ' , param_1.datatype , 'and value is so : ' , type(param_1.value) , param_1.value)
 param_1.datatype = 'decimal'
 print ('datatype is : ' , param_1.datatype , 'and value is so : ' , type(param_1.value) , param_1.value)
+
+
+import pprint
+pprint = pprint.PrettyPrinter(indent=4).pprint
+print('------------------ EXPORT NAMESPACE -------------------------------')
+pprint(applications_export())
