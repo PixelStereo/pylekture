@@ -43,9 +43,7 @@ class Project(object):
         self._instances.append(weakref.ref(self))
         self.debug = debug
         if self.debug == 2:
-            print()
             print("........... PROJECT created ...........")
-            print()
         self.author = None
         self.version = None
         self._path = None
@@ -123,10 +121,10 @@ class Project(object):
         """open a lekture project"""
         path = os.path.abspath(path)
         if not os.path.exists(path):
-            print("ERROR - THIS PATH IS NOT VALID", path)
+            print("ERROR - THIS PATH IS NOT VALID " + path)
             return False
         else:
-            print('loading', path)
+            print('loading project in ' + path)
             try:
                 with open(path) as in_file:
                     # clear the project

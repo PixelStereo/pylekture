@@ -3,20 +3,20 @@
 
 """implements a Scenario Class that contains events"""
 
+import liblo
 import threading
 from time import sleep
+from pydular import debug
 from pydular.functions import timestamp, checkType
-import liblo
+
 
 class Scenario(object):
     """Create a new scenario"""
     def __init__(self, project, name=None, description='', output=None, wait=0, post_wait=0):
         """create an scenario"""
         self.project = project
-        if self.project.debug == 2:
-            print()
+        if debug == 2:
             print("........... SCENARIO created ...........")
-            print()
         if description == '':
             description = "write a comment"
         if not name:
@@ -54,25 +54,25 @@ class Scenario(object):
                 index = 0
                 if self.scenario.wait:
                     # if there is a wait, please wait!!
-                    if self.project.debug:
+                    if debug:
                         print('WAIT', self.scenario.name, \
                               'DURING', self.scenario.wait, 'SECONDS')
                     sleep(self.scenario.wait)
             else:
-                # start from the index
+                # start from the index, we will skip the pre-wait sleep
                 index = self.index
-            if self.project.debug:
+            if debug:
                 print('PLAY', self.scenario.name, 'FROM INDEX', index)
             for event in self.scenario.events()[index:]:
                 # play each event
                 event.play()
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
-                if self.project.debug:
+                if debug:
                     print('POST_WAIT', self.scenario.name, \
                           'DURING', self.scenario.post_wait, 'SECONDS')
                 sleep(self.scenario.post_wait)
-            if self.project.debug:
+            if debug:
                 print('SCENARIO DONE', self.scenario.name)
             # scenario is now finish
             return True
@@ -162,10 +162,8 @@ class Event(object):
     a loop process or everything you can imagine """
     def __init__(self, scenario, content=None, name='', description='', output=None):
         self.project = scenario.project
-        if self.project.debug == 2:
-            print()
+        if debug == 2:
             print("........... Event created ...........")
-            print()
         if description == '':
             description = "event's description"
         if name == '':
@@ -197,7 +195,7 @@ class Event(object):
             args = None
         try:
             target = liblo.Address(out.ip, int(out.udp))
-            if self.project.debug:
+            if debug:
                 print('connect to : ' + out.ip + ':' + str(out.udp))
         except liblo.AddressError as err:
             print(err)
@@ -259,7 +257,7 @@ class Event(object):
                 if out.getprotocol() == 'OSC':
                     self.play_osc(out)
                 else:
-                    print('protocol', out.getprotocol(), 'is not yet implemented')
+                    print('ERROR XXX - protocol ' + out.getprotocol() + ' is not yet implemented')
             else:
                 print('there is no output for this event / scenario')
 
