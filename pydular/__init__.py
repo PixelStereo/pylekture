@@ -18,7 +18,7 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
-- v0.1.8  -
+- v0.1.8  - April 5th 2016
     - nice and robust utf-8 encoding everywhere. That means using unicode for any string.
     - add project.play() method (bunch of scenario)
     - add project.autoplay attribute
@@ -52,5 +52,5 @@ Changelog:
     - First draft"""
 
 debug = False
-
+__version__ = '0.1.8'
 _applications = []
