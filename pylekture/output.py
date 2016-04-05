@@ -3,10 +3,12 @@
 
 """implements output for scenario-events"""
 
+from __init__ import debug
+
 class Output(object):
     """Create a new output"""
     def __init__(self, project, protocol='OSC', name='no-name'):
-        if project.debug == 2:
+        if debug == 2:
             print()
             print("........... OUTPUT created ...........")
             print()

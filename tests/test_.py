@@ -4,24 +4,20 @@
 import unittest
 import os, sys
 from time import sleep
-# for
+
 lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
-# for Travis CI
-lib_path = os.path.abspath('./../pydular')
-sys.path.append(lib_path)
-
-
-from pydular import project
-from pydular import debug
-from pydular.project import new_project, projects
+from pylekture import project
+from pylekture import debug
+from pylekture.project import new_project, projects
 from pydular.functions import timestamp, checkType
+from pydular.modular_functions import m_bool, m_int, m_string
 import datetime
 import liblo
 import time
 
- 
+
 class TestAll(unittest.TestCase):
 
     def test_project(self):
@@ -32,6 +28,8 @@ class TestAll(unittest.TestCase):
         my_other_project =  new_project()
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 2)
+        self.assertEqual(my_project.author, "Renaud Rubiano")
+        self.assertEqual(my_project.version, "0.1.0")
         my_scenario = my_project.new_scenario()
         my_other_scenario = my_project.new_scenario()
         my_scenario.name = 'the scenario test'
@@ -71,8 +69,8 @@ class TestAll(unittest.TestCase):
         fourth_event = my_scenario.new_event(content='/address_only')
         midi_event = my_other_scenario.new_event(content=['CC', 16, 1, 64])
         """test scenario file"""
-        assert(my_scenario.getduration()==900)
-        assert(len(my_scenario.events())==5)
+        self.assertEqual(my_scenario.getduration(), 900)
+        self.assertEqual(len(my_scenario.events()), 5)
         my_scenario.play()
         sleep(1)
         my_scenario.play_from_here(third_event)
@@ -81,13 +79,56 @@ class TestAll(unittest.TestCase):
         my_other_scenario.play(index=1)
         sleep(0.01)
         my_project.autoplay = 1
-        my_project.loop= 1
+        my_project.loop = 1
         my_scenario.del_event(4)
-        my_project.loop= 0
+        my_project.loop = 0
+        self.assertEqual(my_project.getprotocols(), ['OSC', 'PJLINK', 'MIDI'])
+        self.assertEqual(my_project.scenarios[0].name, 'the scenario test')
+        my_project.scenarios_set(0, 1)
+        self.assertEqual(my_project.scenarios[0].name, 'the other scenario')
+        my_project.del_scenario(my_scenario)
+        self.assertEqual(len(my_project.scenarios), 1)
+        self.assertEqual(len(my_project.outputs()), 4)
+        self.assertEqual(len(my_project.outputs('PJLINK')), 1)
+        self.assertEqual(len(my_project.outputs('OSC')), 2)
+        my_project.path = 'my_file'
+        my_project.write()
+        self.assertEqual(my_project.read('my_file.json'), True)
+        sleep(0.5)
+        self.assertEqual(my_project.read('test_pylekture.py'), False)
+        self.assertEqual(my_project.read('bogus'), False)
+        my_project.reset()
+        self.assertEqual(my_project.outputs(), [])
+        self.assertEqual(my_project.scenarios, [])
+        del my_project
 
+    def test_timestamp(self):
         """test_timestamp"""
         the_timestamp = timestamp()
 
+    def test_modular_functions(self):
+        b = 2
+        self.assertEqual(type(b), int)
+        b = m_bool(b)
+        self.assertEqual(type(b), bool)
+        i = 22.22
+        self.assertEqual(type(i), float)
+        i = m_int(i)
+        self.assertEqual(type(i), int)
+        i = [22.22]
+        self.assertEqual(type(i), list)
+        i = m_int(i)
+        self.assertEqual(type(i), int)
+        s = 2
+        self.assertEqual(type(s), int)
+        s = m_string(s)
+        self.assertEqual(type(s), str)
+        s = [2]
+        self.assertEqual(type(s), list)
+        s = m_string(s)
+        self.assertEqual(type(s), str)
+
+    def test_checktypes(self):
         """test_checkType"""
         a_string = u'popo2'
         a_float = u'122.2'
@@ -123,30 +164,6 @@ class TestAll(unittest.TestCase):
         assert(type(simple_float)==float)
         assert(type(simple_int)==int)
 
-
-        assert(len(projects())==2)
-        assert(my_project.author== "Renaud Rubiano")
-        assert(my_project.version== "0.1.0")
-        assert(my_project.getprotocols()==['OSC', 'PJLINK', 'MIDI'])
-        assert(my_project.scenarios[0].name=='the scenario test')
-        my_project.scenarios_set(0, 1)
-        assert(my_project.scenarios[0].name=='the other scenario')
-        my_project.del_scenario(my_scenario)
-        assert(len(my_project.scenarios)==1)
-        assert(len(my_project.outputs())==4)
-        assert(len(my_project.outputs('PJLINK'))==1)
-        assert(len(my_project.outputs('OSC'))==2)
-        my_project.path = 'my_file'
-        my_project.write()
-        assert(my_project.read('my_file.json')==True)
-        sleep(0.5)
-        assert(my_project.read('test_pydular.py')==False)
-        assert(my_project.read('bogus')==False)
-        my_project.reset()
-        assert(my_project.outputs()==[])
-        assert(my_project.scenarios==[])
-        del my_project
- 
 
 if __name__ == '__main__':
     unittest.main()

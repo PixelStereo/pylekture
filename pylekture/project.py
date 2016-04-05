@@ -10,10 +10,10 @@ from time import sleep
 import simplejson as json
 from pydular.functions import timestamp
 
-from pydular.scenario import Scenario
-from pydular.output import Output
+from pylekture.scenario import Scenario
+from pylekture.output import Output
 
-debug = False
+from pylekture import debug
 
 def new_project():
     """Create a new project"""
@@ -41,8 +41,7 @@ class Project(object):
     def __init__(self):
         super(Project, self).__init__()
         self._instances.append(weakref.ref(self))
-        self.debug = debug
-        if self.debug == 2:
+        if debug == 2:
             print("........... PROJECT created ...........")
         self.author = None
         self.version = None
@@ -129,7 +128,7 @@ class Project(object):
                 with open(path) as in_file:
                     # clear the project
                     self.reset()
-                    if self.debug:
+                    if debug:
                         print('file reading : ', path)
                     loaded = json.load(in_file)
                     in_file.close()
@@ -155,7 +154,7 @@ class Project(object):
                             for protocol in loaded['outputs']:
                                 for out in loaded['outputs'][protocol]:
                                     self.new_output(protocol, **out['attributes'])
-                if self.debug:
+                if debug:
                     print('project loaded')
                 self._path = path
                 self.write()
@@ -163,7 +162,7 @@ class Project(object):
                     self.play()
             # catch error if file is not valid or if file is not a lekture project
             except (IOError, ValueError):
-                if self.debug:
+                if debug:
                     print('error : project not loaded, this is not a lekture project file')
                 return False
             return True
@@ -196,7 +195,7 @@ class Project(object):
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\
                                       ensure_ascii=False).encode('utf8'))
 
-            if self.debug:
+            if debug:
                 print("file has been written : ", savepath)
             return True
         else:
@@ -209,7 +208,7 @@ class Project(object):
         if self.scenarios:
             self.Play(self)
         else:
-            if self.debug:
+            if debug:
                 print('This project is empty')
 
 
@@ -220,7 +219,6 @@ class Project(object):
         """
         def __init__(self, project):
             self.project = project
-            self.debug = project.debug
             threading.Thread.__init__(self)
             self.start()
 
@@ -230,7 +228,7 @@ class Project(object):
                 wait = scenario.getduration() / 1000
                 # add wait and post_wait to duration
                 wait = wait + scenario.wait + scenario.post_wait
-                if self.debug:
+                if debug:
                     print('play', scenario, 'during', wait, 'seconds')
                 # play the scenario
                 scenario.play()
@@ -299,10 +297,10 @@ class Project(object):
                 scenario.del_event(event)
             # delete the scenario itself
             self._scenario_list.remove(scenario)
-            if self.debug == 2:
+            if debug == 2:
                 print('delete scenario', scenario, len(self._scenario_list))
         else:
-            if self.debug == 2:
+            if debug == 2:
                 print('ERROR - trying to delete a scenario which not exists \
                       in self._scenario_list', scenario)
 

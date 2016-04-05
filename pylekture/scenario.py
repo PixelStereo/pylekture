@@ -6,7 +6,7 @@
 import liblo
 import threading
 from time import sleep
-from pydular import debug
+from pylekture import debug
 from pydular.functions import timestamp, checkType
 
 

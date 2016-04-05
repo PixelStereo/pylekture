@@ -1,16 +1,16 @@
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from distutils.core import setup
 
 setup(
-  name = 'pydular',
-  packages = ['pydular'], 
-  version = '0.1.8',
+  name = 'pylekture',
+  packages = ['pylekture'],
+  version = pylekture.__version__,
   description = 'A projekt management library',
   author = 'Pixel Stereo',
-  url='https://github.com/PixelStereo/pydular', 
-  download_url = 'https://github.com/PixelStereo/pydular/tarball/0.1.8', 
+  url='https://github.com/PixelStereo/pylekture',
+  download_url = 'https://github.com/PixelStereo/pylekture/tarball/' + pylekture.__version__,
   classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
@@ -23,5 +23,5 @@ setup(
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Topic :: Software Development :: Libraries :: Python Modules'
-    ],
+    ]
 )

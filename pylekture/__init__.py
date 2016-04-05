@@ -1,14 +1,9 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-This module contains a project manager for writing inter/multi-media scenario.
-
-First, you create a project. In this project you can add Scenario and Outputs.
-
+In this project you can add Scenario and Outputs.
 A scenario contains an ordered list of Events.
-
 A scenario outputs its event to a choosen Output.
-
 If an output is given for an event, it will overwrite the scenario output for this event.
 
 -------------------------------------------------------------------------------
@@ -18,7 +13,12 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog:
 -------------------------------------------------------------------------------
-- v0.1.8  - April 5th 2016
+
+- v0.1.9 - Apr. 5th 2016
+    - New name. Now known as pylekture, for python lekture framework.
+    - Pylekture is based on pydular framework (python modular implementation)
+
+- v0.1.8  - Apr. 5th 2016
     - nice and robust utf-8 encoding everywhere. That means using unicode for any string.
     - add project.play() method (bunch of scenario)
     - add project.autoplay attribute
@@ -27,7 +27,7 @@ Changelog:
     - transform scenarios from method to property
 
 - v0.1.7  -  Jan. 25th 2016
-    - new name. Now known as pydular, for python modular implementation
+    - New name. Now known as pydular, for python modular implementation
     - enhance tests
 
 - v0.1.4  -  Jan. 6th 2016
@@ -52,5 +52,16 @@ Changelog:
     - First draft"""
 
 debug = False
-__version__ = '0.1.8'
 _applications = []
+# The short X.Y version.
+__version__ = '0.1.8'
+# The full version, including alpha/beta/rc tags.
+__release__ = __version__
+
+import os, sys
+path = os.path.dirname(os.path.realpath(__file__))
+path = path.split('/')
+path = path[:-2]
+path = '/'.join(path) + '/lekture/3rdparty/pydular'
+sys.path.append(path)
+import pydular
