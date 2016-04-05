@@ -2,10 +2,15 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+The Node is the Base class of all items in a namespace.
+Every Model, Application or Parameter is based on the Node Class
+"""
+
 from pydular import debug
 
 class Node(object):
-    """This is a node"""
+    """Base Class for all item in the namespace"""
     def __init__(self, name, tags=None, priority=None):
         self._name = name
         self._tags = tags
@@ -16,22 +21,6 @@ class Node(object):
     def __repr__(self):
         printer = 'Node (name:{name}, priority:{priority}, tags:{tags})'
         return printer.format(name=self.name, priority=self.priority, tags=self.tags)
-
-    def node_new(self, *args, **kwargs):
-        """
-        Create a new node in the parent node
-            :return node object if successful
-            :return False if name is not valid (already exists or is not provided)
-        """
-        size = len(self._nodes)
-        self._nodes.append(Node(args[0]))
-        for key, value in kwargs.items():
-            setattr(self._nodes[size], key, value)
-        return self._nodes[size]
-
-    @property
-    def nodes(self):
-        return self._nodes
 
     @property
     def name(self):
