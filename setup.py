@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from distutils.core import setup
-from pylekture import __version__
 import versioneer
-
 from pylekture._version import get_versions
 __version__ = get_versions()['version']
 del get_versions

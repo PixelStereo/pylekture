@@ -4,3 +4,4 @@
 """a few constants for the project"""
 
 debug = 1
+_applications = []
