@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath('./../'))
 from pylekture.project import Output
 from pylekture.constants import debug
 from pylekture.project import new_project, projects
-from pylekture.functions import timestamp, checkType
+from pylekture.functions import checkType
 
 import datetime
 import liblo
@@ -102,7 +102,9 @@ class TestAll(unittest.TestCase):
 
     def test_timestamp(self):
         """test_timestamp"""
-        the_timestamp = timestamp()
+        import datetime
+        timestamp = datetime.datetime.now()
+        print timestamp
 
 if __name__ == '__main__':
     unittest.main()

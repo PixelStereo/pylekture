@@ -9,7 +9,7 @@ import threading
 from time import sleep
 import simplejson as json
 
-from pylekture.functions import timestamp
+import datetime
 from pylekture.scenario import Scenario
 from pylekture.output import Output
 from pylekture.constants import debug
@@ -48,7 +48,7 @@ class Project(object):
         self.lastopened = None
         self._autoplay = False
         self._loop = False
-        self.created = timestamp()
+        self.created = datetime.datetime.now()
         self.output_list = []
         self._scenario_list = []
 
@@ -148,7 +148,7 @@ class Project(object):
                                     self.autoplay = value
                                 if attribute == 'loop':
                                     self.loop = value
-                            self.lastopened = timestamp()
+                            self.lastopened = datetime.datetime.now()
                         elif key == 'outputs':
                             for protocol in loaded['outputs']:
                                 for out in loaded['outputs'][protocol]:

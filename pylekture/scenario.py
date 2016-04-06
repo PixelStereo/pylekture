@@ -7,7 +7,8 @@ import liblo
 import threading
 from time import sleep
 from pylekture.constants import debug
-from pylekture.functions import timestamp, checkType
+from pylekture.functions import checkType
+import datetime
 
 
 class Scenario(object):
@@ -20,7 +21,7 @@ class Scenario(object):
         if description == '':
             description = "write a comment"
         if not name:
-            name = timestamp()
+            name = datetime.datetime.now()
         self.name = name
         self._project = project
         self.output = output
