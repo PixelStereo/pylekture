@@ -14,9 +14,8 @@ If an output is given for an event, it will overwrite the scenario output for th
 Changelog:
 -------------------------------------------------------------------------------
 
-- v0.1.9 - Apr. 5th 2016
+- v0.1.9 - Apr. 6th 2016
     - New name. Now known as pylekture, for python lekture framework.
-    - Pylekture is based on pydular framework (python modular implementation)
 
 - v0.1.8  - Apr. 5th 2016
     - nice and robust utf-8 encoding everywhere. That means using unicode for any string.
@@ -49,19 +48,10 @@ Changelog:
     - FIX output
 
 - v0.1  - Dec. 25th 2015
-    - First draft"""
+    - First draft
+"""
 
 debug = False
 _applications = []
-# The short X.Y version.
-__version__ = '0.1.8'
-# The full version, including alpha/beta/rc tags.
+__version__ = '0.1.9'
 __release__ = __version__
-
-import os, sys
-path = os.path.dirname(os.path.realpath(__file__))
-path = path.split('/')
-path = path[:-1]
-path = '/'.join(path) + '/3rdparty/pydular'
-sys.path.append(path)
-import pydular

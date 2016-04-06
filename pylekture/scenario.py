@@ -7,7 +7,7 @@ import liblo
 import threading
 from time import sleep
 from pylekture import debug
-from pydular.functions import timestamp, checkType
+from pylekture.functions import timestamp, checkType
 
 
 class Scenario(object):

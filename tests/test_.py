@@ -11,8 +11,7 @@ sys.path.append(lib_path)
 from pylekture import project
 from pylekture import debug
 from pylekture.project import new_project, projects
-from pydular.functions import timestamp, checkType
-from pydular.modular_functions import m_bool, m_int, m_string
+from pylekture.functions import timestamp, checkType
 import datetime
 import liblo
 import time
@@ -105,65 +104,6 @@ class TestAll(unittest.TestCase):
     def test_timestamp(self):
         """test_timestamp"""
         the_timestamp = timestamp()
-
-    def test_modular_functions(self):
-        b = 2
-        self.assertEqual(type(b), int)
-        b = m_bool(b)
-        self.assertEqual(type(b), bool)
-        i = 22.22
-        self.assertEqual(type(i), float)
-        i = m_int(i)
-        self.assertEqual(type(i), int)
-        i = [22.22]
-        self.assertEqual(type(i), list)
-        i = m_int(i)
-        self.assertEqual(type(i), int)
-        s = 2
-        self.assertEqual(type(s), int)
-        s = m_string(s)
-        self.assertEqual(type(s), str)
-        s = [2]
-        self.assertEqual(type(s), list)
-        s = m_string(s)
-        self.assertEqual(type(s), str)
-
-    def test_checktypes(self):
-        """test_checkType"""
-        a_string = u'popo2'
-        a_float = u'122.2'
-        a_list = [u'2.2', u'renaud', u'22']
-        an_int = u'122'
-        string_int = '2'
-        string_float = '2.2'
-        simple_int = 2
-        simple_float = 2.2
-        simple_int = checkType(simple_int)
-        simple_float = checkType(simple_float)
-        string_int = checkType(string_int)
-        string_float = checkType(string_float)
-        the_none = None
-        a_float = checkType(a_float)
-        a_list = checkType(a_list)
-        an_int = checkType(an_int)
-        the_none = checkType(the_none)
-        # test functions file
-        #assert(type(list(string_dict)[0])==unicode)
-        #assert(type(string_list[0])==unicode)
-        #assert(type(a_string)==unicode)
-        #assert(type(an_int)==int)
-        #assert(type(a_list)==list)
-        #assert(type(a_list[0])==unicode)
-        #assert(type(a_list[0])==unicode)
-        #assert(type(a_list[1])==unicode)
-        #assert(type(a_list[2])==unicode)
-        assert(type(a_float)==float)
-        assert(type(the_none)==type(None))
-        assert(type(string_float)==float)
-        assert(type(string_int)==int)
-        assert(type(simple_float)==float)
-        assert(type(simple_int)==int)
-
 
 if __name__ == '__main__':
     unittest.main()
