@@ -1,43 +1,42 @@
-
 pylekture
 =========
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-
 .. automodule:: pylekture
     :members:
     :undoc-members:
     :show-inheritance:
 
-pylekture package
-=================
+Index
+=====
+* :ref:`genindex`
 
-Submodules
-----------
-
-pylekture.output module
------------------------
-
-.. automodule:: pylekture.output
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pylekture.project module
-------------------------
+pylekture.project
+-----------------
 
 .. automodule:: pylekture.project
     :members:
     :undoc-members:
     :show-inheritance:
 
-pylekture.scenario module
--------------------------
+pylekture.scenario
+------------------
 
 .. automodule:: pylekture.scenario
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pylekture.output
+----------------
+
+.. automodule:: pylekture.output
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pylekture.functions
+-------------------
+
+.. automodule:: pylekture.functions
     :members:
     :undoc-members:
     :show-inheritance:

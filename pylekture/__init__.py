@@ -1,9 +1,22 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-In this project you can add Scenario and Outputs.
-A scenario contains an ordered list of Events.
-A scenario outputs its event to a choosen Output.
+pylekture is a python package that provide an API to create scenario for intermedia projects.
+
+The project is designed around the concept of a project, that handles scenario, 
+which itself contains events.
+
+An events can be a command or a wait for now, but we should extendending the concept
+ later during the implementation.
+
+In details : 
+    - A project contains Scenario and Outputs.
+        - A scenario contains an ordered list of Events.
+        - A scenario outputs its events to a choosen Output.
+        - An output is a in/out protocol such as OSC, MIDI, Serial, Artnet etc…
+
+An output is associated to the project. But you can redirect each scenario to a different output
+and even more.
 If an output is given for an event, it will overwrite the scenario output for this event.
 
 -------------------------------------------------------------------------------
@@ -11,7 +24,9 @@ If an output is given for an event, it will overwrite the scenario output for th
     Copyright (c) 2015 - 2016 Pixel Stereo
 
 -------------------------------------------------------------------------------
-Changelog:
+
+-------------------------------------------------------------------------------
+Changelog
 -------------------------------------------------------------------------------
 
 - v0.1.9 - Apr. 6th 2016
