@@ -28,7 +28,9 @@ If an output is given for an event, it will overwrite the scenario output for th
 -------------------------------------------------------------------------------
 Changelog
 -------------------------------------------------------------------------------
-
+- v2.0.0 - Apr. ??th 2016
+    - Use versioneer to take care of versionning
+        - https://github.com/warner/python-versioneer
 - v0.1.9 - Apr. 6th 2016
     - New name. Now known as pylekture, for python lekture framework.
 

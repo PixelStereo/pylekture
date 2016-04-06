@@ -16,9 +16,12 @@ import sys
 import os
 import shlex
 import sphinx_rtd_theme
-lib_path = os.path.abspath('./../../')
-sys.path.append(lib_path)
-from pylekture import __version__, __release__
+
+sys.path.append(os.path.abspath('./../../'))
+from pylekture._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
+__release__ = __version__
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

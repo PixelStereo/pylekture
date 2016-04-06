@@ -3,11 +3,19 @@
 
 from distutils.core import setup
 from pylekture import __version__
+import versioneer
+
+from pylekture._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
+__version__ = __version__.split('+')
+__version__ = __version__[0]
 
 setup(
+  version=versioneer.get_version(),
+  cmdclass=versioneer.get_cmdclass(),
   name = 'pylekture',
   packages = ['pylekture'],
-  version = __version__,
   description = 'A projekt management library',
   author = 'Pixel Stereo',
   url='https://github.com/PixelStereo/pylekture',
