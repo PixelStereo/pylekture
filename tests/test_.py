@@ -5,13 +5,12 @@ import unittest
 import os, sys
 from time import sleep
 
-lib_path = os.path.abspath('./../')
-sys.path.append(lib_path)
-
-from pylekture import project
-from pylekture import debug
+sys.path.append(os.path.abspath('./../'))
+from pylekture.project import Output
+from pylekture.constants import debug
 from pylekture.project import new_project, projects
 from pylekture.functions import timestamp, checkType
+
 import datetime
 import liblo
 import time
@@ -53,8 +52,8 @@ class TestAll(unittest.TestCase):
         self.assertEqual(second_out.getprotocol(), 'PJLINK')
         self.assertEqual(third_out.getprotocol(), 'OSC')
         self.assertEqual(forth_out.getprotocol(), 'MIDI')
-        self.assertEqual(project.Output.protocols(), ['OSC'])
-        self.assertEqual(len(project.Output.getinstances(my_project)), 4)
+        self.assertEqual(Output.protocols(), ['OSC'])
+        self.assertEqual(len(Output.getinstances(my_project)), 4)
         self.assertEqual(my_output.getproject().version, '0.1.0')
         self.assertEqual(my_scenario.getoutput().getprotocol(), 'OSC')
         self.assertEqual(my_scenario.getoutput().ip, '127.0.0.1')
