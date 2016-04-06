@@ -49,7 +49,7 @@ class Project(object):
         self.lastopened = None
         self._autoplay = False
         self._loop = False
-        self.created = timestamp(display='nice')
+        self.created = timestamp()
         self.output_list = []
         self._scenario_list = []
 
