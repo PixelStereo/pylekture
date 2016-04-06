@@ -3,7 +3,9 @@
 
 from distutils.core import setup
 import versioneer
-from pylekture._version import get_versions
+import os, sys
+sys.path.append(os.path.abspath('./pylekture'))
+from _version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 __version__ = __version__.split('+')
