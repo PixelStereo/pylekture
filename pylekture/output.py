@@ -3,7 +3,7 @@
 
 """implements output for scenario-events"""
 
-from __init__ import debug
+from pylekture import debug
 
 class Output(object):
     """Create a new output"""
