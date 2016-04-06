@@ -43,7 +43,6 @@ Changelog
     - transform scenarios from method to property
 
 - v0.1.7  -  Jan. 25th 2016
-    - New name. Now known as pydular, for python modular implementation
     - enhance tests
 
 - v0.1.4  -  Jan. 6th 2016
