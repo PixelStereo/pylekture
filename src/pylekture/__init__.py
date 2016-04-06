@@ -68,5 +68,9 @@ Changelog
 
 debug = False
 _applications = []
-__version__ = '0.1.9'
-__release__ = __version__
+__version__ = '0.2.0'
+__release__ = __version__ + 'dev'
+
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
