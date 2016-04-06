@@ -24,11 +24,3 @@ script:
 after_success:
 - coveralls
 - travis-sphinx deploy
-deploy:
-  provider: pypi
-  user: $pypilog
-  password: $pypipass
-  on:
-    tags: true
-    distributions: sdist bdist_wheel
-    repo: PixelStereo/pylekture
