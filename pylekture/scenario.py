@@ -21,7 +21,7 @@ class Scenario(object):
         if description == '':
             description = "write a comment"
         if not name:
-            name = datetime.datetime.now()
+            name = str(datetime.datetime.now())
         self.name = name
         self._project = project
         self.output = output

@@ -103,8 +103,8 @@ class TestAll(unittest.TestCase):
     def test_timestamp(self):
         """test_timestamp"""
         import datetime
-        timestamp = datetime.datetime.now()
-        print timestamp
+        timestamp = str(datetime.datetime.now())
+        self.assertEqual(isinstance(timestamp, str), True)
 
 if __name__ == '__main__':
     unittest.main()

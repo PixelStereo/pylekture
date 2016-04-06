@@ -48,7 +48,7 @@ class Project(object):
         self.lastopened = None
         self._autoplay = False
         self._loop = False
-        self.created = datetime.datetime.now()
+        self.created = str(datetime.datetime.now())
         self.output_list = []
         self._scenario_list = []
 
@@ -148,7 +148,7 @@ class Project(object):
                                     self.autoplay = value
                                 if attribute == 'loop':
                                     self.loop = value
-                            self.lastopened = datetime.datetime.now()
+                            self.lastopened = str(datetime.datetime.now())
                         elif key == 'outputs':
                             for protocol in loaded['outputs']:
                                 for out in loaded['outputs'][protocol]:
