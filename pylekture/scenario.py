@@ -6,7 +6,7 @@
 import liblo
 import threading
 from time import sleep
-from pylekture import debug
+from pylekture.constants import debug
 from pylekture.functions import timestamp, checkType
 
 

@@ -8,12 +8,11 @@ import weakref
 import threading
 from time import sleep
 import simplejson as json
-from pylekture.functions import timestamp
 
+from pylekture.functions import timestamp
 from pylekture.scenario import Scenario
 from pylekture.output import Output
-
-from pylekture import debug
+from pylekture.constants import debug
 
 def new_project():
     """Create a new project"""
