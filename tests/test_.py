@@ -124,7 +124,12 @@ class TestAll(unittest.TestCase):
         self.assertEqual(isinstance(uni, float), True)
         uni = u'twenty-two-22'
         uni = checkType(uni)
-        self.assertEqual(isinstance(uni, basestring), True)
+        try:
+            # this is python 2
+            self.assertEqual(isinstance(uni, basestring), True)
+        except:
+            # this is python 3
+            self.assertEqual(isinstance(uni, (str, bytes)), True)
 
 if __name__ == '__main__':
     unittest.main()
