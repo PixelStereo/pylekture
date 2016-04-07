@@ -258,7 +258,7 @@ class Event(object):
                 if out.getprotocol() == 'OSC':
                     self.play_osc(out)
                 else:
-                    print('ERROR XXX - protocol ' + out.getprotocol() + ' is not yet implemented')
+                    print('ERROR 503 - protocol ' + out.getprotocol() + ' is not yet implemented')
             else:
                 print('there is no output for this event / scenario')
 
