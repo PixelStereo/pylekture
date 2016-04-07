@@ -22,11 +22,11 @@ In details:
     - An output is a in/out protocol such as OSC, MIDI, Serial, Artnet etc…
 
 Project has a few attributes:
-    -version(read-only):the version of pylekture used to create this Project
-    -lastopened
-    -created
-    -autoplay
-    -loop
+    - version(read-only):the version of pylekture used to create this Project
+    - lastopened:timestamp of the last time pylekture opened this file
+    - created:timestamp of the creation of this file
+    - autoplay:enable/disable play when file is loaded
+    - loop:enable/disable play when project file reach ends of a play
 
 -------------------------------------------------------------------------------
 
