@@ -28,7 +28,7 @@ class Output(object):
     @staticmethod
     def getinstances(project):
         """return a list of outputs for a given project"""
-        return project.output_list
+        return project._output_list
 
     @staticmethod
     def protocols():

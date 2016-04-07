@@ -273,5 +273,9 @@ class Event(object):
         if output:
             protocol = output[0]
             output = output[1] - 1
-            output = self.scenario._project.outputs(protocol)[output]
+            try:
+                output = self.scenario._project.outputs(protocol)[output]
+            except IndexError:
+                print('ERROR in getoutput - please clip the value to existing outputs')
+                return False
         return output

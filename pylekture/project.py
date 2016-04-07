@@ -13,6 +13,7 @@ from time import sleep
 import simplejson as json
 
 import datetime
+from pylekture import __version__
 from pylekture.scenario import Scenario
 from pylekture.output import Output
 from pylekture.constants import debug
@@ -31,9 +32,7 @@ def projects():
 class Project(object):
     """
     A project handles everything you need. Ouputs and scenarios are all project-relative
-
-    :param <author>: Name of the project author. Default is None
-    :param <version>: Name of the project author. Default is None
+    :param <version>: Version of the pylekture lib that created the project. Read-Only value
     :param <lastopened>: Datetime of the last opened date of this project. Default is None
     """
 
@@ -43,14 +42,13 @@ class Project(object):
     def __init__(self):
         super(Project, self).__init__()
         self._instances.append(weakref.ref(self))
-        self.author = None
-        self.version = None
+        self._version = __version__
         self._path = None
         self.lastopened = None
         self._autoplay = False
         self._loop = False
-        self.created = str(datetime.datetime.now())
-        self.output_list = []
+        self._created = str(datetime.datetime.now())
+        self._output_list = []
         self._scenario_list = []
 
     def __repr__(self):
@@ -67,7 +65,14 @@ class Project(object):
         Return a list of scenarios for this project
         """
         return self._scenario_list
-        
+
+    @property
+    def version(self):
+        return self._version
+    @version.setter
+    def version(self, version):
+        print('version cannot be set')
+
     @property
     def path(self):
         return self._path
@@ -105,11 +110,10 @@ class Project(object):
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
         # reset project attributes
-        self.author = None
         self.version = None
         self._path = None
         # reset outputs
-        self.output_list = []
+        self._output_list = []
         # reset scenarios and events
         self._scenario_list = []
 
@@ -119,6 +123,7 @@ class Project(object):
             :arg: file to load. Filepath must be provided as a string/unicode.
                                 Filepath will be checked, if valid it will be loaded
                                 Otherwise, it will return False
+
             :rtype:True if the project has been correctly loaded, False otherwise
         """
         path = os.path.abspath(path)
@@ -133,16 +138,23 @@ class Project(object):
         """
         Load a lekture-project from a file from hard drive
         It will play the file after loading, according to autoplay attribute value
+
             :arg: file to load. Filepath must be valid when provided, it must be checked before.
+
             :rtype:True if the project has been correctly loaded, False otherwise
         """
-        with open(path) as in_file:
-            # clear the project
-            self.reset()
-            loaded = json.load(in_file)
-            in_file.close()
-            # create objects from loaded file
-            flag = self.fillin(loaded)
+        try:
+            with open(path) as in_file:
+                # clear the project
+                self.reset()
+                loaded = json.load(in_file)
+                in_file.close()
+                # create objects from loaded file
+                flag = self.fillin(loaded)
+        # catch error if file is not valid or if file is not a lekture project
+        except (IOError, ValueError):
+            print('ERROR 906 - project not loaded, this is not a lekture-project file')
+            return False
         self._path = path
         if self._autoplay:
             self.play()
@@ -151,7 +163,7 @@ class Project(object):
     def fillin(self, loaded):
         """
         Creates Outputs, Scenario and Events obects
-        Return True if file formatting is correct, False otherwise
+            :rtype:True if file formatting is correct, False otherwise
         """
         try:
             for key in loaded.keys():
@@ -163,10 +175,10 @@ class Project(object):
                             scenar.new_event(**event['attributes'])
                 elif key == 'attributes':
                     for attribute, value in loaded['attributes'].items():
-                        if attribute == 'author':
-                            self.author = value
+                        if attribute == 'created':
+                            self._created = value
                         if attribute == 'version':
-                            self.version = value
+                            self._version = value
                         if attribute == 'autoplay':
                             self.autoplay = value
                         if attribute == 'loop':
@@ -264,7 +276,7 @@ class Project(object):
         if protocol == 'all' or protocol == None:
             return Output.getinstances(self)
         else:
-            for out in self.output_list:
+            for out in self._output_list:
                 if out:
                     if protocol == out.getprotocol():
                         outs.append(out)
@@ -298,17 +310,17 @@ class Project(object):
     def new_output(self, protocol, **kwargs):
         """
         Create a new output for this project
-            args:Mandatory argument is the protocol that you want to use for this output
-                (OSC, MIDI, serial, ArtNet)
-            rtype:Output object
+        args:Mandatory argument is the protocol that you want to use for this output
+        (OSC, MIDI, serial, ArtNet)
+        rtype:Output object
         """
-        taille = len(self.output_list)
+        taille = len(self._output_list)
         the_output = None
-        self.output_list.append(the_output)
-        self.output_list[taille] = Output(self, protocol)
+        self._output_list.append(the_output)
+        self._output_list[taille] = Output(self, protocol)
         for key, value in kwargs.items():
-            setattr(self.output_list[taille], key, value)
-        return self.output_list[taille]
+            setattr(self._output_list[taille], key, value)
+        return self._output_list[taille]
 
     def del_scenario(self, scenario):
         """
@@ -330,7 +342,8 @@ class Project(object):
 
     def _export_attributes(self):
         """export attributes of the project"""
-        attributes = {'author':self.author, 'version':self.version, 'lastopened':self.lastopened, 'loop':self._loop, 'autoplay':self._autoplay}
+        attributes = {'created':self._created, 'version':self.version, \
+                      'lastopened':self.lastopened, 'loop':self._loop, 'autoplay':self._autoplay}
         return attributes
 
     def _export_scenario(self):

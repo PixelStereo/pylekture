@@ -6,6 +6,7 @@ import os, sys
 from time import sleep
 
 sys.path.append(os.path.abspath('./../'))
+from pylekture import __version__
 from pylekture.project import Output
 from pylekture.constants import debug
 from pylekture.project import new_project, projects
@@ -24,14 +25,11 @@ class TestAll(unittest.TestCase):
         print(my_project)
         my_project.play()
         my_project.getprotocols()
-        my_project.author = 'Renaud Rubiano'
-        my_project.version = version='0.1.0'
         my_other_project =  new_project()
         print(my_project.path, my_project.autoplay, my_project.loop)
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 2)
-        self.assertEqual(my_project.author, "Renaud Rubiano")
-        self.assertEqual(my_project.version, "0.1.0")
+        self.assertEqual(my_project.version, __version__)
         my_scenario = my_project.new_scenario()
         my_other_scenario = my_project.new_scenario()
         my_scenario.name = 'the scenario test'
@@ -59,7 +57,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(forth_out.getprotocol(), 'MIDI')
         self.assertEqual(Output.protocols(), ['OSC'])
         self.assertEqual(len(Output.getinstances(my_project)), 4)
-        self.assertEqual(my_output.getproject().version, '0.1.0')
+        self.assertEqual(my_output.getproject().version, __version__)
         self.assertEqual(my_scenario.getoutput().getprotocol(), 'OSC')
         self.assertEqual(my_scenario.getoutput().ip, '127.0.0.1')
         self.assertEqual(my_scenario.getoutput().udp, 1234)
@@ -100,9 +98,9 @@ class TestAll(unittest.TestCase):
         my_project.write('the_file')
         my_project.write('/Users/pop')
         self.assertEqual(my_project.read('my_file.json'), True)
-        sleep(0.5)
+        sleep(0.01)
         my_project.loop = 0
-        sleep(0.5)
+        sleep(0.2)
         self.assertEqual(my_project.read('test_.py'), False)
         self.assertEqual(my_project.read('bogus'), False)
         my_project.reset()
