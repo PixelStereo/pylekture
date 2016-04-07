@@ -16,8 +16,6 @@ class Scenario(object):
     def __init__(self, project, name=None, description='', output=None, wait=0, post_wait=0):
         """create an scenario"""
         self.project = project
-        if debug == 2:
-            print("........... SCENARIO created ...........")
         if description == '':
             description = "write a comment"
         if not name:
@@ -162,8 +160,6 @@ class Event(object):
     a loop process or everything you can imagine """
     def __init__(self, scenario, content=None, name='', description='', output=None):
         self.project = scenario.project
-        if debug == 2:
-            print("........... Event created ...........")
         if description == '':
             description = "event's description"
         if name == '':
@@ -198,7 +194,7 @@ class Event(object):
             if debug:
                 print('connect to : ' + out.ip + ':' + str(out.udp))
         except liblo.AddressError as err:
-            print(err)
+            print('liblo.AddressError' + str(err))
         if isinstance(args, list) and 'ramp' in args:
             # this is a ramp, make it in a separate thread
             self.Ramp(target, address, args)

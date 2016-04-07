@@ -1,7 +1,10 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""create and manage a project"""
+"""
+This is the Project Class, which is the base of our document.
+You can here create a project, or make a list of projects available.
+"""
 
 import os
 import weakref
@@ -40,8 +43,6 @@ class Project(object):
     def __init__(self):
         super(Project, self).__init__()
         self._instances.append(weakref.ref(self))
-        if debug == 2:
-            print("........... PROJECT created ...........")
         self.author = None
         self.version = None
         self._path = None
@@ -70,7 +71,6 @@ class Project(object):
     @property
     def path(self):
         return self._path
-
     @path.setter
     def path(self, value):
         self._path = value
@@ -78,7 +78,6 @@ class Project(object):
     @property
     def autoplay(self):
         return self._autoplay
-
     @autoplay.setter
     def autoplay(self, value):
         self._autoplay = value
@@ -86,7 +85,6 @@ class Project(object):
     @property
     def loop(self):
         return self._loop
-
     @loop.setter
     def loop(self, value):
         self._loop = value
@@ -296,10 +294,10 @@ class Project(object):
                 scenario.del_event(event)
             # delete the scenario itself
             self._scenario_list.remove(scenario)
-            if debug == 2:
+            if debug:
                 print('delete scenario', scenario, len(self._scenario_list))
         else:
-            if debug == 2:
+            if debug:
                 print('ERROR - trying to delete a scenario which not exists \
                       in self._scenario_list', scenario)
 

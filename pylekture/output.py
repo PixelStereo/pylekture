@@ -8,10 +8,6 @@ from pylekture.constants import debug
 class Output(object):
     """Create a new output"""
     def __init__(self, project, protocol='OSC', name='no-name'):
-        if debug == 2:
-            print()
-            print("........... OUTPUT created ...........")
-            print()
         self._protocol = protocol
         self._project = project
         self.name = name
