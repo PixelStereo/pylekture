@@ -21,9 +21,13 @@ class TestAll(unittest.TestCase):
     def test_project(self):
         """create projects"""
         my_project = new_project()
+        print(my_project)
+        my_project.play()
+        my_project.getprotocols()
         my_project.author = 'Renaud Rubiano'
         my_project.version = version='0.1.0'
         my_other_project =  new_project()
+        print(my_project.path, my_project.autoplay, my_project.loop)
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 2)
         self.assertEqual(my_project.author, "Renaud Rubiano")
@@ -79,21 +83,26 @@ class TestAll(unittest.TestCase):
         my_project.autoplay = 1
         my_project.loop = 1
         my_scenario.del_event(4)
-        my_project.loop = 0
         self.assertEqual(my_project.getprotocols(), ['OSC', 'PJLINK', 'MIDI'])
         self.assertEqual(my_project.scenarios[0].name, 'the scenario test')
         my_project.scenarios_set(0, 1)
         self.assertEqual(my_project.scenarios[0].name, 'the other scenario')
         my_project.del_scenario(my_scenario)
+        my_project.del_scenario('bogus')
         self.assertEqual(len(my_project.scenarios), 1)
         self.assertEqual(len(my_project.outputs()), 4)
         self.assertEqual(len(my_project.outputs('PJLINK')), 1)
         self.assertEqual(len(my_project.outputs('OSC')), 2)
+        my_project.write()
         my_project.path = 'my_file'
         my_project.write()
+        my_project.write('the_file')
+        my_project.write('/Users/pop')
         self.assertEqual(my_project.read('my_file.json'), True)
         sleep(0.5)
-        self.assertEqual(my_project.read('test_pylekture.py'), False)
+        my_project.loop = 0
+        sleep(0.5)
+        self.assertEqual(my_project.read('test_.py'), False)
         self.assertEqual(my_project.read('bogus'), False)
         my_project.reset()
         self.assertEqual(my_project.outputs(), [])
@@ -105,6 +114,17 @@ class TestAll(unittest.TestCase):
         import datetime
         timestamp = str(datetime.datetime.now())
         self.assertEqual(isinstance(timestamp, str), True)
+
+    def test_checkType(self):
+        uni = u'22'
+        uni = checkType(uni)
+        self.assertEqual(isinstance(uni, int), True)
+        uni = u'22.22'
+        uni = checkType(uni)
+        self.assertEqual(isinstance(uni, float), True)
+        uni = u'twenty-two-22'
+        uni = checkType(uni)
+        self.assertEqual(isinstance(uni, basestring), True)
 
 if __name__ == '__main__':
     unittest.main()
