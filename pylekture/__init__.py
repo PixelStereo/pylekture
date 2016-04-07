@@ -7,9 +7,9 @@ The API is designed around the concept of a project, that handles scenario and o
 Each scenario contains events.
 
 -Project : this is a bunch of Outputs and Scenario
-    -Output : This is frome here that you output Events
-    -Scenario : This is a bunch of Events
-        -Event : This is a command
+-Output : This is frome here that you output Events
+-Scenario : This is a bunch of Events
+-Event : This is a command
 
 An event can be a command for a device, or a wait-command for the the scenario.
 

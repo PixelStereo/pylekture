@@ -114,55 +114,75 @@ class Project(object):
         self._scenario_list = []
 
     def read(self, path):
-        """open a lekture project"""
+        """
+        Read a lekture-project file from hard drive
+            :arg: file to load. Filepath must be provided as a string/unicode.
+                                Filepath will be checked, if valid it will be loaded
+                                Otherwise, it will return False
+            :rtype:True if the project has been correctly loaded, False otherwise
+        """
         path = os.path.abspath(path)
         if not os.path.exists(path):
-            print("ERROR - THIS PATH IS NOT VALID " + path)
+            print("ERROR 901 - THIS PATH IS NOT VALID " + path)
             return False
         else:
             print('loading project in ' + path)
-            try:
-                with open(path) as in_file:
-                    # clear the project
-                    self.reset()
-                    if debug:
-                        print('file reading : ', path)
-                    loaded = json.load(in_file)
-                    in_file.close()
-                    for key in loaded.keys():
-                        if key == 'scenario':
-                            for scenario in loaded['scenario']:
-                                events = scenario['attributes'].pop('events')
-                                scenar = self.new_scenario(**scenario['attributes'])
-                                for event in events:
-                                    scenar.new_event(**event['attributes'])
-                        elif key == 'attributes':
-                            for attribute, value in loaded['attributes'].items():
-                                if attribute == 'author':
-                                    self.author = value
-                                if attribute == 'version':
-                                    self.version = value
-                                if attribute == 'autoplay':
-                                    self.autoplay = value
-                                if attribute == 'loop':
-                                    self.loop = value
-                            self.lastopened = str(datetime.datetime.now())
-                        elif key == 'outputs':
-                            for protocol in loaded['outputs']:
-                                for out in loaded['outputs'][protocol]:
-                                    self.new_output(protocol, **out['attributes'])
-                if debug:
-                    print('project loaded')
-                self._path = path
-                self.write()
-                if self._autoplay:
-                    self.play()
-            # catch error if file is not valid or if file is not a lekture project
-            except (IOError, ValueError):
-                if debug:
-                    print('error : project not loaded, this is not a lekture project file')
-                return False
+            return self.load(path)
+
+    def load(self, path):
+        """
+        Load a lekture-project from a file from hard drive
+        It will play the file after loading, according to autoplay attribute value
+            :arg: file to load. Filepath must be valid when provided, it must be checked before.
+            :rtype:True if the project has been correctly loaded, False otherwise
+        """
+        with open(path) as in_file:
+            # clear the project
+            self.reset()
+            loaded = json.load(in_file)
+            in_file.close()
+            # create objects from loaded file
+            flag = self.fillin(loaded)
+        self._path = path
+        if self._autoplay:
+            self.play()
+        return flag
+
+    def fillin(self, loaded):
+        """
+        Creates Outputs, Scenario and Events obects
+        Return True if file formatting is correct, False otherwise
+        """
+        try:
+            for key in loaded.keys():
+                if key == 'scenario':
+                    for scenario in loaded['scenario']:
+                        events = scenario['attributes'].pop('events')
+                        scenar = self.new_scenario(**scenario['attributes'])
+                        for event in events:
+                            scenar.new_event(**event['attributes'])
+                elif key == 'attributes':
+                    for attribute, value in loaded['attributes'].items():
+                        if attribute == 'author':
+                            self.author = value
+                        if attribute == 'version':
+                            self.version = value
+                        if attribute == 'autoplay':
+                            self.autoplay = value
+                        if attribute == 'loop':
+                            self.loop = value
+                    self.lastopened = str(datetime.datetime.now())
+                elif key == 'outputs':
+                    for protocol in loaded['outputs']:
+                        for out in loaded['outputs'][protocol]:
+                            self.new_output(protocol, **out['attributes'])
+            print('project loaded')
             return True
+        # catch error if file is not valid or if file is not a lekture project
+        except (IOError, ValueError):
+            if debug:
+                print('ERROR 907 - project not loaded, this is not a lekture-project file')
+            return False
 
     def write(self, path=None):
         """
@@ -181,19 +201,15 @@ class Project(object):
                 out_file = open((savepath), 'wb')
             except IOError:
                 # path does not exists
-                if debug:
-                    print('path is not valid, could not write to disk on :', savepath)
+                print('ERROR 909 - path is not valid, could not save project - ' + savepath)
                 return False
             project = {}
             project.setdefault('scenario', self._export_scenario())
             project.setdefault('attributes', self._export_attributes())
             project.setdefault('outputs', self._export_outputs())
-
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\
                                       ensure_ascii=False).encode('utf8'))
-
-            if debug:
-                print("file has been written : ", savepath)
+            print("file has been written : ", savepath)
             return True
         else:
             return False
@@ -295,8 +311,10 @@ class Project(object):
         return self.output_list[taille]
 
     def del_scenario(self, scenario):
-        """delete a scenario of this project
-        This function will delete events of the scenario"""
+        """
+        delete a scenario of this project
+        This function will delete events of the scenario
+        """
         if scenario in self.scenarios:
             # delete events of this scenario
             for event in scenario.events():
