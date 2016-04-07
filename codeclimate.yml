@@ -1,4 +1,17 @@
-languages:
-  Python: true
+engines:
+duplication:
+enabled: true
+config:
+  languages:
+  - python
+fixme:
+enabled: true
+radon:
+enabled: true
+ratings:
+paths:
+- "**.py"
 exclude_paths:
-  - "examples/*"
+- tests/
+- examples/
+- pylekture/_version.py
