@@ -6,14 +6,14 @@ pylekture is a python package that provide an API to create scenario for interme
 The API is designed around the concept of a project, that handles scenario and outputs.
 Each scenario contains events.
 
--Project : this is a bunch of Outputs and Scenario
--Output : This is frome here that you output Events
--Scenario : This is a bunch of Events
--Event : This is a command
+- Project:this is a bunch of Outputs and Scenario
+- Output:This is frome here that you output Events
+- Scenario:This is a bunch of Events
+- Event:This is a command
 
 An event can be a command for a device, or a wait-command for the the scenario.
 
-In details : 
+In details 
     - A project contains Scenario and Outputs.
         - A scenario contains an ordered list of Events.
         - A scenario outputs its events to a choosen Output.
