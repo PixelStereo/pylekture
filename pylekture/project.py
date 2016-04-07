@@ -267,7 +267,11 @@ class Project(object):
             return protocols
 
     def new_scenario(self, **kwargs):
-        """create a new scenario"""
+        """
+        Create a new scenario for this Project
+            args:Optional args are every attributes of the scenario, associated with a keyword
+            rtype:Scenario object
+        """
         taille = len(self._scenario_list)
         scenario = Scenario(self)
         self._scenario_list.append(scenario)
@@ -276,7 +280,12 @@ class Project(object):
         return scenario
 
     def new_output(self, protocol, **kwargs):
-        """create a new output for this project"""
+        """
+        Create a new output for this project
+            args:Mandatory argument is the protocol that you want to use for this output
+                (OSC, MIDI, serial, ArtNet)
+            rtype:Output object
+        """
         taille = len(self.output_list)
         the_output = None
         self.output_list.append(the_output)

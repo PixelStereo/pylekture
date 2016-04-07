@@ -3,11 +3,15 @@
 """
 pylekture is a python package that provide an API to create scenario for intermedia projects.
 
-The project is designed around the concept of a project, that handles scenario, 
-which itself contains events.
+The API is designed around the concept of a project, that handles scenario and outputs.
+Each scenario contains events.
 
-An events can be a command or a wait for now, but we should extendending the concept
- later during the implementation.
+-Project : this is a bunch of Outputs and Scenario
+    -Output : This is frome here that you output Events
+    -Scenario : This is a bunch of Events
+        -Event : This is a command
+
+An event can be a command for a device, or a wait-command for the the scenario.
 
 In details : 
     - A project contains Scenario and Outputs.
@@ -16,21 +20,26 @@ In details :
         - An output is a in/out protocol such as OSC, MIDI, Serial, Artnet etc…
 
 An output is associated to the project. But you can redirect each scenario to a different output
-and even more.
-If an output is given for an event, it will overwrite the scenario output for this event.
+and even more. If an output is specified for an event, it will be use to output this event.
+Even if it is different that the output associated with the parent scenario.
 
 -------------------------------------------------------------------------------
 
-    Copyright (c) 2015 - 2016 Pixel Stereo
+                Copyright (c) 2015 - 2016 Pixel Stereo
 
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
 Changelog
 -------------------------------------------------------------------------------
-- v2.0.0 - Apr. ??th 2016
+
+- v0.2.1 - ??
+    - Use 
+
+- v0.2.0 - Apr. 6th 2016
     - Use versioneer to take care of versionning
         - https://github.com/warner/python-versioneer
+
 - v0.1.9 - Apr. 6th 2016
     - New name. Now known as pylekture, for python lekture framework.
 
