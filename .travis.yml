@@ -16,8 +16,8 @@ install:
 - pip install travis-sphinx
 script:
 - cd tests
-- coverage run test_.py
-- coverage report -m
+- coverage run --omit ../pylekture/_version.py test_.py
+- coverage report -m  --omit ../pylekture/_version.py ../pylekture/*.py
 - cd ../
 - travis-sphinx build
 after_success:
