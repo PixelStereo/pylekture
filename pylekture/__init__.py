@@ -1,27 +1,32 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-pylekture is a python package that provide an API to create scenario for intermedia projects.
+"""pylekture is a python package that provide an API to create scenario for intermedia projects.
 
 The API is designed around the concept of a project, that handles scenario and outputs.
 Each scenario contains events.
 
-- Project:this is a bunch of Outputs and Scenario
-- Output:This is frome here that you output Events
+- Project: this is a bunch of Outputs and Scenario
+- Output: This is frome here that you output Events
 - Scenario:This is a bunch of Events
-- Event:This is a command
+- Event:This is a command for a device, or a wait for the the Scenario
 
-An event can be a command for a device, or a wait-command for the the scenario.
-
-In details 
-    - A project contains Scenario and Outputs.
-        - A scenario contains an ordered list of Events.
-        - A scenario outputs its events to a choosen Output.
-        - An output is a in/out protocol such as OSC, MIDI, Serial, Artnet etc…
 
 An output is associated to the project. But you can redirect each scenario to a different output
 and even more. If an output is specified for an event, it will be use to output this event.
 Even if it is different that the output associated with the parent scenario.
+
+In details:
+    - A project contains a list of Scenario and Outputs.
+    - A scenario contains an ordered list of Events.
+    - A scenario outputs its events to a choosen Output.
+    - An output is a in/out protocol such as OSC, MIDI, Serial, Artnet etc…
+
+Project has a few attributes:
+    -version(read-only):the version of pylekture used to create this Project
+    -lastopened
+    -created
+    -autoplay
+    -loop
 
 -------------------------------------------------------------------------------
 
@@ -73,8 +78,7 @@ Changelog
     - FIX output
 
 - v0.1  - Dec. 25th 2015
-    - First draft
-"""
+    - First draft"""
 
 from ._version import get_versions
 __version__ = get_versions()['version']
