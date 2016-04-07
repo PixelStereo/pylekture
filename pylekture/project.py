@@ -3,6 +3,18 @@
 
 """
 This is the Project Class, which is the base of our document.
+
+To start with pylekture, you just need to import 2 functions
+
+Here is an example to create a project.
+    from pylekture.project import new_project, projects
+    my_project = new_project()
+
+Then, you can create an output and a scenario
+    my_out = my_project.new_output('OSC')
+    my_scenario = my_project.new_scenario()
+
+
 You can here create a project, or make a list of projects available.
 """
 
@@ -52,8 +64,8 @@ class Project(object):
         self._scenario_list = []
 
     def __repr__(self):
-        s = 'Project (path="{path}", autoplay={autoplay}, loop={loop}, ' \
-            'scenarios={scenarios}'
+        s = 'Project (path={path}, autoplay={autoplay}, loop={loop}, ' \
+            'scenarios={scenarios})'
         return s.format(path=self.path,
                         autoplay=self.autoplay,
                         loop=self.loop,
@@ -69,9 +81,6 @@ class Project(object):
     @property
     def version(self):
         return self._version
-    @version.setter
-    def version(self, version):
-        print('version cannot be set')
 
     @property
     def path(self):
@@ -89,6 +98,13 @@ class Project(object):
 
     @property
     def loop(self):
+        """
+        If enable, the project play again when it reaches the end of the scenarios
+
+            :getter:    Returns the status of the loop flag
+            :setter:    Sets this loop flag 
+            :type:      Boolean
+        """
         return self._loop
     @loop.setter
     def loop(self, value):
@@ -110,7 +126,7 @@ class Project(object):
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
         # reset project attributes
-        self.version = None
+        self._version = None
         self._path = None
         # reset outputs
         self._output_list = []
@@ -146,9 +162,10 @@ class Project(object):
         try:
             with open(path) as in_file:
                 # clear the project
-                self.reset()
                 loaded = json.load(in_file)
                 in_file.close()
+                # reset project
+                self.reset()
                 # create objects from loaded file
                 flag = self.fillin(loaded)
         # catch error if file is not valid or if file is not a lekture project
