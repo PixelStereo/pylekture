@@ -54,6 +54,7 @@ class TestAll(unittest.TestCase):
         #assert(my_output.vars_() ==['ip', 'udp', 'name'])
         self.assertEqual(my_output.getprotocol(), 'OSC')
         self.assertEqual(second_out.getprotocol(), 'PJLINK')
+        self.assertEqual(isinstance(second_out.getprotocol(), str), True)
         self.assertEqual(third_out.getprotocol(), 'OSC')
         self.assertEqual(forth_out.getprotocol(), 'MIDI')
         self.assertEqual(Output.protocols(), ['OSC'])
