@@ -73,7 +73,7 @@ class TestAll(unittest.TestCase):
         my_scenario.new_event(content='/address_only')
         my_other_scenario.new_event(content=['CC', 16, 1, 64])
 
-        # test scenario file 
+        # test scenario file
         self.assertEqual(my_scenario.getduration(), 900)
         self.assertEqual(len(my_scenario.events()), 5)
         my_scenario.play()

@@ -10,7 +10,7 @@ def checkType(data):
     """
     Transform an unicode into its original type
 
-    Args:
+    data:
         an integer or float encoded as a string
 
     Returns:
@@ -22,7 +22,7 @@ def checkType(data):
         else:
             try:
                 data = float(data)
-            except:
+            except ValueError:
                 pass
     except AttributeError:
         pass
