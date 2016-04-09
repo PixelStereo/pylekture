@@ -24,7 +24,7 @@ Development is made on OSX with python 2.7.11
 Continious integration is made on linux for python 2.6, 2.7 and 3.3, 3.4, 3.5
 
 [![Code Climate](https://codeclimate.com/github/PixelStereo/pylekture/badges/gpa.svg)](https://codeclimate.com/github/PixelStereo/pylekture)
-[![Coverage Status](https://coveralls.io/repos/github/PixelStereo/pylekture/badge.svg?branch=master)](https://coveralls.io/github/PixelStereo/pylekture?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/PixelStereo/pylekture/badge.svg?branch=master&bust=1)](https://coveralls.io/github/PixelStereo/pylekture?branch=master)
 [![Issue Count](https://codeclimate.com/github/PixelStereo/pylekture/badges/issue_count.svg)](https://codeclimate.com/github/PixelStereo/pylekture)
 [![Build Status](https://travis-ci.org/PixelStereo/pylekture.svg?branch=master)](https://travis-ci.org/PixelStereo/pylekture)
 
