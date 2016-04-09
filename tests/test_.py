@@ -8,16 +8,14 @@ from time import sleep
 sys.path.append(os.path.abspath('./../'))
 from pylekture import __version__
 from pylekture.project import Output
-from pylekture.constants import debug
 from pylekture.project import new_project, projects
 from pylekture.functions import checkType
 
-debug = False
 
 class TestAll(unittest.TestCase):
 
     def test_project(self):
-        """create projects"""
+        # create projects
         my_project = new_project()
         print(my_project)
         my_project.play()

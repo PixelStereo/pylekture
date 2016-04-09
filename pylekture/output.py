@@ -10,11 +10,16 @@ Maybe we might use some plug in pybush to have in/out access for a bunch of node
 from pylekture.constants import debug
 
 class Output(object):
-    """Create a new output"""
+    """
+    Create a new output
+    Need a 
+    """
     def __init__(self, project, protocol='OSC', name='no-name'):
         self._protocol = protocol
         self._project = project
         self.name = name
+        if debug:
+            print('new output with protocol : ' + protocol)
         if protocol == 'OSC':
             osc = OSC()
             self.ip = osc.ip
@@ -31,25 +36,35 @@ class Output(object):
 
     @staticmethod
     def getinstances(project):
-        """return a list of outputs for a given project"""
+        """
+        return a list of outputs for a given project
+        """
         return project._output_list
 
     @staticmethod
     def protocols():
-        """return a list of protocols available"""
+        """
+        return a list of protocols available
+        """
         #return ['OSC','MIDI','PJLINK']
         return ['OSC']
 
     def getprotocol(self):
-        """get the protocol for this output"""
+        """
+        get the protocol for this output
+        """
         return self._protocol
 
     def getproject(self):
-        """return the project of this output"""
+        """
+        return the project of this output
+        """
         return self._project
 
     def vars_(self):
-        """return a list of attributes for this output"""
+        """
+        return a list of attributes for this output
+        """
         # make a copy
         attrs = list(vars(self).keys())
         for attr in attrs:
