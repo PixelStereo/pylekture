@@ -23,7 +23,6 @@ class TestAll(unittest.TestCase):
         my_project.play()
         my_project.getprotocols()
         new_project()
-        print(my_project.path, my_project.autoplay, my_project.loop)
 
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 2)
@@ -68,7 +67,7 @@ class TestAll(unittest.TestCase):
         # fill in scenario with events
         my_scenario.new_event(content=['/previous', 232, 'ramp', 500])
         my_scenario.new_event(content=200)
-        my_scenario.new_event(content=['/zob', 232, 'list', 'uno', 2])
+        third_event = my_scenario.new_event(content=['/zob', 232, 'list', 'uno', 2])
         my_scenario.new_event(content=[200])
         my_scenario.new_event(content='/address_only')
         my_other_scenario.new_event(content=['CC', 16, 1, 64])
@@ -133,6 +132,8 @@ class TestAll(unittest.TestCase):
         except NameError:
             # this is python 3
             self.assertEqual(isinstance(uni, (str, bytes)), True)
+
+
 
 if __name__ == '__main__':
     unittest.main()
