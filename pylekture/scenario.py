@@ -28,10 +28,22 @@ class Scenario(object):
         self.post_wait = post_wait
         self.event_list = []
         self.index = 0
+        self._loop = False
+
+    @property
+    def loop(self):
+        """
+        The loop attribute. If true, the loop plays again when it reach its end.
+            :arg: Boolean
+        """
+        return self._loop
+    @loop.setter
+    def loop(self, loop):
+        self._loop = loop
 
     def play(self, index=0):
         """shortcut to run thread"""
-        self.Play(self, index)
+        print('END', self.Play(self, index))
 
 
     class Play(threading.Thread):
