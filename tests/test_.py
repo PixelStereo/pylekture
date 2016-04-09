@@ -23,6 +23,7 @@ class TestAll(unittest.TestCase):
         my_project.play()
         my_project.getprotocols()
         new_project()
+        print(my_project.path, my_project.autoplay, my_project.loop)
 
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 2)
