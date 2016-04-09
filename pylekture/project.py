@@ -19,7 +19,6 @@ You can here create a project, or make a list of projects available.
 """
 
 import os
-import weakref
 import threading
 from time import sleep
 import simplejson as json
@@ -28,18 +27,18 @@ import datetime
 from pylekture import __version__
 from pylekture.scenario import Scenario
 from pylekture.output import Output
-from pylekture.constants import debug
+from pylekture.constants import debug, _projects
 
 def new_project():
     """Create a new project"""
-    return Project()
+    size = len(_projects)
+    _projects.append(Project())
+    return _projects[size]
 
 def projects():
     """return a list of projects available"""
-    project_list = []
-    for proj in Project.getinstances():
-        project_list.append(proj)
-    return project_list
+    return _projects
+
 
 class Project(object):
     """
@@ -47,13 +46,7 @@ class Project(object):
     :param <version>: Version of the pylekture lib that created the project. Read-Only value
     :param <lastopened>: Datetime of the last opened date of this project. Default is None
     """
-
-    # used  to make a list of projects
-    _instances = []
-
     def __init__(self):
-        super(Project, self).__init__()
-        self._instances.append(weakref.ref(self))
         self._version = __version__
         self._path = None
         self.lastopened = None
