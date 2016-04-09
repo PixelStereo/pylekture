@@ -249,7 +249,6 @@ class Event(object):
                 sleep(0.0008)
                 msg.add(value)
                 liblo.send(self.target, msg)
-        
 
     def play(self):
         """play an event"""

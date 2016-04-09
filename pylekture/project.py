@@ -102,7 +102,7 @@ class Project(object):
         If enable, the project play again when it reaches the end of the scenarios
 
             :getter:    Returns the status of the loop flag
-            :setter:    Sets this loop flag 
+            :setter:    Sets this loop flag
             :type:      Boolean
         """
         return self._loop

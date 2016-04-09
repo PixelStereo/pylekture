@@ -1,7 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""implements output for scenario-events"""
+"""
+Implements output for scenario-events
+An ouput is an object that can send-out commands.
+Maybe we might use some plug in pybush to have in/out access for a bunch of nodes (pybush / a bush)
+"""
 
 from pylekture.constants import debug
 

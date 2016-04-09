@@ -12,10 +12,7 @@ from pylekture.constants import debug
 from pylekture.project import new_project, projects
 from pylekture.functions import checkType
 
-import datetime
-import liblo
-import time
-
+debug = False
 
 class TestAll(unittest.TestCase):
 
@@ -25,8 +22,9 @@ class TestAll(unittest.TestCase):
         print(my_project)
         my_project.play()
         my_project.getprotocols()
-        my_other_project =  new_project()
+        new_project()
         print(my_project.path, my_project.autoplay, my_project.loop)
+
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 2)
         self.assertEqual(my_project.version, __version__)
@@ -36,11 +34,14 @@ class TestAll(unittest.TestCase):
         my_other_scenario.name = 'the other scenario'
         my_scenario.wait = 0.1
         my_scenario.post_wait = 0.05
-        """create an output"""
+
+        # create an output
         my_output = my_project.new_output('OSC')
+
         # Attribute output to scenario
         my_scenario.output = ['OSC', 1]
         my_other_scenario.output = ['MIDI', 1]
+
         # create another output with another protocol
         second_out = my_project.new_output('PJLINK')
         second_out.name = 'another output'
@@ -48,6 +49,7 @@ class TestAll(unittest.TestCase):
         third_out = my_project.new_output('OSC')
         third_out.udp = 22222
         forth_out = my_project.new_output('MIDI')
+
         # failed in poython3
         #assert(my_output.vars_() ==['ip', 'udp', 'name'])
         self.assertEqual(my_output.getprotocol(), 'OSC')
@@ -62,14 +64,16 @@ class TestAll(unittest.TestCase):
         self.assertEqual(my_scenario.getoutput().ip, '127.0.0.1')
         self.assertEqual(my_scenario.getoutput().udp, 1234)
         self.assertEqual(my_scenario.getoutput().name, 'no-name')
-        """fill in scenario with events"""
-        first_event = my_scenario.new_event(content=['/previous', 232, 'ramp', 500])
-        second_event = my_scenario.new_event(content=200)
-        third_event = my_scenario.new_event(content=['/zob', 232, 'list', 'uno', 2])
-        third_half_event = my_scenario.new_event(content=[200])
-        fourth_event = my_scenario.new_event(content='/address_only')
-        midi_event = my_other_scenario.new_event(content=['CC', 16, 1, 64])
-        """test scenario file"""
+
+        # fill in scenario with events
+        my_scenario.new_event(content=['/previous', 232, 'ramp', 500])
+        my_scenario.new_event(content=200)
+        my_scenario.new_event(content=['/zob', 232, 'list', 'uno', 2])
+        my_scenario.new_event(content=[200])
+        my_scenario.new_event(content='/address_only')
+        my_other_scenario.new_event(content=['CC', 16, 1, 64])
+
+        # test scenario file 
         self.assertEqual(my_scenario.getduration(), 900)
         self.assertEqual(len(my_scenario.events()), 5)
         my_scenario.play()
@@ -126,7 +130,7 @@ class TestAll(unittest.TestCase):
         try:
             # this is python 2
             self.assertEqual(isinstance(uni, basestring), True)
-        except:
+        except NameError:
             # this is python 3
             self.assertEqual(isinstance(uni, (str, bytes)), True)
 

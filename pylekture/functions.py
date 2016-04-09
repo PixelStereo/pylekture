@@ -24,6 +24,6 @@ def checkType(data):
                 data = float(data)
             except:
                 pass
-    except:
+    except AttributeError:
         pass
     return data

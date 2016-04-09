@@ -39,7 +39,11 @@ Changelog
 -------------------------------------------------------------------------------
 
 - v0.2.1 - ??
-    - Use 
+    - Revam Project Attributes
+        - Remove author attribute
+        - Version attribute is now the version of pylekture used to create this project
+        - Fix created/lastopened attributes
+    - Enhance uni-testing
 
 - v0.2.0 - Apr. 6th 2016
     - Use versioneer to take care of versionning
