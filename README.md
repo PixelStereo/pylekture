@@ -1,6 +1,7 @@
 # pylekture
 [![Coverage Status](https://coveralls.io/repos/github/PixelStereo/pylekture/badge.svg?branch=master&bust=1)](https://coveralls.io/github/PixelStereo/pylekture?branch=master)
 [![Build Status](https://travis-ci.org/PixelStereo/pylekture.svg?branch=master)](https://travis-ci.org/PixelStereo/pylekture)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/e0076e979dc64ed3b11d5389a0ddd946)](https://www.codacy.com/app/contact_37/pylekture)
 
 =====
 #### Python Scenario framework for real-time inter-media projects
