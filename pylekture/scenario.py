@@ -42,8 +42,13 @@ class Scenario(object):
         self._loop = loop
 
     def play(self, index=0):
-        """shortcut to run thread"""
-        print('END', self.Play(self, index))
+        """
+        Play a scenario
+        It creates a new object play in a separate thread.
+        """
+        p = self.Play(self, index)
+        print(p.join())
+        print('end')
 
 
     class Play(threading.Thread):
@@ -73,10 +78,11 @@ class Scenario(object):
                 # start from the index, we will skip the pre-wait sleep
                 index = self.index
             if debug:
-                print('PLAY', self.scenario.name, 'FROM INDEX', index)
+                dbg = 'scenario-play: {scenario} from index {index} in {thread}'
+                print(dbg.format(scenario=self.scenario.name, index=index, thread=str(threading.current_thread().name)))
             for event in self.scenario.events()[index:]:
                 # play each event
-                event.play()
+                player = event.play()
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
                 if debug:
@@ -185,70 +191,95 @@ class Event(object):
         if not output:
             self.output = 'parent'
 
+    def join(self):
+        threading.Thread.join(self)
+        return 'event end'
+
     @staticmethod
     def getinstances(scenario):
         """return a list of events for a given scenario"""
         return scenario.event_list
 
-    def play_osc(self,out):
-        """play an OSC event"""
-        args = self.content
-        if isinstance(args, list):
-            # address is the first item of the list
-            address = args[0]
-            args = args[1:]
-        else:
-            # this is a adress_only without arguments
-            address = args
-            args = None
-        try:
-            target = liblo.Address(out.ip, int(out.udp))
-            if debug:
-                print('connect to : ' + out.ip + ':' + str(out.udp))
-        except liblo.AddressError as err:
-            print('liblo.AddressError' + str(err))
-        if isinstance(args, list) and 'ramp' in args:
-            # this is a ramp, make it in a separate thread
-            self.Ramp(target, address, args)
-        elif isinstance(args, list):
-            msg = liblo.Message(address)
-            for arg in args:
-                arg = checkType(arg)
-                msg.add(arg)
-            liblo.send(target, msg)
-        else:
-            msg = liblo.Message(address)
-            if args:
-                msg.add(args)
-            liblo.send(target, msg)
 
-
-    class Ramp(threading.Thread):
-        """Instanciate a thread for Playing a ramp
-        Allow to do several ramps in a same scenario"""
-        def __init__(self, target, address, args):
+    class PlayOsc(threading.Thread):
+        """docstring for PlayOsc"""
+        def __init__(self, out, content):
             threading.Thread.__init__(self)
-            self.args = args
-            self.address = address
-            self.target = target
+            self.out = out
+            self.content = content
             self.start()
 
+        def join(self):
+            threading.Thread.join(self)
+            return 'play-osc end'
+
         def run(self):
-            index = self.args.index('ramp')
-            ramp = self.args[index+1]
-            dest = self.args[index-1]
-            dest = checkType(dest)
-            ramp = checkType(ramp)
-            value = 0
-            delta = dest - value
-            delta = float(delta)
-            step = delta / ramp
-            for millisec in range(ramp):
-                msg = liblo.Message(self.address)
-                value += step
-                sleep(0.0008)
-                msg.add(value)
-                liblo.send(self.target, msg)
+            """play an OSC event"""
+            out = self.out
+            args = self.content
+            if isinstance(args, list):
+                # address is the first item of the list
+                address = args[0]
+                args = args[1:]
+            else:
+                # this is a adress_only without arguments
+                address = args
+                args = None
+            try:
+                target = liblo.Address(out.ip, int(out.udp))
+                if debug:
+                    print('connect to : ' + out.ip + ':' + str(out.udp))
+            except liblo.AddressError as err:
+                print('liblo.AddressError' + str(err))
+            if isinstance(args, list) and 'ramp' in args:
+                # this is a ramp, make it in a separate thread
+                ramp = self.Ramp(target, address, args)
+                return ramp
+            elif isinstance(args, list):
+                msg = liblo.Message(address)
+                for arg in args:
+                    arg = checkType(arg)
+                    msg.add(arg)
+                liblo.send(target, msg)
+                return self
+            else:
+                msg = liblo.Message(address)
+                if args:
+                    msg.add(args)
+                liblo.send(target, msg)
+                return self
+
+
+        class Ramp(threading.Thread):
+            """Instanciate a thread for Playing a ramp
+            Allow to do several ramps in a same scenario"""
+            def __init__(self, target, address, args):
+                threading.Thread.__init__(self)
+                self.args = args
+                self.address = address
+                self.target = target
+                self.start()
+
+            def run(self):
+                index = self.args.index('ramp')
+                ramp = self.args[index+1]
+                dest = self.args[index-1]
+                dest = checkType(dest)
+                ramp = checkType(ramp)
+                value = 0
+                delta = dest - value
+                delta = float(delta)
+                step = delta / ramp
+                for millisec in range(ramp):
+                    msg = liblo.Message(self.address)
+                    value += step
+                    sleep(0.0008)
+                    msg.add(value)
+                    liblo.send(self.target, msg)
+
+            def join(self):
+                threading.Thread.join(self)
+                return 'ramp end'
 
     def play(self):
         """play an event"""
@@ -267,7 +298,10 @@ class Event(object):
             out = self.getoutput()
             if out:
                 if out.getprotocol() == 'OSC':
-                    self.play_osc(out)
+                    if debug:
+                        print('event-play - osc ' + self.name + ' in ' + str(threading.current_thread().name))
+                    player = self.PlayOsc(out, self.content)
+                    print(player.join())
                 else:
                     print('ERROR 503 - protocol ' + out.getprotocol() + ' is not yet implemented')
             else:

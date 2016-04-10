@@ -241,7 +241,10 @@ class Project(object):
         shortcut to run thread
         """
         if self.scenarios:
-            self.Play(self)
+            player = self.Play(self)
+            player.join()
+            if debug:
+                print('project-end')
         else:
             if debug:
                 print('This project is empty')
@@ -264,7 +267,8 @@ class Project(object):
                 # add wait and post_wait to duration
                 wait = wait + scenario.wait + scenario.post_wait
                 if debug:
-                    print('play', scenario, 'during', wait, 'seconds')
+                    dbg = 'project-play: {scenario} in {thread} - ({wait} seconds)'
+                    print(dbg.format(scenario=scenario.name, wait=wait, thread=str(threading.current_thread().name)))
                 # play the scenario
                 scenario.play()
                 # wait during the scenario
@@ -272,6 +276,10 @@ class Project(object):
             # all scenario have been played
             if self.project.loop:
                 self.project.play()
+
+        def join(self):
+            threading.Thread.join(self)
+            return 'project end'
 
 
     def scenarios_set(self, old, new):
