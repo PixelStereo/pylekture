@@ -81,14 +81,16 @@ class TestAll(unittest.TestCase):
         my_scenario.play_from_here(2)
         my_other_scenario.play(index=1)
         sleep(0.01)
-        my_project.autoplay = 1
+
+        # need to be debug then test again
+        my_project.autoplay = 0
         my_project.loop = 1
         my_scenario.del_event(4)
         self.assertEqual(my_project.getprotocols(), ['OSC', 'PJLINK', 'MIDI'])
         self.assertEqual(my_project.scenarios[0].name, 'the scenario test')
         my_project.scenarios_set(0, 1)
         self.assertEqual(my_project.scenarios[0].name, 'the other scenario')
-        my_project.del_scenario(my_scenario)
+        my_project.del_scenario(my_other_scenario)
         my_project.del_scenario('bogus')
         self.assertEqual(len(my_project.scenarios), 1)
         self.assertEqual(len(my_project.outputs()), 4)
