@@ -52,6 +52,7 @@ class Project(object):
         self.lastopened = None
         self._autoplay = False
         self._loop = False
+        self._name = 'no name'
         self._created = str(datetime.datetime.now())
         self._output_list = []
         self._scenario_list = []
@@ -59,7 +60,8 @@ class Project(object):
     def __repr__(self):
         s = 'Project (path={path}, autoplay={autoplay}, loop={loop}, ' \
             'scenarios={scenarios})'
-        return s.format(path=self.path,
+        return s.format(name=self.name,
+                        path=self.path,
                         autoplay=self.autoplay,
                         loop=self.loop,
                         scenarios=len(self.scenarios))
@@ -74,6 +76,13 @@ class Project(object):
     @property
     def version(self):
         return self._version
+
+    @property
+    def name(self):
+        return self._name
+    @name.setter
+    def name(self, name):
+        self._name = name
 
     @property
     def path(self):
@@ -360,7 +369,7 @@ class Project(object):
 
     def _export_attributes(self):
         """export attributes of the project"""
-        attributes = {'created':self._created, 'version':self.version, \
+        attributes = {'name':self._name, 'created':self._created, 'version':self.version, \
                       'lastopened':self.lastopened, 'loop':self._loop, 'autoplay':self._autoplay}
         return attributes
 
