@@ -252,8 +252,6 @@ class Project(object):
         if self.scenarios:
             player = self.Play(self)
             player.join()
-            if debug:
-                print('project-end')
         else:
             if debug:
                 print('This project is empty')
@@ -288,7 +286,9 @@ class Project(object):
 
         def join(self):
             threading.Thread.join(self)
-            return 'project end'
+            if debug:
+                print('project-end: ' + self.project.name + ' in ' + self.name + ' ends')
+
 
 
     def scenarios_set(self, old, new):

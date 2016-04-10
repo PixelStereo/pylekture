@@ -47,8 +47,7 @@ class Scenario(object):
         It creates a new object play in a separate thread.
         """
         p = self.Play(self, index)
-        print(p.join())
-        print('end')
+        p.join()
 
 
     class Play(threading.Thread):
@@ -60,6 +59,11 @@ class Scenario(object):
             self.scenario = scenario
             self.index = index
             self.start()
+
+        def join(self):
+            threading.Thread.join(self)
+            if debug:
+                print('scenario-end: ' + self.scenario.name + ' in ' + self.name + ' ends')
 
         def run(self):
             """play a scenario from the beginning
@@ -83,14 +87,13 @@ class Scenario(object):
             for event in self.scenario.events()[index:]:
                 # play each event
                 player = event.play()
+                player.join()
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
                 if debug:
                     print('POST_WAIT', self.scenario.name, \
                           'DURING', self.scenario.post_wait, 'SECONDS')
                 sleep(self.scenario.post_wait)
-            if debug:
-                print('SCENARIO DONE', self.scenario.name)
             # scenario is now finish
             return True
 
@@ -189,11 +192,7 @@ class Event(object):
         self.description = description
         self.content = content
         if not output:
-            self.output = 'parent'
-
-    def join(self):
-        threading.Thread.join(self)
-        return 'event end'
+            self.output = 'parent'        
 
     @staticmethod
     def getinstances(scenario):
@@ -201,20 +200,24 @@ class Event(object):
         return scenario.event_list
 
 
-    class PlayOsc(threading.Thread):
+    class Play(threading.Thread):
         """docstring for PlayOsc"""
-        def __init__(self, out, content):
+        def __init__(self, out, event):
             threading.Thread.__init__(self)
             self.out = out
-            self.content = content
+            self.content = event.content
+            self.event = event
             self.start()
 
         def join(self):
             threading.Thread.join(self)
-            return 'play-osc end'
+            if debug:
+                print('event-end: ' + self.event.name + ' in ' + self.name + ' ends')
 
         def run(self):
             """play an OSC event"""
+            if debug:
+                print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name))
             out = self.out
             args = self.content
             if isinstance(args, list):
@@ -234,20 +237,18 @@ class Event(object):
             if isinstance(args, list) and 'ramp' in args:
                 # this is a ramp, make it in a separate thread
                 ramp = self.Ramp(target, address, args)
-                return ramp
+                ramp.join()
             elif isinstance(args, list):
                 msg = liblo.Message(address)
                 for arg in args:
                     arg = checkType(arg)
                     msg.add(arg)
                 liblo.send(target, msg)
-                return self
             else:
                 msg = liblo.Message(address)
                 if args:
                     msg.add(args)
                 liblo.send(target, msg)
-                return self
 
 
         class Ramp(threading.Thread):
@@ -261,6 +262,8 @@ class Event(object):
                 self.start()
 
             def run(self):
+                if debug:
+                    print('ramp ' + self.name + ' start')
                 index = self.args.index('ramp')
                 ramp = self.args[index+1]
                 dest = self.args[index-1]
@@ -279,7 +282,26 @@ class Event(object):
 
             def join(self):
                 threading.Thread.join(self)
-                return 'ramp end'
+                if debug:
+                    print('ramp-end: ' + ' in ' + self.name + ' ends')
+
+    class Sleep(threading.Thread):
+        """docstring for Sleep"""
+        def __init__(self, duration):
+            threading.Thread.__init__(self)
+            self.duration = duration
+            self.start()
+
+        def run(self):
+            if debug:
+                print('sleep starts in ' + self.name)
+            sleep(self.duration)
+
+        def join(self):
+            threading.Thread.join(self)
+            if debug:
+                print('sleep-end: ' + ' in ' + self.name + ' ends')
+            
 
     def play(self):
         """play an event"""
@@ -292,20 +314,23 @@ class Event(object):
         if wait:
             wait = wait/1000
             if debug:
-                print('waiting', wait)
-            sleep(wait)
+                if wait <= 1:
+                    print('waiting ' + str(wait) + ' second')
+                else:
+                    print('waiting ' + str(wait) + ' seconds')
+            sleeper = self.Sleep(wait)
+            return sleeper
         else:
             out = self.getoutput()
             if out:
                 if out.getprotocol() == 'OSC':
-                    if debug:
-                        print('event-play - osc ' + self.name + ' in ' + str(threading.current_thread().name))
-                    player = self.PlayOsc(out, self.content)
-                    print(player.join())
+                    player = self.Play(out, self)
+                    return player
                 else:
                     print('ERROR 503 - protocol ' + out.getprotocol() + ' is not yet implemented')
             else:
                 print('there is no output for this event / scenario')
+
 
     def getoutput(self):
         """rerurn the current output for this event.
