@@ -18,8 +18,6 @@ class Output(object):
         self._protocol = protocol
         self._project = project
         self.name = name
-        if debug:
-            print('new output with protocol : ' + protocol)
         if protocol == 'OSC':
             osc = OSC()
             self.ip = osc.ip
