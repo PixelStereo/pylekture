@@ -10,3 +10,4 @@ my_file.json
 lastfailed
 docs/source/_build
 the_file.json
+coverage.xml
