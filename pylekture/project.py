@@ -265,6 +265,9 @@ class Project(object):
         def __init__(self, project):
             self.project = project
             threading.Thread.__init__(self)
+            if debug:
+                dbg = 'project-play: {project} in {thread} - it is {time}'
+                print(dbg.format(project=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
             self.start()
 
         def run(self):
@@ -273,13 +276,8 @@ class Project(object):
                 wait = scenario.getduration() / 1000
                 # add wait and post_wait to duration
                 wait = wait + scenario.wait + scenario.post_wait
-                if debug:
-                    dbg = 'project-play: {scenario} in {thread} - ({wait} seconds)'
-                    print(dbg.format(scenario=scenario.name, wait=wait, thread=str(threading.current_thread().name)))
                 # play the scenario
                 scenario.play()
-                # wait during the scenario
-                sleep(wait)
             # all scenario have been played
             if self.project.loop:
                 self.project.play()
@@ -287,7 +285,7 @@ class Project(object):
         def join(self):
             threading.Thread.join(self)
             if debug:
-                print('project-end: ' + self.project.name + ' in ' + self.name + ' ends')
+                print('project-end: ' + self.project.name + ' in ' + self.name + ' ends at ' + str(datetime.datetime.now()))
 
 
 
