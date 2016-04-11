@@ -39,11 +39,13 @@ Changelog
 -------------------------------------------------------------------------------
 
 - v0.2.1 - ??
-    - Revam Project Attributes
+    - Revamp Project Attributes
         - Remove author attribute
         - Version attribute is now the version of pylekture used to create this project
         - Fix created/lastopened attributes
-    - Enhance uni-testing
+        - Name attribute (might be file name)
+    - Enhance unit-testing
+    - Use Thread.join() as mechanism to be notified when the previous event/scenario has been sent
 
 - v0.2.0 - Apr. 6th 2016
     - Use versioneer to take care of versionning
