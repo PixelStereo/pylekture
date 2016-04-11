@@ -16,9 +16,10 @@ e1 = s.new_event(content=[1000])
 e2 = s.new_event(content=['/polo', 232, 'ramp', 1000])
 e2.name = 'my_event_2'
 o = p.new_output('OSC')
+# next line should be : s.output = o
 s.output = ['OSC', 1]
-p.play()
+#p.play()
 #s.play()
-#e.play()
+e.play()
 #e1.play()
 #e2.play()
