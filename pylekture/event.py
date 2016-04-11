@@ -74,10 +74,10 @@ class Event(object):
                     print('connect to : ' + out.ip + ':' + str(out.udp))
             except liblo.AddressError as err:
                 print('liblo.AddressError' + str(err))
-            if isinstance(args, list) and 'ramp' in args:
-                # this is a ramp, make it in a separate thread
-                ramp = self.Ramp(target, address, args)
-                ramp.join()
+            if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
+                    # this is a ramp, make it in a separate thread
+                    ramp = self.Ramp(target, address, args)
+                    ramp.join()
             elif isinstance(args, list):
                 msg = liblo.Message(address)
                 for arg in args:
