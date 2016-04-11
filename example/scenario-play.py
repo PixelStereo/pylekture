@@ -18,8 +18,8 @@ e2.name = 'my_event_2'
 o = p.new_output('OSC')
 # next line should be : s.output = o
 s.output = ['OSC', 1]
-#p.play()
+p.play()
 #s.play()
-e.play()
+#e.play()
 #e1.play()
 #e2.play()

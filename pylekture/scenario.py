@@ -93,7 +93,7 @@ class Scenario(object):
                 # play each event
                 player = event.play()
                 player.join()
-            return player
+            #return player
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
                 if debug:
