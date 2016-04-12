@@ -38,7 +38,8 @@ Project has a few attributes:
 Changelog
 -------------------------------------------------------------------------------
 
-- v0.2.1 - ??
+- v0.2.1 - Apr. 12th 2016
+    - Introduce .lekture extension instead of .json extension
     - Revamp Project Attributes
         - Remove author attribute
         - Version attribute is now the version of pylekture used to create this project
