@@ -101,7 +101,7 @@ class TestAll(unittest.TestCase):
         my_project.write()
         my_project.write('the_file')
         my_project.write('/Users/pop')
-        self.assertEqual(my_project.read('my_file.json'), True)
+        self.assertEqual(my_project.read('my_file.lekture'), True)
         sleep(0.01)
         my_project.loop = 0
         sleep(0.2)
