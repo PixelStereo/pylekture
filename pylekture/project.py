@@ -225,8 +225,8 @@ class Project(object):
             savepath = self._path
         if savepath:
             # make sure we will write a file with json extension
-            if not savepath.endswith('.json'):
-                savepath = savepath + '.json'
+            if not savepath.endswith('.lekture'):
+                savepath = savepath + '.lekture'
             try:
                 # create / open the file
                 out_file = open((savepath), 'wb')
@@ -240,7 +240,7 @@ class Project(object):
             project.setdefault('outputs', self._export_outputs())
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\
                                       ensure_ascii=False).encode('utf8'))
-            print("file has been written : ", savepath)
+            print("file has been written in " + savepath)
             return True
         else:
             return False
