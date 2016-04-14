@@ -38,6 +38,13 @@ Project has a few attributes:
 Changelog
 -------------------------------------------------------------------------------
 
+- v0.2.2 - ??
+    - Massive Revamp
+        - outputs is now attribute of project
+        - events is now attributes of scenario
+        - command is now atrributes of event (instead of content)
+        - remove all useless nodes called 'attributes' in the json export file
+
 - v0.2.1 - Apr. 12th 2016
     - Introduce .lekture extension instead of .json extension
     - Revamp Project Attributes

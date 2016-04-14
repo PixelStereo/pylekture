@@ -187,9 +187,7 @@ class Scenario(Node):
         """export events of the project"""
         events = []
         for event in self.events:
-            events.append({'attributes':{'output':event._output,\
-                                         'name':event.name,\
-                                         'description':event.description,\
-                                         'command':event.command\
-                                         }})
+            events.append({'output':event._output, 'name':event.name,\
+                           'description':event.description, 'command':event.command
+                            })
         return events

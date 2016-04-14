@@ -191,12 +191,15 @@ class Project(Node):
             for key in loaded.keys():
                 if key == "scenario":
                     for scenario in loaded["scenario"]:
-                        events = scenario["attributes"].pop("events")
-                        scenar = self.new_scenario(**scenario["attributes"])
+                        events = scenario.pop("events")
+                        scenar = self.new_scenario(**scenario)
                         for event in events:
-                            scenar.new_event(**event["attributes"])
-                elif key == "attributes":
-                    for attribute, value in loaded["attributes"].items():
+                            scenar.new_event(**event)
+                elif key == "outputs":
+                    for out in loaded["outputs"]:
+                        self.new_output(**out)
+                else:
+                    for attribute, value in loaded.items():
                         if attribute == "created":
                             self._created = value
                         if attribute == "version":
@@ -206,9 +209,6 @@ class Project(Node):
                         if attribute == "loop":
                             self.loop = value
                     self.lastopened = str(datetime.datetime.now())
-                elif key == "outputs":
-                    for out in loaded["outputs"]:
-                        self.new_output(**out)
             print("project loaded")
             return True
         # catch error if file is not valid or if file is not a lekture project
@@ -387,10 +387,9 @@ class Project(Node):
         """export scenario of the project"""
         scenarios = []
         for scenario in self.scenarios:
-            scenarios.append({"attributes":{"output":self.outputs.index(scenario.output), \
-                                            "name":scenario.name, \
-                                            "description":scenario.description, \
-                                            "events":scenario.export_events()}})
+            scenarios.append({"output":self.outputs.index(scenario.output), \
+                              "name":scenario.name, "description":scenario.description, \
+                              "events":scenario.export_events()})
         return scenarios
 
     def _export_outputs(self):
