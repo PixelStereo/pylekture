@@ -65,11 +65,6 @@ class Scenario(object):
             self.index = index
             self.start()
 
-        def join(self):
-            threading.Thread.join(self)
-            if debug:
-                print('scenario-end: ' + self.scenario.name + ' in ' + self.name + ' ends at ' + str(datetime.datetime.now()))
-
         def run(self):
             """play a scenario from the beginning
             play an scenario

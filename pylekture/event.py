@@ -49,11 +49,6 @@ class Event(object):
             self.event = event
             self.start()
 
-        def join(self):
-            threading.Thread.join(self)
-            if debug:
-                print('event-end: ' + self.event.name + ' in ' + self.name + ' ends - ' + str(datetime.datetime.now()))
-
         def run(self):
             """play an OSC event"""
             if debug:

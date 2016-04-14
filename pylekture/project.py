@@ -282,12 +282,6 @@ class Project(object):
             if self.project.loop:
                 self.project.play()
 
-        def join(self):
-            threading.Thread.join(self)
-            if debug:
-                print('project-end: ' + self.project.name + ' in ' + self.name + ' ends at ' + str(datetime.datetime.now()))
-
-
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
