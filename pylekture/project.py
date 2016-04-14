@@ -11,7 +11,7 @@ Here is an example to create a project.
     my_project = new_project()
 
 Then, you can create an output and a scenario
-    my_out = my_project.new_output('OSC')
+    my_out = my_project.new_output("OSC")
     my_scenario = my_project.new_scenario()
 
 
@@ -20,14 +20,16 @@ You can here create a project, or make a list of projects available.
 
 import os
 import threading
-from time import sleep
 import simplejson as json
 
 import datetime
 from pylekture import __version__
-from pylekture.scenario import Scenario
+from pylekture.node import Node
 from pylekture.output import Output
+from pylekture.scenario import Scenario
+from pylekture.output import OSC, MIDI, PJLINK
 from pylekture.constants import debug, _projects
+from pylekture.functions import prop_dict
 
 def new_project():
     """Create a new project"""
@@ -40,26 +42,27 @@ def projects():
     return _projects
 
 
-class Project(object):
+class Project(Node):
     """
     A project handles everything you need. Ouputs and scenarios are all project-relative
     :param <version>: Version of the pylekture lib that created the project. Read-Only value
     :param <lastopened>: Datetime of the last opened date of this project. Default is None
     """
     def __init__(self):
+        super(Project, self).__init__()
         self._version = __version__
         self._path = None
         self.lastopened = None
         self._autoplay = False
         self._loop = False
-        self._name = 'no name'
+        self._name = "no name"
         self._created = str(datetime.datetime.now())
-        self._output_list = []
+        self._outputs = []
         self._scenario_list = []
 
     def __repr__(self):
-        s = 'Project (path={path}, autoplay={autoplay}, loop={loop}, ' \
-            'scenarios={scenarios})'
+        s = "Project (path={path}, autoplay={autoplay}, loop={loop}, " \
+            "scenarios={scenarios})"
         return s.format(name=self.name,
                         path=self.path,
                         autoplay=self.autoplay,
@@ -131,7 +134,7 @@ class Project(object):
         self._version = None
         self._path = None
         # reset outputs
-        self._output_list = []
+        self._outputs = []
         # reset scenarios and events
         self._scenario_list = []
 
@@ -149,7 +152,7 @@ class Project(object):
             print("ERROR 901 - THIS PATH IS NOT VALID " + path)
             return False
         else:
-            print('loading project in ' + path)
+            print("loading project in " + path)
             return self.load(path)
 
     def load(self, path):
@@ -172,7 +175,7 @@ class Project(object):
                 flag = self.fillin(loaded)
         # catch error if file is not valid or if file is not a lekture project
         except (IOError, ValueError):
-            print('ERROR 906 - project not loaded, this is not a lekture-project file')
+            print("ERROR 906 - project not loaded, this is not a lekture-project file")
             return False
         self._path = path
         if self._autoplay:
@@ -186,33 +189,33 @@ class Project(object):
         """
         try:
             for key in loaded.keys():
-                if key == 'scenario':
-                    for scenario in loaded['scenario']:
-                        events = scenario['attributes'].pop('events')
-                        scenar = self.new_scenario(**scenario['attributes'])
+                if key == "scenario":
+                    for scenario in loaded["scenario"]:
+                        events = scenario["attributes"].pop("events")
+                        scenar = self.new_scenario(**scenario["attributes"])
                         for event in events:
-                            scenar.new_event(**event['attributes'])
-                elif key == 'attributes':
-                    for attribute, value in loaded['attributes'].items():
-                        if attribute == 'created':
+                            scenar.new_event(**event["attributes"])
+                elif key == "attributes":
+                    for attribute, value in loaded["attributes"].items():
+                        if attribute == "created":
                             self._created = value
-                        if attribute == 'version':
+                        if attribute == "version":
                             self._version = value
-                        if attribute == 'autoplay':
+                        if attribute == "autoplay":
                             self.autoplay = value
-                        if attribute == 'loop':
+                        if attribute == "loop":
                             self.loop = value
                     self.lastopened = str(datetime.datetime.now())
-                elif key == 'outputs':
-                    for protocol in loaded['outputs']:
-                        for out in loaded['outputs'][protocol]:
-                            self.new_output(protocol, **out['attributes'])
-            print('project loaded')
+                elif key == "outputs":
+                    for protocol in loaded["outputs"]:
+                        for out in loaded["outputs"][protocol]:
+                            self.new_output(protocol, **out["attributes"])
+            print("project loaded")
             return True
         # catch error if file is not valid or if file is not a lekture project
         except (IOError, ValueError):
             if debug:
-                print('ERROR 907 - project not loaded, this is not a lekture-project file')
+                print("ERROR 907 - project not loaded, this is not a lekture-project file")
             return False
 
     def write(self, path=None):
@@ -225,21 +228,23 @@ class Project(object):
             savepath = self._path
         if savepath:
             # make sure we will write a file with json extension
-            if not savepath.endswith('.lekture'):
-                savepath = savepath + '.lekture'
+            if not savepath.endswith(".lekture"):
+                savepath = savepath + ".lekture"
             try:
                 # create / open the file
-                out_file = open((savepath), 'wb')
+                out_file = open((savepath), "wb")
             except IOError:
                 # path does not exists
-                print('ERROR 909 - path is not valid, could not save project - ' + savepath)
+                print("ERROR 909 - path is not valid, could not save project - " + savepath)
                 return False
             project = {}
-            project.setdefault('scenario', self._export_scenario())
-            project.setdefault('attributes', self._export_attributes())
-            project.setdefault('outputs', self._export_outputs())
+            project.setdefault("scenario", self._export_scenario())
+            project.setdefault("attributes", self._export_attributes())
+            project.setdefault("outputs", self._export_outputs())
+            import pprint
+            pprint.pprint(project)
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\
-                                      ensure_ascii=False).encode('utf8'))
+                                      ensure_ascii=False).encode("utf8"))
             print("file has been written in " + savepath)
             return True
         else:
@@ -252,9 +257,12 @@ class Project(object):
         if self.scenarios:
             player = self.Play(self)
             player.join()
+            # all scenario have been played
+            if self.loop:
+                self.play()
         else:
             if debug:
-                print('This project is empty')
+                print("This project is empty")
 
 
     class Play(threading.Thread):
@@ -266,7 +274,7 @@ class Project(object):
             self.project = project
             threading.Thread.__init__(self)
             if debug:
-                dbg = 'project-play: {project} in {thread} - it is {time}'
+                dbg = "project-play: {project} in {thread} - it is {time}"
                 print(dbg.format(project=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
             self.start()
 
@@ -278,10 +286,6 @@ class Project(object):
                 wait = wait + scenario.wait + scenario.post_wait
                 # play the scenario
                 scenario.play()
-            # all scenario have been played
-            if self.project.loop:
-                self.project.play()
-
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
@@ -289,23 +293,31 @@ class Project(object):
         self._scenario_list.pop(old)
         self._scenario_list.insert(new, s_temp)
 
-    def outputs(self, protocol='all'):
-        """return a list of available output for this project"""
-        outs = []
-        if protocol == 'all' or protocol == None:
-            return Output.getinstances(self)
+    @property
+    def outputs(self):
+        """
+        return a list of outputs of this project
+        """
+        return self._outputs
+
+    def getoutputs(self, protocol):
+        """
+        return a list of available output for this protocol
+        """
+        if self.outputs:
+            outputs = []
+            for out in self.outputs:
+                if protocol == out.protocol:
+                    outputs.append(out)
+            return outputs
         else:
-            for out in self._output_list:
-                if out:
-                    if protocol == out.getprotocol():
-                        outs.append(out)
-            return outs
+            return None
 
     def getprotocols(self):
         """return the protocols available for this project"""
         protocols = []
-        for out in self.outputs():
-            proto = out.getprotocol()
+        for out in self.outputs:
+            proto = out.protocol
             if not proto in protocols:
                 protocols.append(proto)
         if protocols == []:
@@ -326,20 +338,27 @@ class Project(object):
             setattr(self._scenario_list[taille], key, value)
         return scenario
 
-    def new_output(self, protocol, **kwargs):
+    def new_output(self, protocol="OSC", **kwargs):
         """
         Create a new output for this project
         args:Mandatory argument is the protocol that you want to use for this output
         (OSC, MIDI, serial, ArtNet)
         rtype:Output object
         """
-        taille = len(self._output_list)
-        the_output = None
-        self._output_list.append(the_output)
-        self._output_list[taille] = Output(self, protocol)
+        taille = len(self._outputs)
+        if protocol == "OSC":
+            output = OSC()
+        elif protocol == "MIDI":
+            output = MIDI()
+        elif protocol == "PJLINK":
+            output = PJLINK()
+        else:
+            output = None
+        if output:
+            self._outputs.append(output)
         for key, value in kwargs.items():
-            setattr(self._output_list[taille], key, value)
-        return self._output_list[taille]
+            setattr(self._outputs[taille], key, value)
+        return self._outputs[taille]
 
     def del_scenario(self, scenario):
         """
@@ -348,44 +367,36 @@ class Project(object):
         """
         if scenario in self.scenarios:
             # delete events of this scenario
-            for event in scenario.events():
+            for event in scenario.events:
                 scenario.del_event(event)
             # delete the scenario itself
             self._scenario_list.remove(scenario)
             if debug:
-                print('delete scenario', scenario, len(self._scenario_list))
+                print("delete scenario", scenario, len(self._scenario_list))
         else:
             if debug:
-                print('ERROR - trying to delete a scenario which not exists \
-                      in self._scenario_list', scenario)
+                print("ERROR - trying to delete a scenario which not exists \
+                      in self._scenario_list", scenario)
 
     def _export_attributes(self):
         """export attributes of the project"""
-        attributes = {'name':self._name, 'created':self._created, 'version':self.version, \
-                      'lastopened':self.lastopened, 'loop':self._loop, 'autoplay':self._autoplay}
+        attributes = {"name":self._name, "created":self._created, "version":self.version, \
+                      "lastopened":self.lastopened, "loop":self._loop, "autoplay":self._autoplay}
         return attributes
 
     def _export_scenario(self):
         """export scenario of the project"""
         scenarios = []
         for scenario in self.scenarios:
-            scenarios.append({'attributes':{'output':scenario.output, \
-                                            'name':scenario.name, \
-                                            'description':scenario.description, \
-                                            'events':scenario.export_events()}})
+            scenarios.append({"attributes":{"output":self.outputs.index(scenario.output), \
+                                            "name":scenario.name, \
+                                            "description":scenario.description, \
+                                            "events":scenario.export_events()}})
         return scenarios
 
     def _export_outputs(self):
         """export outputs of the project"""
-        outputs = {}
-        for output in self.outputs():
-            protocol = output.getprotocol()
-            if not protocol in outputs:
-                outputs.setdefault(protocol, [])
-            outputs[protocol].append({'attributes':{}})
-            index = len(outputs[protocol])
-            index -= 1
-            for attr in output.vars_():
-                if not attr.startswith('_'):
-                    outputs[protocol][index]['attributes'].setdefault(attr, getattr(output, attr))
+        outputs = []
+        for output in self.outputs:
+            outputs.append(prop_dict(output))
         return outputs

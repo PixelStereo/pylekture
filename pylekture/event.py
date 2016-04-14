@@ -10,35 +10,29 @@ import liblo
 import datetime
 import threading
 from time import sleep
+from pylekture.node import Node
 from pylekture.constants import debug
 from pylekture.functions import checkType
 
 
-class Event(object):
+class Event(Node):
     """Create an Event
     an Event is like a step of a Scenario.
     It could be a delay, a goto value, a random process,
     a loop process or everything you can imagine """
-    def __init__(self, scenario, content=None, name='', description='', output=None):
-        self.project = scenario.project
-        if description == '':
-            description = "event's description"
-        if name == '':
-            name = 'untitled event'
-        if not content:
-            content = "no content for this event"
-        self.name = name
+    def __init__(self, scenario, commands=None, output=None):
+        super(Event, self).__init__()
+        self._commands = []
+        self._output = None
         self.scenario = scenario
-        self.description = description
-        self.content = content
-        if not output:
-            self.output = 'parent'        
 
-    @staticmethod
-    def getinstances(scenario):
-        """return a list of events for a given scenario"""
-        return scenario.event_list
-
+    @property
+    def output(self):
+        if self._output:
+            return self._output
+        else:
+            return self.scenario.output
+    
 
     class Play(threading.Thread):
         """docstring for PlayOsc"""
@@ -156,31 +150,12 @@ class Event(object):
             sleeper = self.Sleep(wait)
             return sleeper
         else:
-            out = self.getoutput()
+            out = self.output
             if out:
-                if out.getprotocol() == 'OSC':
+                if out.protocol == 'OSC':
                     player = self.Play(out, self)
                     return player
                 else:
-                    print('ERROR 503 - protocol ' + out.getprotocol() + ' is not yet implemented')
+                    print('ERROR 503 - protocol ' + out.protocol+ ' is not yet implemented')
             else:
                 print('there is no output for this event / scenario')
-
-
-    def getoutput(self):
-        """rerurn the current output for this event.
-        If no output is set for this event,
-        parent scenario output will be used"""
-        if self.output == 'parent':
-            output = self.scenario.output
-        else:
-            output = self.output
-        if output:
-            protocol = output[0]
-            output = output[1] - 1
-            try:
-                output = self.scenario._project.outputs(protocol)[output]
-            except IndexError:
-                print('ERROR in getoutput - please clip the value to existing outputs')
-                return False
-        return output

@@ -6,33 +6,42 @@ The Scenario Class
 A scenario is always in a project and it (may) contains events
 """
 
-import liblo
 import datetime
 import threading
 from time import sleep
-from pylekture.constants import debug
-from pylekture.functions import checkType
+from pylekture.node import Node
 from pylekture.event import Event
+from pylekture.constants import debug
 
 
-class Scenario(object):
+class Scenario(Node):
     """Create a new scenario"""
-    def __init__(self, project, name=None, description='', output=None, wait=0, post_wait=0):
-        """create an scenario"""
-        self.project = project
-        if description == '':
-            description = "write a comment"
-        if not name:
-            name = str(datetime.datetime.now())
-        self.name = name
-        self._project = project
-        self.output = output
-        self.description = description
-        self.wait = wait
-        self.post_wait = post_wait
-        self.event_list = []
+    def __init__(self, output=None, wait=0, post_wait=0):
+        super(Scenario, self).__init__()
+        self._output = output
+        self._wait = wait
+        self._post_wait = post_wait
+        self._events = []
         self.index = 0
         self._loop = False
+
+    @property
+    def output(self):
+        """
+        Output of the scenario
+        """
+        if self._output:
+            return self._output
+        else:
+            outputs = self.project.outputs()
+            if outputs:
+                output = outputs[0]
+                return output
+            else:
+                return False
+    @output.setter
+    def output(self, output):
+        self._output = output
 
     @property
     def loop(self):
@@ -51,15 +60,47 @@ class Scenario(object):
         It creates a new object play in a separate thread.
         """
         player = self.Play(self, index)
-        player.join()
+        if player:
+            player.join()
         return player
+
+    @property
+    def wait(self):
+        """
+        Wait time in seconds
+        """
+        return self._wait
+    @wait.setter
+    def wait(self, wait):
+        self._wait = wait
+
+    @property
+    def post_wait(self):
+        """
+        Time to wait after all events played and before the end of this scenario
+        unit:
+        seconds
+        """
+        return self._post_wait
+    @post_wait.setter
+    def post_wait(self, post_wait):
+        self._post_wait = post_wait
+
+    @property
+    def events(self):
+        """
+        All the events of this scenario
+        """
+        return self._events
+    @events.setter
+    def events(self, events):
+        self._events = events
 
 
     class Play(threading.Thread):
         """Instanciate a thread for Playing a scenario
         Allow to start twice or more each scenario in the same time"""
         def __init__(self, scenario, index):
-            self.project = scenario.project
             threading.Thread.__init__(self)
             self.scenario = scenario
             self.index = index
@@ -75,25 +116,25 @@ class Scenario(object):
                 if self.scenario.wait:
                     # if there is a wait, please wait!!
                     if debug:
-                        print('WAIT', self.scenario.name, \
-                              'DURING', self.scenario.wait, 'SECONDS')
+                        print('------ WAIT ',  self.scenario.name, 'DURING' , self.scenario.wait, 'SECONDS')
                     sleep(self.scenario.wait)
             else:
                 # start from the index, we will skip the pre-wait sleep
                 index = self.index
             if debug:
-                dbg = 'scenario-play: {scenario} from index {index} in {thread} at {time}'
-                print(dbg.format(scenario=self.scenario.name, index=index, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
-            for event in self.scenario.events()[index:]:
+                dbg = '------ scenario-play: {scenario} from index {index} in {thread} at {time}'
+                print(dbg.format(scenario=self.scenario, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
+            for event in self.scenario.events[index:]:
                 # play each event
                 player = event.play()
-                player.join()
+                if player:
+                    player.join()
             #return player
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
                 if debug:
-                    print('POST_WAIT', self.scenario.name, \
-                          'DURING', self.scenario.post_wait, 'SECONDS')
+                    print('>>>>> POST_WAIT ' , self.scenario, \
+                          ' DURING ' , self.scenario.post_wait, ' SECONDS')
                 sleep(self.scenario.post_wait)
             # scenario is now finish
             return True
@@ -102,7 +143,7 @@ class Scenario(object):
         """return the duration of the scenario
         Addition the ramp flags with the wait events"""
         duration = 0
-        for event in self.events():
+        for event in self.events:
             if isinstance(event.content, int) or isinstance(event.content, float):
                 # this is a wait
                 duration += event.content
@@ -118,56 +159,35 @@ class Scenario(object):
                     duration += int(ramp)
         return duration
 
-    def events(self):
-        """return a list of events for this scenario"""
-        return Event.getinstances(self)
-
     def new_event(self, *args, **kwargs):
         """create a new event for this scenario"""
-        taille = len(self.event_list)
+        taille = len(self.events)
         the_event = None
-        self.event_list.append(the_event)
-        self.event_list[taille] = Event(self, args)
+        self.events.append(the_event)
+        self.events[taille] = Event(self, args)
         for key, value in kwargs.items():
-            setattr(self.event_list[taille], key, value)
-        return self.event_list[taille]
+            setattr(self.events[taille], key, value)
+        return self.events[taille]
 
     def del_event(self, index):
         """delete an event, by index or with object instance"""
         if isinstance(index, int):
             index -= 1
-            self.event_list.pop(index)
+            self.events.pop(index)
         else:
-            self.event_list.remove(index)
+            self.events.remove(index)
 
     def play_from_here(self, index):
         """play scenario from a given index"""
         if not isinstance(index, int):
-            index = self.event_list.index(index)
+            index = self.events.index(index)
         self.play(index)
-
-    def getoutput(self):
-        """get the output object for this scenario"""
-        if self.output:
-            out_protocol = self.output[0]
-            out_index = self.output[1] - 1
-            out_list = []
-            for out in self._project.outputs():
-                if out.getprotocol() == out_protocol:
-                    out_list.append(out)
-            if len(out_list) > out_index:
-                output = out_list[out_index]
-            else:
-                output = None
-        else:
-            output = None
-        return output
 
     def export_events(self):
         """export events of the project"""
         events = []
-        for event in self.events():
-            events.append({'attributes':{'output':event.output,\
+        for event in self.events:
+            events.append({'attributes':{'output':event._output,\
                                          'name':event.name,\
                                          'description':event.description,\
                                          'content':event.content\
