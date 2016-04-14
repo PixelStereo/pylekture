@@ -39,13 +39,6 @@ class Output(object):
         """
         return project._output_list
 
-    @staticmethod
-    def protocols():
-        """
-        return a list of protocols available
-        """
-        #return ['OSC','MIDI','PJLINK']
-        return ['OSC']
 
     def getprotocol(self):
         """
