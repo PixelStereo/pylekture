@@ -144,18 +144,18 @@ class Scenario(Node):
         Addition the ramp flags with the wait events"""
         duration = 0
         for event in self.events:
-            if isinstance(event.content, int) or isinstance(event.content, float):
+            if isinstance(event.command, int) or isinstance(event.command, float):
                 # this is a wait
-                duration += event.content
-            elif isinstance(event.content, list):
+                duration += event.command
+            elif isinstance(event.command, list):
                 # this is a wait in a list, unicode or string
-                if len(event.content) == 1:
-                    if isinstance(event.content[0], int) or isinstance(event.content[0], float):
-                        duration += int(event.content[0])
-                if 'ramp' in event.content:
+                if len(event.command) == 1:
+                    if isinstance(event.command[0], int) or isinstance(event.command[0], float):
+                        duration += int(event.command[0])
+                if 'ramp' in event.command:
                     # this is a ramp
-                    index = event.content.index('ramp')
-                    ramp = event.content[index+1]
+                    index = event.command.index('ramp')
+                    ramp = event.command[index+1]
                     duration += int(ramp)
         return duration
 
@@ -190,6 +190,6 @@ class Scenario(Node):
             events.append({'attributes':{'output':event._output,\
                                          'name':event.name,\
                                          'description':event.description,\
-                                         'content':event.content\
+                                         'command':event.command\
                                          }})
         return events

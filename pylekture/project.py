@@ -207,9 +207,8 @@ class Project(Node):
                             self.loop = value
                     self.lastopened = str(datetime.datetime.now())
                 elif key == "outputs":
-                    for protocol in loaded["outputs"]:
-                        for out in loaded["outputs"][protocol]:
-                            self.new_output(protocol, **out["attributes"])
+                    for out in loaded["outputs"]:
+                        self.new_output(**out)
             print("project loaded")
             return True
         # catch error if file is not valid or if file is not a lekture project

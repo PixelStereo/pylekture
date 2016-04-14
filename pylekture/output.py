@@ -92,7 +92,7 @@ class PJLINK(OutputIP):
     """Create a PJLINK output"""
     def __init__(self):
         super(PJLINK, self).__init__()
-        self.udp = 4352
+        self._udp = 4352
 
     @property
     def protocol(self):

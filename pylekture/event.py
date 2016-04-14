@@ -22,7 +22,7 @@ class Event(Node):
     a loop process or everything you can imagine """
     def __init__(self, scenario, commands=None, output=None):
         super(Event, self).__init__()
-        self._commands = []
+        self._command = []
         self._output = None
         self.scenario = scenario
 
@@ -32,14 +32,24 @@ class Event(Node):
             return self._output
         else:
             return self.scenario.output
-    
+    @output.setter
+    def output(self, output):
+        self._output = output
+
+    @property
+    def command(self):
+        return self._command
+    @command.setter
+    def command(self, command):
+        self._command = command
+
 
     class Play(threading.Thread):
         """docstring for PlayOsc"""
         def __init__(self, out, event):
             threading.Thread.__init__(self)
             self.out = out
-            self.content = event.content
+            self.command = event.command
             self.event = event
             self.start()
 
@@ -48,7 +58,7 @@ class Event(Node):
             if debug:
                 print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
             out = self.out
-            args = self.content
+            args = self.command
             if isinstance(args, list):
                 # address is the first item of the list
                 address = args[0]
@@ -135,11 +145,11 @@ class Event(Node):
     def play(self):
         """play an event"""
         wait = 0
-        if isinstance(self.content, list):
-            if len(self.content) == 1 and str(self.content[0]).isdigit():
-                wait = float(self.content[0])
-        elif isinstance(self.content, int):
-            wait = float(self.content)
+        if isinstance(self.command, list):
+            if len(self.command) == 1 and str(self.command[0]).isdigit():
+                wait = float(self.command[0])
+        elif isinstance(self.command, int):
+            wait = float(self.command)
         if wait:
             wait = wait/1000
             if debug:

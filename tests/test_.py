@@ -65,12 +65,12 @@ class TestAll(unittest.TestCase):
         #self.assertEqual(my_scenario.output.name, "no-name")
 
         # fill in scenario with events
-        my_scenario.new_event(content=["/previous", 232, "ramp", 500])
-        my_scenario.new_event(content=200)
-        third_event = my_scenario.new_event(content=["/zob", 232, "list", "uno", 2])
-        my_scenario.new_event(content=[200])
-        my_scenario.new_event(content="/address_only")
-        my_other_scenario.new_event(content=["CC", 16, 1, 64])
+        my_scenario.new_event(command=["/previous", 232, "ramp", 500])
+        my_scenario.new_event(command=200)
+        third_event = my_scenario.new_event(command=["/zob", 232, "list", "uno", 2])
+        my_scenario.new_event(command=[200])
+        my_scenario.new_event(command="/address_only")
+        my_other_scenario.new_event(command=["CC", 16, 1, 64])
 
         # test scenario file
         self.assertEqual(my_scenario.getduration(), 900)
@@ -107,13 +107,12 @@ class TestAll(unittest.TestCase):
         my_project.loop = 0
         sleep(0.2)
         self.assertEqual(len(my_project.scenarios), 1)
-        print(my_project.scenarios[0].name)
+        print(my_project.scenarios[0].name.encode('utf-8'))
         self.assertEqual(my_project.read("test_.py"), False)
         self.assertEqual(my_project.read("bogus"), False)
         self.assertEqual(my_project.read("the_file.lekture"), True)
-        self.test_project()
         my_project.reset()
-        self.assertEqual(my_project.outputs(), [])
+        self.assertEqual(my_project.outputs, [])
         self.assertEqual(my_project.scenarios, [])
         del my_project
 
