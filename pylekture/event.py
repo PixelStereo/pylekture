@@ -119,10 +119,6 @@ class Event(Node):
                     msg.add(value)
                     liblo.send(self.target, msg)
 
-            def join(self):
-                threading.Thread.join(self)
-                if debug:
-                    print('ramp ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
 
     class Sleep(threading.Thread):
         """docstring for Sleep"""
@@ -136,11 +132,6 @@ class Event(Node):
                 print('sleep starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
             sleep(self.duration)
 
-        def join(self):
-            threading.Thread.join(self)
-            if debug:
-                print('sleep ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
-            
 
     def play(self):
         """play an event"""

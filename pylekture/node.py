@@ -7,8 +7,6 @@ It's the base class that every object inherit
 Contains name / description
 """
 
-from pylekture.constants import debug
-
 
 class Node(object):
     """Create a new scenario"""
