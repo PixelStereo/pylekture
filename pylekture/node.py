@@ -19,7 +19,10 @@ class Node(object):
     @property
     def name(self):
         """
-        Name of the scenario
+        It acts as a nick name.
+        You can have several nodes with the same name
+        Read-Only
+            Return:String
         """
         return self._name
     @name.setter
@@ -29,7 +32,10 @@ class Node(object):
     @property
     def description(self):
         """
-        Description of the scenario
+        Description of this node
+        You could here send a few words explainig this node.
+            Args:String
+            Returns:String
         """
         return self._description
     @description.setter
