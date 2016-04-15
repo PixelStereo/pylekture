@@ -25,7 +25,6 @@ import simplejson as json
 import datetime
 from pylekture import __version__
 from pylekture.node import Node
-from pylekture.output import Output
 from pylekture.scenario import Scenario
 from pylekture.output import OSC, MIDI, PJLINK
 from pylekture.constants import debug, _projects
