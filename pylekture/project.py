@@ -115,19 +115,6 @@ class Project(Node):
     def loop(self, value):
         self._loop = value
 
-    @classmethod
-    def getinstances(cls):
-        """retuurn a list with all project instances"""
-        dead = set()
-        for ref in cls._instances:
-            obj = ref()
-            if obj is not None:
-                yield obj
-            else:
-                dead.add(ref)
-        for de in dead:
-            cls._instances.remove(de)
-
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
         # reset project attributes
@@ -240,8 +227,6 @@ class Project(Node):
             project.setdefault("scenario", self._export_scenario())
             project.setdefault("attributes", self._export_attributes())
             project.setdefault("outputs", self._export_outputs())
-            import pprint
-            pprint.pprint(project)
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\
                                       ensure_ascii=False).encode("utf8"))
             print("file has been written in " + savepath)

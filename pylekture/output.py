@@ -18,24 +18,6 @@ class Output(Node):
     def __init__(self):
         super(Output, self).__init__()
 
-    @staticmethod
-    def getinstances(project):
-        """
-        return a list of outputs for a given project
-        """
-        return project._output_list
-
-    def vars_(self):
-        """
-        return a list of attributes for this output
-        """
-        # make a copy
-        attrs = list(vars(self).keys())
-        for attr in attrs:
-            if attr.startswith('_'):
-                attrs.remove(attr)
-        return attrs
-
 
 class MIDI(Output):
     """Create a MIDI output"""
