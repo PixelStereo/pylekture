@@ -31,30 +31,39 @@ from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
 
 def new_project():
-    """Create a new project"""
-    size = len(_projects)
-    _projects.append(Project())
-    return _projects[size]
+    """
+    Create a new project
+    :
+    """
+    try:
+        size = len(_projects)
+        print _projects, size
+        _projects.append(Project())
+        print _projects[size]
+        return _projects[size]
+    except Exception as problem:
+        print('ERROR 22' + str(problem))
+        return False
 
 def projects():
-    """return a list of projects available"""
+    """
+    List of all projects available
+    """
     return _projects
 
 
 class Project(Node):
     """
-    A project handles everything you need. Ouputs and scenarios are all project-relative
-    :param <version>: Version of the pylekture lib that created the project. Read-Only value
-    :param <lastopened>: Datetime of the last opened date of this project. Default is None
+    A project handles everything you need.
+    Ouputs and scenarios are all project-relative
     """
     def __init__(self):
         super(Project, self).__init__()
         self._version = __version__
         self._path = None
-        self.lastopened = None
+        self._lastopened = None
         self._autoplay = False
         self._loop = False
-        self._name = "no name"
         self._created = str(datetime.datetime.now())
         self._outputs = []
         self._scenarios = []
@@ -71,23 +80,44 @@ class Project(Node):
     @property
     def scenarios(self):
         """
-        Return a list of scenarios for this project
+        Report existing scenarios
+
+        :return: All Scenario of this project
+        :rtype: list
         """
         return self._scenarios
 
     @property
+    def lastopened(self):
+        """
+        Datetime of the last opened date of this project. Default is None
+
+        :getter: datetime object
+        :type getter: string
+        """
+        return self._lastopened
+    
+
+    @property
     def version(self):
+        """
+        The version of pylekture used to create this project
+        Read-Only
+
+        :return: version (tag + number of commits since tag + sha of commit)
+        :rtype: string
+        """
         return self._version
 
     @property
-    def name(self):
-        return self._name
-    @name.setter
-    def name(self, name):
-        self._name = name
-
-    @property
     def path(self):
+        """
+        This is the filepath of the project.
+        It's initialised at None when created, and can be set to any valid path.
+
+        :param path: valid filepath. Return True if valid, False otherwise.
+        :type path: string
+        """
         return self._path
     @path.setter
     def path(self, value):
@@ -95,6 +125,9 @@ class Project(Node):
 
     @property
     def autoplay(self):
+        """
+        If True, it will play the project when it is opened
+        """
         return self._autoplay
     @autoplay.setter
     def autoplay(self, value):
@@ -105,9 +138,9 @@ class Project(Node):
         """
         If enable, the project play again when it reaches the end of the scenarios
 
-            :getter:    Returns the status of the loop flag
-            :setter:    Sets this loop flag
-            :type:      Boolean
+        :getter:    Returns the status of the loop flag
+        :setter:    Sets this loop flag
+        :type:      Boolean
         """
         return self._loop
     @loop.setter
@@ -130,7 +163,7 @@ class Project(Node):
             :arg: file to load. Filepath must be provided as a string/unicode.
                                 Filepath will be checked, if valid it will be loaded
                                 Otherwise, it will return False
-
+            :returns:Boolean
             :rtype:True if the project has been correctly loaded, False otherwise
         """
         path = os.path.abspath(path)
