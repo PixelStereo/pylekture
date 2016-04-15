@@ -58,7 +58,7 @@ class Project(Node):
         self._name = "no name"
         self._created = str(datetime.datetime.now())
         self._outputs = []
-        self._scenario_list = []
+        self._scenarios = []
 
     def __repr__(self):
         s = "Project (path={path}, autoplay={autoplay}, loop={loop}, " \
@@ -74,7 +74,7 @@ class Project(Node):
         """
         Return a list of scenarios for this project
         """
-        return self._scenario_list
+        return self._scenarios
 
     @property
     def version(self):
@@ -136,7 +136,7 @@ class Project(Node):
         # reset outputs
         self._outputs = []
         # reset scenarios and events
-        self._scenario_list = []
+        self._scenarios = []
 
     def read(self, path):
         """
@@ -288,9 +288,9 @@ class Project(Node):
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
-        s_temp = self._scenario_list[old]
-        self._scenario_list.pop(old)
-        self._scenario_list.insert(new, s_temp)
+        s_temp = self._scenarios[old]
+        self._scenarios.pop(old)
+        self._scenarios.insert(new, s_temp)
 
     @property
     def outputs(self):
@@ -330,11 +330,11 @@ class Project(Node):
             args:Optional args are every attributes of the scenario, associated with a keyword
             rtype:Scenario object
         """
-        taille = len(self._scenario_list)
+        taille = len(self._scenarios)
         scenario = Scenario(self)
-        self._scenario_list.append(scenario)
+        self._scenarios.append(scenario)
         for key, value in kwargs.items():
-            setattr(self._scenario_list[taille], key, value)
+            setattr(self._scenarios[taille], key, value)
         return scenario
 
     def new_output(self, protocol="OSC", **kwargs):
@@ -369,13 +369,13 @@ class Project(Node):
             for event in scenario.events:
                 scenario.del_event(event)
             # delete the scenario itself
-            self._scenario_list.remove(scenario)
+            self._scenarios.remove(scenario)
             if debug:
-                print("delete scenario", scenario, len(self._scenario_list))
+                print("delete scenario", scenario, len(self._scenarios))
         else:
             if debug:
                 print("ERROR - trying to delete a scenario which not exists \
-                      in self._scenario_list", scenario)
+                      in self._scenarios", scenario)
 
     def _export_attributes(self):
         """export attributes of the project"""
