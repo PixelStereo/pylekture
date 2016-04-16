@@ -156,12 +156,13 @@ class Project(Node):
 
     def read(self, path):
         """
-        Read a lekture-project file from hard drive
-            :arg: file to load. Filepath must be provided as a string/unicode.
-                                Filepath will be checked, if valid it will be loaded
-                                Otherwise, it will return False
-            :returns:Boolean
-            :rtype:True if the project has been correctly loaded, False otherwise
+        Read a lekture-project file from hard drive. Must be valid.
+        if valid it will be loaded and return True, otherwise, it will return False
+
+            :param path: Filepath to read from.
+            :type path: string
+            :returns: Boolean
+            :rtype: True if the project has been correctly loaded, False otherwise
         """
         path = os.path.abspath(path)
         if not os.path.exists(path):
