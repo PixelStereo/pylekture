@@ -37,9 +37,7 @@ def new_project():
     """
     try:
         size = len(_projects)
-        print _projects, size
         _projects.append(Project())
-        print _projects[size]
         return _projects[size]
     except Exception as problem:
         print('ERROR 22' + str(problem))
@@ -227,7 +225,7 @@ class Project(Node):
                             self.autoplay = value
                         if attribute == "loop":
                             self.loop = value
-                    self.lastopened = str(datetime.datetime.now())
+                    self._lastopened = str(datetime.datetime.now())
             print("project loaded")
             return True
         # catch error if file is not valid or if file is not a lekture project
