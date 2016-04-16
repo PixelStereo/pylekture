@@ -25,7 +25,7 @@ The tests.py file contains a script to understand what you can do with the packa
 #### Development
 ---
 Development is made on OSX with python 2.7.11    
-Continious integration is made on linux for python 2.6, 2.7 and 3.3, 3.4, 3.5
+Continious integration is made on linux for python 2.7 and 3.3, 3.4, 3.5
 
 #### Documentation
 ---
