@@ -10,8 +10,7 @@ Contains name / description
 
 class Node(object):
     """Create a new scenario"""
-    def __init__(self, name='no-name', description='write a comment', \
-                 output=None, wait=0, post_wait=0):
+    def __init__(self, name='no-name', description='write a comment'):
         super(Node, self).__init__()
         self._name = name
         self._description = description

@@ -9,6 +9,7 @@ pylekture
    :maxdepth: 2
 
    project
+   node
    output
    scenario
    functions
