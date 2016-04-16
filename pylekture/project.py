@@ -94,7 +94,6 @@ class Project(Node):
         :type getter: string
         """
         return self._lastopened
-    
 
     @property
     def version(self):

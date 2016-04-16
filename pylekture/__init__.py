@@ -44,6 +44,7 @@ Changelog
         - events is now attributes of scenario
         - command is now atrributes of event (instead of content)
         - remove all useless nodes called 'attributes' in the json export file
+    - Revamp Output link to project / scenario / events
 
 - v0.2.1 - Apr. 12th 2016
     - Introduce .lekture extension instead of .json extension
