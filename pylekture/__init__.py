@@ -34,118 +34,73 @@ Project has a few attributes:
 
 -------------------------------------------------------------------------------
 
+-------------------------------------------------------------------------------
+STORY
+-------------------------------------------------------------------------------
+A story is the home of the project. It included a bunch of scenario, events and parameters.
+A Story can be autoplayed when loading file, and can be loop like everything in this package.
+Playing a story plays sequenctially all the scenario one by one
+
+-------------------------------------------------------------------------------
+PARAMETER
+-------------------------------------------------------------------------------
+a parameter is a value holder with a datatype/domain/clipmode attributes.
+This is the data we want to make a stroy with.
+
+pylekture exposes its parameter so it has at least a bunch of parameters.
+every public methods/properties play/stop/events/scenarios etc…
+
+-------------------------------------------------------------------------------
+SCENARIO
+-------------------------------------------------------------------------------
+A Scenario is a list of events. 
+Playing a scenario plays sequentially all the events one by one
+
+-------------------------------------------------------------------------------
+TRIGGER
+-------------------------------------------------------------------------------
+A Trigger is an entry to our world
+A trigger can be applied to anything
+You can set several Trigger on a event/scenario/story
+
+-------------------------------------------------------------------------------
+COMMAND
+-------------------------------------------------------------------------------
+A Command is an order to a parameter.
+It can be a Ramp, a State, or a Wait
+it has an output
+A Wait is a pause to the current scenario
+It has a time in and a time out.
+
+-------------------------------------------------------------------------------
+RAMP
+-------------------------------------------------------------------------------
+a ramp is an animation applied to a parameter or a group of parameter
+
+-------------------------------------------------------------------------------
+STATE
+-------------------------------------------------------------------------------
+a state represents a specific state of a parameter
+
+-------------------------------------------------------------------------------
+EVENTS
+-------------------------------------------------------------------------------
+An Event is a command + a trigger
+
 
 
 -------------------------------------------------------------------------------
 TODO
 -------------------------------------------------------------------------------
-
-- Revamp new_event method. It must be attached to the project
-    - You specify protocol. For lekture, it formats the type of args.
-    - Code Review of export. It must do ref to the index of the event/scenario. Event has a name, a description, an output.
-- A scenario is now just a group of events
-Lekture will represent 
-
+We need a visualisation with curves for each events/outputs
+We need to adapt the lenght to display to what we display
+pylekture must provided the computation. You can save a computation as a scenario. It is a kind of encapsulate.
 
 In this kind of representation, we must compute the scenario to display the view we want : 
 no selection, display the whole project/story
 one selection, display the scenario with events for this output highlighted
 multiple selection, compute the whole data
 
--------------------------------------------------------------------------------
-PROJECT
--------------------------------------------------------------------------------
-attributes
-        "autoplay": 0,
-        "created": "2016-04-17 11:08:53.760141",
-        "lastopened": null,
-        "loop": 1,
-        "name": "no-name",
-        "version": "0.2.1+30.g27f1dae.dirty"
-outputs
-        [{
-            "description": "write a comment",
-            "ip": "127.0.0.1",
-            "name": "no-name",
-            "protocol": "OSC",
-            "udp": 1234
-            "namespace": {
-                "pop":  {
-                    "service": "parameter",
-                    "value": 0,
-                    "datatype": decimal,
-                    "domain": [0, 10],
-                    "clipmode": 'low'
-                    "description" : "i'm a float 0/infinite"
-                }
-            }
-        },
-        {
-            "description": "write a comment",
-            "ip": "127.0.0.1",
-            "name": "another output",
-            "protocol": "PJLINK",
-            "udp": 1234
-        },
-        {
-            "description": "write a comment",
-            "ip": "127.0.0.1",
-            "name": "no-name",
-            "protocol": "OSC",
-            "udp": 22222
-        },
-        {
-            "description": "write a comment",
-            "name": "no-name",
-            "protocol": "MIDI"
-        }]
-scenario
-        [{
-            "description": "write a comment",
-            "events": [
-                {
-                    "command": [
-                        "/previous",
-                        232,
-                        "ramp",
-                        500
-                    ],
-                    "description": "write a comment",
-                    "name": "no-name",
-                    "output": null
-                },
-                {
-                    "command": 200,
-                    "description": "write a comment",
-                    "name": "no-name",
-                    "output": null
-                },
-                {
-                    "command": [
-                        "/zob",
-                        232,
-                        "list",
-                        "uno",
-                        2
-                    ],
-                    "description": "write a comment",
-                    "name": "no-name",
-                    "output": null
-                },
-                {
-                    "command": "/address_only",
-                    "description": "write a comment",
-                    "name": "no-name",
-                    "output": null
-                }
-            ],
-            "name": "the scénario è © • test",
-            "output": 0
-        }]
-
-We need a visualisation with curves for each events/outputs
-We need to adapt the lenght to display to what we display
-pylekture must provided the computation. You can save a computation as a scenario. It is a kind of encapsulate.
 ---------------------------------------------------------
         |   scenario 1  |   scenario 2  |   scenario 3  |
 ---------------------------------------------------------
@@ -200,13 +155,17 @@ These class might be automatically detected and new_event method will create the
 Changelog
 -------------------------------------------------------------------------------
 
-- v0.2.2 - ??
+- v0.2.2 - Apr. 17th 2016
     - Massive Revamp
         - outputs is now attribute of project
         - events is now attributes of scenario
         - command is now atrributes of event (instead of content)
         - remove all useless nodes called 'attributes' in the json export file
     - Revamp Output link to project / scenario / events
+    - Revamp events. there is now a event.protocol value(OSC/MidiNote/PJLINK)
+    - A scenario is now just a group of events
+    - Revamp new_event method. It must be attached to the project
+    - You specify protocol. For lekture, it formats the type of args.
 
 - v0.2.1 - Apr. 12th 2016
     - Introduce .lekture extension instead of .json extension
