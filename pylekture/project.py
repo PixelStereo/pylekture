@@ -223,36 +223,46 @@ class Project(Node):
     def fillin(self, loaded):
         """
         Creates Outputs, Scenario and Events obects
+        First, dump attributes, then outputs, scenario and finish with events.
             :rtype:True if file formatting is correct, False otherwise
         """
         try:
-            for key in loaded.keys():
-                if key == "scenario":
-                    for scenario in loaded["scenario"]:
-                        events = scenario.pop("events")
-                        scenar = self.new_scenario(**scenario)
-                        for event in events:
-                            scenar.new_event(**event)
-                elif key == "outputs":
-                    for out in loaded["outputs"]:
-                        self.new_output(**out)
-                else:
-                    for attribute, value in loaded.items():
-                        if attribute == "created":
-                            self._created = value
-                        if attribute == "version":
-                            self._version = value
-                        if attribute == "autoplay":
-                            self.autoplay = value
-                        if attribute == "loop":
-                            self.loop = value
-                    self._lastopened = str(datetime.datetime.now())
+            # dump attributes
+            attributes = loaded.pop('attributes')
+            for attribute, value in attributes.items():
+                if attribute == "created":
+                    self._created = value
+                if attribute == "version":
+                    self._version = value
+                if attribute == "autoplay":
+                    self.autoplay = value
+                if attribute == "loop":
+                    self.loop = value
+                if attribute == "name":
+                    self.name= value
+            self._lastopened = str(datetime.datetime.now())
+            # dump outputs
+            outputs = loaded.pop('outputs')
+            for out in outputs:
+                self.new_output(**out)
+            scenarios = loaded.pop('scenarios')
+            # dump scenario
+            for scenario in scenarios:
+                output = scenario['output']
+                if output != None:
+                    scenario['output'] = self.outputs[output]
+                events = scenario.pop("events")
+                scenar = self.new_scenario(**scenario)
+                for event in events:
+                    scenar.new_event(**event)
+            if loaded != {}:
+                print('ERROIR 906 - loaded file has not been totally loaded', loaded )
             print("project loaded")
             return True
         # catch error if file is not valid or if file is not a lekture project
-        except (IOError, ValueError):
+        except (IOError, ValueError) as Error:
             if debug:
-                print("ERROR 907 - project not loaded, this is not a lekture-project file")
+                print(Error, "ERROR 907 - project not loaded, this is not a lekture-project file")
             return False
 
     def write(self, path=None):
@@ -275,7 +285,7 @@ class Project(Node):
                 print("ERROR 909 - path is not valid, could not save project - " + savepath)
                 return False
             project = {}
-            project.setdefault("scenario", self._export_scenario())
+            project.setdefault("scenarios", self._export_scenario())
             project.setdefault("attributes", self._export_attributes())
             project.setdefault("outputs", self._export_outputs())
             out_file.write(json.dumps(project, sort_keys=True, indent=4,\

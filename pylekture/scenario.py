@@ -37,20 +37,29 @@ class Scenario(Node):
     @property
     def output(self):
         """
-        Output of the scenario
+        The port to output this scenario
+        Initialised to None if user does not set it.
         """
         if self._output:
             return self._output
         else:
-            outputs = self.project.outputs()
-            if outputs:
-                output = outputs[0]
-                return output
-            else:
-                return False
+            return self.project.output
     @output.setter
     def output(self, output):
-        self._output = output
+        if str(output.__class__) == "<class 'pylekture.output.OSC'>":
+            self._output = output
+        elif str(output.__class__) == "<class 'pylekture.output.PJLINK'>":
+            self._output = output
+        elif str(output.__class__) == "<class 'pylekture.output.MIDI'>":
+            self._output = output
+        else:
+            print()
+            print('-------------')
+            print(output.__class__)
+            print()
+            print()
+            #raise LektureTypeError('OSC', output)
+
 
     @property
     def loop(self):
