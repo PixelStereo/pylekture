@@ -16,8 +16,9 @@ from pylekture.constants import debug
 
 class Scenario(Node):
     """Create a new scenario"""
-    def __init__(self, output=None, wait=0, post_wait=0):
+    def __init__(self, project, output=None, wait=0, post_wait=0):
         super(Scenario, self).__init__()
+        self.project = project
         self._output = output
         self._wait = wait
         self._post_wait = post_wait
