@@ -458,9 +458,9 @@ class Project(Node):
     def _export_scenario(self):
         """export scenario of the project"""
         scenarios = []
-        events = []
         for scenario in self.scenarios:
-            for event in self.events:
+            events = []
+            for event in scenario.events:
                 events.append(self.events.index(event))
             scenarios.append({"output":self.outputs.index(scenario.output), \
                               "name":scenario.name, "description":scenario.description, \

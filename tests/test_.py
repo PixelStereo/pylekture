@@ -85,9 +85,9 @@ class TestAll(unittest.TestCase):
         my_third_event = my_project.new_event('OSC', command=["/zob", 232, "list", "uno", 2])
         my_scenario.add_event(my_third_event)
         my_forth_event = my_project.new_event('WAIT', command=200)
-        my_scenario.add_event(my_forth_event)
         my_fifth_event = my_project.new_event('OSC', command="/address_only")
         my_scenario.add_event(my_fifth_event)
+        my_scenario.add_event(my_forth_event)
         other_event = my_project.new_event('MidiNote', command=["CC", 16, 1, 64])
         my_other_scenario.add_event(other_event)
 
