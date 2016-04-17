@@ -14,6 +14,18 @@ from pylekture.project import new_project, projects
 
 class TestAll(unittest.TestCase):
 
+    def test_output(self):
+        p = new_project()
+        print('after p test_output', p)
+        o = p.new_output('OSC')
+        s = p.new_scenario()
+        e = s.new_event(['/test', 22222])
+        print(s.output)
+        self.assertEqual(p.output, o)
+        print('----', s.output)
+        self.assertEqual(s.output, o)
+        self.assertEqual(e.output, o)
+
     def test_project(self):
         # create projects
         my_project = new_project()
@@ -24,7 +36,7 @@ class TestAll(unittest.TestCase):
         print(my_project.path, my_project.autoplay, my_project.loop)
 
         # we should have two projects, as we created two of them
-        self.assertEqual(len(projects()), 2)
+        self.assertEqual(len(projects()), 3)
         self.assertEqual(my_project.version, __version__)
         my_scenario = my_project.new_scenario()
         my_other_scenario = my_project.new_scenario()
@@ -111,6 +123,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(my_project.read("test_.py"), False)
         self.assertEqual(my_project.read("bogus"), False)
         self.assertEqual(my_project.read("the_file.lekture"), True)
+        self.assertEqual(len(my_project.outputs), 4)
         my_project.reset()
         self.assertEqual(my_project.outputs, [])
         self.assertEqual(my_project.scenarios, [])
@@ -137,7 +150,6 @@ class TestAll(unittest.TestCase):
         except NameError:
             # this is python 3
             self.assertEqual(isinstance(uni, (str, bytes)), True)
-
 
 
 if __name__ == "__main__":
