@@ -83,7 +83,6 @@ class TestAll(unittest.TestCase):
         my_third_event = my_project.new_event('OSC', command=["/zob", 232, "list", "uno", 2])
         my_forth_event = my_project.new_event('WAIT', command=200)
         my_fifth_event = my_project.new_event('OSC', command="/address_only")
-        my_scenario.add_event(my_fifth_event)
         my_scenario.add_event(my_forth_event)
         my_scenario.add_event(my_third_event)
         other_event = my_project.new_event('MidiNote', command=["CC", 16, 1, 64])
@@ -92,7 +91,7 @@ class TestAll(unittest.TestCase):
 
         # test scenario file
         self.assertEqual(my_scenario.getduration(), 900)
-        self.assertEqual(len(my_scenario.events), 6)
+        self.assertEqual(len(my_scenario.events), 5)
         my_scenario.play()
         sleep(1)
         my_scenario.play_from_here(my_third_event)
@@ -104,7 +103,14 @@ class TestAll(unittest.TestCase):
         # need to be debug then test again
         my_project.autoplay = 0
         my_project.loop = 1
-        my_scenario.del_event(4)
+        # calling del event must check first if the event is in other place.
+        self.assertEqual(len(my_project.events), 6)
+        my_project.del_event(5)
+        self.assertEqual(len(my_project.events), 5)
+        # try to delete an event present in other scenario
+        my_project.del_event(3)
+        self.assertEqual(len(my_project.events), 5)
+
         self.assertEqual(my_project.getprotocols(), ["OSC", "PJLINK", "MIDI"])
         self.assertEqual(my_project.scenarios[0].name, "the scénario è © • test")
         my_project.scenarios_set(0, 1)

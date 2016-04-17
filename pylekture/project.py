@@ -70,7 +70,7 @@ class Project(Node):
         self._output = None
         self._outputs = []
         self._scenarios = []
-        self._events = []
+        self._events = [] 
 
     def __repr__(self):
         s = "Project (path={path}, autoplay={autoplay}, loop={loop}, " \
@@ -496,11 +496,23 @@ class Project(Node):
         """
         delete an event, by index or with object instance
         """
+        used = False
         if isinstance(index, int):
             index -= 1
-            self.events.pop(index)
+            for scenario in self.scenarios:
+                for event in scenario.events:
+                    if event == self.events[index]:
+                        print('WARNING - this event is still referenced in scenario ' + scenario.name)
+                        used = True
+            if not used:
+                self.events.pop(index)
         else:
-            self.events.remove(index)
+            for scenario in self.scenarios:
+                for index in scenario.events:
+                    print('WARNING - this event is still referenced in scenario ' + scenario.name)
+                    used = True
+            if not used:
+                self.events.remove(index)
 
     def export_events(self):
         """
