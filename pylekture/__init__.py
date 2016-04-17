@@ -135,21 +135,21 @@ events['MIDICC'] => [1, 12, 'random', 10, 64, 'ramp', 'random', 500, 2000] (will
 We should implement several class of Events
 These class might be automatically detected and new_event method will create the appropriate class
 - SCENARIO / EVENT
-    - How to describe that we want to play an event or a scenaio which already exists?
-    - PLAY
+	- How to describe that we want to play an event or a scenaio which already exists?
+	- PLAY
 - OSC
-    - if we have a / as first character
+	- if we have a / as first character
 - WAIT
-    - if we have a single float/integer (float is in seconds and integer in milliseconds)
+	- if we have a single float/integer (float is in seconds and integer in milliseconds)
 - MIDI
-    - if we have 3 numbers in a row (Channel btw 0/15, Controler btw 0/127 and Value btw 0/127)
-    - we might create a sub-class for MidiNote, MidiCC, etc…
+	- if we have 3 numbers in a row (Channel btw 0/15, Controler btw 0/127 and Value btw 0/127)
+	- we might create a sub-class for MidiNote, MidiCC, etc…
 - PJLINK
-    - if we have a command without ???
+	- if we have a command without ???
 - UDP
-    - send a raw UDP command
+	- send a raw UDP command
 - OLA
-    - a DMX command to be executed in python -> OLA
+	- a DMX command to be executed in python -> OLA
 
 -------------------------------------------------------------------------------
 Changelog
