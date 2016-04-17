@@ -53,7 +53,7 @@ every public methods/properties play/stop/events/scenarios etc…
 -------------------------------------------------------------------------------
 SCENARIO
 -------------------------------------------------------------------------------
-A Scenario is a list of events. 
+A Scenario is a list of events.
 Playing a scenario plays sequentially all the events one by one
 
 -------------------------------------------------------------------------------
@@ -94,9 +94,10 @@ TODO
 -------------------------------------------------------------------------------
 We need a visualisation with curves for each events/outputs
 We need to adapt the lenght to display to what we display
-pylekture must provided the computation. You can save a computation as a scenario. It is a kind of encapsulate.
+pylekture must provided the computation.
+You can save a computation as a scenario. It is a kind of encapsulate.
 
-In this kind of representation, we must compute the scenario to display the view we want : 
+In this kind of representation, we must compute the scenario to display the view we want :
 no selection, display the whole project/story
 one selection, display the scenario with events for this output highlighted
 multiple selection, compute the whole data
@@ -121,7 +122,7 @@ A plugin is devided into an Event Subclass, an Input and an Output Subclass
 In pylekture, we import plugins module, and it will import each plugin.
 
 Events might be index as root. Like this, we could refer in differents scenario the same event.
-When saving an events, we save a reference to the events list : 
+When saving an events, we save a reference to the events list :
 events as a protocol tyep (automatically detect when created), it is the class of the event
 scenario[events] => [OSC_1, WAIT_1000, SCENARIO_2, MIDICC_1, OSC_2, OSC_1]
 project[scenarios] => [SCENARIO_1, SCENARIO_2]
@@ -129,8 +130,10 @@ project[scenarios] => [SCENARIO_1, SCENARIO_2]
 events['OSC'] => ['/toto', 1, 'ramp', 5000]
 events['MIDICC'] => [1, 12, 127, 'ramp' 5000, 'from', 0]
 events['MIDICC'] => [1, 12, 127, 'ramp' 5000] (from latest value (will ask for))
-events['MIDICC'] => [1, 12, 'random', 10, 64, 'ramp', 1000]  (will generate a random value each second between 10 and 64)
-events['MIDICC'] => [1, 12, 'random', 10, 64, 'ramp', 'random', 500, 2000] (will generate a randome value between 10 and 64 each 500/2000 milliseconds)
+events['MIDICC'] => [1, 12, 'random', 10, 64, 'ramp', 1000]
+=> (will generate a random value each second between 10 and 64)
+events['MIDICC'] => [1, 12, 'random', 10, 64, 'ramp', 'random', 500, 2000]
+=> (will generate a randome value between 10 and 64 each 500/2000 milliseconds)
 
 We should implement several class of Events
 These class might be automatically detected and new_event method will create the appropriate class
