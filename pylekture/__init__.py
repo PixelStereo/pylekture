@@ -52,6 +52,97 @@ no selection, display the whole project/story
 one selection, display the scenario with events for this output highlighted
 multiple selection, compute the whole data
 
+-------------------------------------------------------------------------------
+PROJECT
+-------------------------------------------------------------------------------
+attributes
+        "autoplay": 0,
+        "created": "2016-04-17 11:08:53.760141",
+        "lastopened": null,
+        "loop": 1,
+        "name": "no-name",
+        "version": "0.2.1+30.g27f1dae.dirty"
+outputs
+        [{
+            "description": "write a comment",
+            "ip": "127.0.0.1",
+            "name": "no-name",
+            "protocol": "OSC",
+            "udp": 1234
+            "namespace": {
+                "pop":  {
+                    "service": "parameter",
+                    "value": 0,
+                    "datatype": decimal,
+                    "domain": [0, 10],
+                    "clipmode": 'low'
+                    "description" : "i'm a float 0/infinite"
+                }
+            }
+        },
+        {
+            "description": "write a comment",
+            "ip": "127.0.0.1",
+            "name": "another output",
+            "protocol": "PJLINK",
+            "udp": 1234
+        },
+        {
+            "description": "write a comment",
+            "ip": "127.0.0.1",
+            "name": "no-name",
+            "protocol": "OSC",
+            "udp": 22222
+        },
+        {
+            "description": "write a comment",
+            "name": "no-name",
+            "protocol": "MIDI"
+        }]
+scenario
+        [{
+            "description": "write a comment",
+            "events": [
+                {
+                    "command": [
+                        "/previous",
+                        232,
+                        "ramp",
+                        500
+                    ],
+                    "description": "write a comment",
+                    "name": "no-name",
+                    "output": null
+                },
+                {
+                    "command": 200,
+                    "description": "write a comment",
+                    "name": "no-name",
+                    "output": null
+                },
+                {
+                    "command": [
+                        "/zob",
+                        232,
+                        "list",
+                        "uno",
+                        2
+                    ],
+                    "description": "write a comment",
+                    "name": "no-name",
+                    "output": null
+                },
+                {
+                    "command": "/address_only",
+                    "description": "write a comment",
+                    "name": "no-name",
+                    "output": null
+                }
+            ],
+            "name": "the scénario è © • test",
+            "output": 0
+        }]
+
 We need a visualisation with curves for each events/outputs
 We need to adapt the lenght to display to what we display
 pylekture must provided the computation. You can save a computation as a scenario. It is a kind of encapsulate.

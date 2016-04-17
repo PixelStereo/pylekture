@@ -13,6 +13,7 @@ from time import sleep
 from pylekture.node import Node
 from pylekture.constants import debug
 from pylekture.functions import checkType
+from pylekture.animations import Ramp
 
 
 class Event(Node):
@@ -44,11 +45,22 @@ class Event(Node):
         self._command = command
 
 
+class OSC(Event):
+    """
+    An OSC event is an Event designed to be outputed via OSC
+    """
+    def __init__(self, scenario, command, *args, **kwargs):
+        super(OSC, self).__init__(scenario, command, *args, **kwargs)
+        self.address = command[0]
+        if len(command) > 1:
+            self.args = command[:1]
+            self.protocol = 'OSC'
+
     class Play(threading.Thread):
         """docstring for PlayOsc"""
-        def __init__(self, out, event):
+        def __init__(self, event):
             threading.Thread.__init__(self)
-            self.out = out
+            self.output = event.output
             self.command = event.command
             self.event = event
             self.start()
@@ -57,7 +69,7 @@ class Event(Node):
             """play an OSC event"""
             if debug:
                 print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
-            out = self.out
+            out = self.output
             args = self.command
             if isinstance(args, list):
                 # address is the first item of the list
@@ -75,7 +87,7 @@ class Event(Node):
                 print('liblo.AddressError' + str(err))
             if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
                     # this is a ramp, make it in a separate thread
-                    ramp = self.Ramp(target, address, args)
+                    ramp = Ramp(target, address, args)
                     ramp.join()
             elif isinstance(args, list):
                 msg = liblo.Message(address)
@@ -89,38 +101,24 @@ class Event(Node):
                     msg.add(args)
                 liblo.send(target, msg)
 
-
-        class Ramp(threading.Thread):
-            """Instanciate a thread for Playing a ramp
-            Allow to do several ramps in a same scenario"""
-            def __init__(self, target, address, args):
-                threading.Thread.__init__(self)
-                self.args = args
-                self.address = address
-                self.target = target
-                self.start()
-
-            def run(self):
-                if debug:
-                    print('ramp starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
-                index = self.args.index('ramp')
-                ramp = self.args[index+1]
-                dest = self.args[index-1]
-                dest = checkType(dest)
-                ramp = checkType(ramp)
-                value = 0
-                delta = dest - value
-                delta = float(delta)
-                step = delta / ramp
-                for millisec in range(ramp):
-                    msg = liblo.Message(self.address)
-                    value += step
-                    sleep(0.00072)
-                    msg.add(value)
-                    liblo.send(self.target, msg)
+    def play(self):
+        """
+        Play an EventOSC
+        """
+        player = self.Play(self)
+        return player
 
 
-    class Sleep(threading.Thread):
+class Wait(Event):
+    """
+    Play an EventWait
+    """
+    def __init__(self, duration, *args, **kwargs):
+        super(Wait, self).__init__(duration, *args, **kwargs)
+        self.duration = duration
+        self.protocol = 'WAIT'
+
+    class Play(threading.Thread):
         """docstring for Sleep"""
         def __init__(self, duration):
             threading.Thread.__init__(self)
@@ -131,39 +129,44 @@ class Event(Node):
             if debug:
                 print('sleep starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
             sleep(self.duration)
-
+            if debug:
+                print('sleep ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
 
     def play(self):
-        """play an event"""
-        wait = 0
-        if isinstance(self.command, list):
-            if len(self.command) == 1 and str(self.command[0]).isdigit():
-                wait = float(self.command[0])
-        elif isinstance(self.command, int):
-            wait = float(self.command)
-        if wait:
-            wait = wait/1000
-            if debug:
-                if wait <= 1:
-                    print('waiting ' + str(wait) + ' second')
-                else:
-                    print('waiting ' + str(wait) + ' seconds')
-            sleeper = self.Sleep(wait)
-            return sleeper
-        else:
-            out = self.output
-            if out:
-                if out.protocol == 'OSC':
-                    player = self.Play(out, self)
-                    return player
-                else:
-                    print('ERROR 503 - protocol ' + out.protocol+ ' is not yet implemented')
-            else:
-                print('there is no output for this event / scenario')
+        """
+        Play an EventOSC
+        """
+        wait = Wait(self.duration)
 
-class OSC(Event):
+
+class MidiNote(Event):
     """
     An OSC event is an Event designed to be outputed via OSC
     """
     def __init__(self, scenario, command, *args, **kwargs):
-        super(OSC, self).__init__(scenario, command, *args, **kwargs)
+        super(MidiNote, self).__init__(scenario, command, *args, **kwargs)
+        self.address = command[0]
+        if len(command) > 1:
+            self.args = command[:1]
+        self.protocol = 'MidiNote'
+
+    class Play(threading.Thread):
+        """docstring for PlayOsc"""
+        def __init__(self, out, event):
+            threading.Thread.__init__(self)
+            self.out = out
+            self.command = event.command
+            self.event = event
+            self.start()
+
+        def run(self):
+            """
+            Play the MidiNote
+            """
+            pass
+
+    def play(self):
+        """
+        Play an EventOSC
+        """
+        pass

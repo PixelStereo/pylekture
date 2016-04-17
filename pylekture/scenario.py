@@ -30,9 +30,9 @@ class Scenario(Node):
         self._output = output
         self._wait = wait
         self._post_wait = post_wait
-        self._events = []
         self.index = 0
         self._loop = False
+        self._events = []
 
     @property
     def output(self):
@@ -59,7 +59,6 @@ class Scenario(Node):
             print()
             print()
             #raise LektureTypeError('OSC', output)
-
 
     @property
     def loop(self):
@@ -110,9 +109,39 @@ class Scenario(Node):
         All the events of this scenario
         """
         return self._events
-    @events.setter
-    def events(self, events):
-        self._events = events
+
+    def add_event(self, event, index='last'):
+        """
+        Add an event to the scenario
+
+        :param event: The event to be add to the events of this scenario
+        :type event: Lekture.Event instance
+        """
+        if index == 'last':
+            self._events.append(event)
+        else:
+            self._events.insert(index, event)
+
+    def del_event(self, index):
+        """
+        delete an event, by index or with object instance
+        """
+        if isinstance(index, int):
+            index -= 1
+            self.events.pop(index)
+        else:
+            self.events.remove(index)
+
+    def export_events(self):
+        """
+        export events of the project
+        """
+        events = []
+        for event in self.events:
+            events.append({'output':event._output, 'name':event.name,\
+                           'description':event.description, 'command':event.command
+                            })
+        return events
 
 
     class Play(threading.Thread):
@@ -177,38 +206,8 @@ class Scenario(Node):
                     duration += int(ramp)
         return duration
 
-    def new_event(self, protocol, command, **kwargs):
-        """create a new event for this scenario"""
-        taille = len(self.events)
-        the_event = None
-        self.events.append(the_event)
-        if protocol == 'OSC':
-            self.events[taille] = OSC(self, command)
-        else:
-            self.events[taille] = Event(self, command)
-        for key, value in kwargs.items():
-            setattr(self.events[taille], key, value)
-        return self.events[taille]
-
-    def del_event(self, index):
-        """delete an event, by index or with object instance"""
-        if isinstance(index, int):
-            index -= 1
-            self.events.pop(index)
-        else:
-            self.events.remove(index)
-
     def play_from_here(self, index):
         """play scenario from a given index"""
         if not isinstance(index, int):
             index = self.events.index(index)
         self.play(index)
-
-    def export_events(self):
-        """export events of the project"""
-        events = []
-        for event in self.events:
-            events.append({'output':event._output, 'name':event.name,\
-                           'description':event.description, 'command':event.command
-                            })
-        return events
