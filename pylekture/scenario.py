@@ -14,6 +14,14 @@ from pylekture.event import Event
 from pylekture.constants import debug
 
 
+class LektureTypeError(LookupError):
+    """docstring for LektureTypeError"""
+    def __init__(self, expected, received):
+        super(LektureTypeError, self).__init__()
+        dbg = 'Wait for an {expected} instance object but receive a {received}'
+        print(dbg.format(expected=expected, received=received.__class__))
+
+
 class Scenario(Node):
     """Create a new scenario"""
     def __init__(self, project, output=None, wait=0, post_wait=0):
