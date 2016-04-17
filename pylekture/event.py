@@ -67,7 +67,7 @@ class OSC(Event):
 
         def run(self):
             """play an OSC event"""
-            if debug:
+            if debug >= 3:
                 print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
             out = self.output
             args = self.command
@@ -81,7 +81,7 @@ class OSC(Event):
                 args = None
             try:
                 target = liblo.Address(out.ip, int(out.udp))
-                if debug:
+                if debug >= 3:
                     print('connect to : ' + out.ip + ':' + str(out.udp))
             except liblo.AddressError as err:
                 print('liblo.AddressError' + str(err))
@@ -126,10 +126,10 @@ class Wait(Event):
             self.start()
 
         def run(self):
-            if debug:
+            if debug >= 3:
                 print('sleep starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
             sleep(self.duration)
-            if debug:
+            if debug >= 3:
                 print('sleep ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
 
     def play(self):

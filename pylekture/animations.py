@@ -23,7 +23,7 @@ class Ramp(threading.Thread):
         self.start()
 
     def run(self):
-        if debug:
+        if debug >= 3:
             print('ramp starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
         index = self.args.index('ramp')
         ramp = self.args[index+1]

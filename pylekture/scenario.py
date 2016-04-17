@@ -162,14 +162,14 @@ class Scenario(Node):
                 index = 0
                 if self.scenario.wait:
                     # if there is a wait, please wait!!
-                    if debug:
-                        print('------ WAIT ',  self.scenario.name, 'DURING' , self.scenario.wait, 'SECONDS')
+                    if debug >= 3:
+                        print('>>>>> WAIT ',  self.scenario.name, 'DURING' , self.scenario.wait, 'SECONDS')
                     sleep(self.scenario.wait)
             else:
                 # start from the index, we will skip the pre-wait sleep
                 index = self.index
-            if debug:
-                dbg = '------ scenario-play: {scenario} from index {index} in {thread} at {time}'
+            if debug >= 3:
+                dbg = '>>>>> scenario-play: {scenario} from index {index} in {thread} at {time}'
                 print(dbg.format(scenario=self.scenario, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
             for event in self.scenario.events[index:]:
                 # play each event
@@ -179,12 +179,17 @@ class Scenario(Node):
             #return player
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
-                if debug:
+                if debug >= 3:
                     print('>>>>> POST_WAIT ' , self.scenario, \
                           ' DURING ' , self.scenario.post_wait, ' SECONDS')
                 sleep(self.scenario.post_wait)
             # scenario is now finish
             return True
+
+        def join(self, timeout=None):
+            if debug >= 3:
+                dbg = '>>>>> scenario-ends: {scenario} in {thread} at {time}'
+                print(dbg.format(scenario=self.scenario, thread=threading.current_thread().name, time=datetime.datetime.now()))
 
     def getduration(self):
         """return the duration of the scenario
