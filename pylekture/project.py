@@ -224,7 +224,9 @@ class Project(Node):
         """
         Creates Outputs, Scenario and Events obects
         First, dump attributes, then outputs, scenario and finish with events.
-            :rtype:True if file formatting is correct, False otherwise
+
+        :returns: True if file formatting is correct, False otherwise
+        :rtype: boolean
         """
         try:
             # dump attributes
