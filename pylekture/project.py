@@ -256,7 +256,7 @@ class Project(Node):
                 events = scenario.pop("events")
                 scenar = self.new_scenario(**scenario)
                 for event in events:
-                    scenar.new_event(**event)
+                    scenar.new_event('OSC', **event)
             if loaded != {}:
                 print('ERROIR 906 - loaded file has not been totally loaded', loaded )
             print("project loaded")

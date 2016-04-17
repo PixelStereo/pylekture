@@ -19,7 +19,7 @@ class TestAll(unittest.TestCase):
         print('after p test_output', p)
         o = p.new_output('OSC')
         s = p.new_scenario()
-        e = s.new_event(['/test', 22222])
+        e = s.new_event('OSC', ['/test', 22222])
         print(s.output)
         self.assertEqual(p.output, o)
         print('----', s.output)
@@ -77,12 +77,12 @@ class TestAll(unittest.TestCase):
         #self.assertEqual(my_scenario.output.name, "no-name")
 
         # fill in scenario with events
-        my_scenario.new_event(command=["/previous", 232, "ramp", 500])
-        my_scenario.new_event(command=200)
-        third_event = my_scenario.new_event(command=["/zob", 232, "list", "uno", 2])
-        my_scenario.new_event(command=[200])
-        my_scenario.new_event(command="/address_only")
-        my_other_scenario.new_event(command=["CC", 16, 1, 64])
+        my_scenario.new_event('OSC', command=["/previous", 232, "ramp", 500])
+        my_scenario.new_event('WAIT', command=200)
+        third_event = my_scenario.new_event('OSC', command=["/zob", 232, "list", "uno", 2])
+        my_scenario.new_event('WAIT', command=[200])
+        my_scenario.new_event('OSC', command="/address_only")
+        my_other_scenario.new_event('MIDI', command=["CC", 16, 1, 64])
 
         # test scenario file
         self.assertEqual(my_scenario.getduration(), 900)
