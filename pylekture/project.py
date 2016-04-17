@@ -63,6 +63,7 @@ class Project(Node):
         self._autoplay = False
         self._loop = False
         self._created = str(datetime.datetime.now())
+        self._output = None
         self._outputs = []
         self._scenarios = []
 
@@ -74,6 +75,26 @@ class Project(Node):
                         autoplay=self.autoplay,
                         loop=self.loop,
                         scenarios=len(self.scenarios))
+
+    @property
+    def output(self):
+        """
+        The port to output this project
+        Initialised to the first output (created when creating a project)
+        """
+        if self._output:
+            return self._output
+        else:
+            if self._outputs:
+                return self._outputs[0]
+            else:
+                raise OutputZeroError('This project has no output')
+    @output.setter
+    def output(self, output):
+        if output.__class__ == 'Output':
+            self._output = output
+        else:
+            raise LektureTypeError('Wait for an Output but receive a', output.__class__, output)
 
     @property
     def scenarios(self):
