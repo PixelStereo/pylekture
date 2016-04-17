@@ -10,7 +10,7 @@ import datetime
 import threading
 from time import sleep
 from pylekture.node import Node
-from pylekture.event import Event
+from pylekture.event import Event, OSC
 from pylekture.constants import debug
 
 
@@ -177,12 +177,15 @@ class Scenario(Node):
                     duration += int(ramp)
         return duration
 
-    def new_event(self, *args, **kwargs):
+    def new_event(self, protocol, command, **kwargs):
         """create a new event for this scenario"""
         taille = len(self.events)
         the_event = None
         self.events.append(the_event)
-        self.events[taille] = Event(self, args)
+        if protocol == 'OSC':
+            self.events[taille] = OSC(self, command)
+        else:
+            self.events[taille] = Event(self, command)
         for key, value in kwargs.items():
             setattr(self.events[taille], key, value)
         return self.events[taille]

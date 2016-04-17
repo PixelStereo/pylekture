@@ -20,10 +20,10 @@ class Event(Node):
     an Event is like a step of a Scenario.
     It could be a delay, a goto value, a random process,
     a loop process or everything you can imagine """
-    def __init__(self, scenario, commands=None, output=None):
+    def __init__(self, scenario, command=None, output=None):
         super(Event, self).__init__()
-        self._command = []
-        self._output = None
+        self._command = command
+        self._output = output
         self.scenario = scenario
 
     @property
@@ -160,3 +160,10 @@ class Event(Node):
                     print('ERROR 503 - protocol ' + out.protocol+ ' is not yet implemented')
             else:
                 print('there is no output for this event / scenario')
+
+class OSC(Event):
+    """
+    An OSC event is an Event designed to be outputed via OSC
+    """
+    def __init__(self, scenario, command, *args, **kwargs):
+        super(OSC, self).__init__(scenario, command, *args, **kwargs)
