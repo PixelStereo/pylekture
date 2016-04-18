@@ -484,11 +484,11 @@ class Project(Event):
         taille = len(self.events)
         the_event = None
         self.events.append(the_event)
-        if event_type == 'OSC':
+        if event_type == 'Osc':
             if command == None:
                 command = ['/lekture', 10]
             self.events[taille] = Osc(self, command)
-        elif event_type == 'WAIT':
+        elif event_type == 'Wait':
             if command == None:
                 command = 1000
             self.events[taille] = Wait(self, command)

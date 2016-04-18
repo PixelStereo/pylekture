@@ -22,7 +22,7 @@ class Event(Node):
     an Event is like a step of a Scenario.
     It could be a delay, a goto value, a random process,
     a loop process or everything you can imagine """
-    def __init__(self, parent, name=None, description='A few words about this event', command=None, output=None, wait=0, post_wait=0):
+    def __init__(self, parent, command=None, name=None, description='A few words about this event', output=None, wait=0, post_wait=0):
         super(Event, self).__init__(parent)
         self.scenario = parent
         if name == None:
@@ -119,11 +119,8 @@ class Osc(Event):
     """
     An OSC event is an Event designed to be outputed via OSC
     """
-    def __init__(self, scenario, command, *args, **kwargs):
+    def __init__(self, scenario, command=None, *args, **kwargs):
         super(Osc, self).__init__(scenario, command, *args, **kwargs)
-        self.address = command[0]
-        if len(command) > 1:
-            self.args = command[:1]
 
     class Play(threading.Thread):
         """docstring for PlayOsc"""
