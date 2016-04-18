@@ -10,55 +10,20 @@ import datetime
 import threading
 from time import sleep
 from pylekture.node import Node
-from pylekture.event import Event, OSC
+from pylekture.event import Event, Osc
 from pylekture.constants import debug
 
 
-class LektureTypeError(LookupError):
-    """docstring for LektureTypeError"""
-    def __init__(self, expected, received):
-        super(LektureTypeError, self).__init__()
-        dbg = 'Wait for an {expected} instance object but receive a {received}'
-        print(dbg.format(expected=expected, received=received.__class__))
-
-
-class Scenario(Node):
+class Scenario(Event):
     """Create a new scenario"""
-    def __init__(self, project, output=None, wait=0, post_wait=0):
-        super(Scenario, self).__init__()
-        self.project = project
-        self._output = output
-        self._wait = wait
-        self._post_wait = post_wait
+    def __init__(self, parent, name=None, description='write a comment', output=None, wait=0, post_wait=0):
+        super(Scenario, self).__init__(parent, name, description, output, wait, post_wait)
+        if self.name == 'Untitled Event':
+            self.name = 'Untitled Scenario'
+        self.project = self.parent
         self.index = 0
         self._loop = False
         self._events = []
-
-    @property
-    def output(self):
-        """
-        The port to output this scenario
-        Initialised to None if user does not set it.
-        """
-        if self._output:
-            return self._output
-        else:
-            return self.project.output
-    @output.setter
-    def output(self, output):
-        if str(output.__class__) == "<class 'pylekture.output.OSC'>":
-            self._output = output
-        elif str(output.__class__) == "<class 'pylekture.output.PJLINK'>":
-            self._output = output
-        elif str(output.__class__) == "<class 'pylekture.output.MIDI'>":
-            self._output = output
-        else:
-            print()
-            print('-------------')
-            print(output.__class__)
-            print()
-            print()
-            #raise LektureTypeError('OSC', output)
 
     @property
     def loop(self):
@@ -80,28 +45,6 @@ class Scenario(Node):
         if player:
             player.join()
         return player
-
-    @property
-    def wait(self):
-        """
-        Wait time in seconds
-        """
-        return self._wait
-    @wait.setter
-    def wait(self, wait):
-        self._wait = wait
-
-    @property
-    def post_wait(self):
-        """
-        Time to wait after all events played and before the end of this scenario
-        unit:
-        seconds
-        """
-        return self._post_wait
-    @post_wait.setter
-    def post_wait(self, post_wait):
-        self._post_wait = post_wait
 
     @property
     def events(self):
@@ -196,19 +139,9 @@ class Scenario(Node):
         Addition the ramp flags with the wait events"""
         duration = 0
         for event in self.events:
-            if isinstance(event.command, int) or isinstance(event.command, float):
-                # this is a wait
-                duration += event.command
-            elif isinstance(event.command, list):
-                # this is a wait in a list, unicode or string
-                if len(event.command) == 1:
-                    if isinstance(event.command[0], int) or isinstance(event.command[0], float):
-                        duration += int(event.command[0])
-                if 'ramp' in event.command:
-                    # this is a ramp
-                    index = event.command.index('ramp')
-                    ramp = event.command[index+1]
-                    duration += int(ramp)
+            duration += event.getduration()
+        duration += self.wait
+        duration += self.post_wait
         return duration
 
     def play_from_here(self, index):
