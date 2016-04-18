@@ -38,7 +38,7 @@ Project has a few attributes:
 Changelog
 -------------------------------------------------------------------------------
 
-- v0.2.2 - Apr. 18th 2016
+- v0.2.2 - Apr. ?? 2016
     - Massive Revamp
         - outputs is now attribute of project
         - events is now attributes of scenario
