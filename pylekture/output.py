@@ -15,32 +15,46 @@ class Output(Node):
     Need to be revamped - protocol miqht be an attribute
     => and protocol-parameters might be in a dict inside the attributes dict?
     """
-    def __init__(self):
-        super(Output, self).__init__()
+    def __init__(self, parent):
+        super(Output, self).__init__(parent)
+        if self.name == 'Untitled Node':
+            self.name = 'Untitled Output'
 
 
-class MIDI(Output):
-    """Create a MIDI output"""
-    def __init__(self, port=0, channel=0, midi_type='CC'):
-        super(MIDI, self).__init__()
+class OutputMidi(Output):
+    """
+    Creates an output port for Midi Device.
+    A Midi Device can handle all type of Midi messages
+    """
+    def __init__(self, parent, port=None):
+        super(OutputMidi, self).__init__(parent)
         self._port = port
-        self._channel = channel
-        self._type = midi_type
+        if self.name == 'Untitled Output':
+            self.name = 'Untitled Midi Output'
 
     @property
-    def protocol(self):
-        """
-        get the protocol for this output
-        """
-        return 'MIDI'
+    def port(self):
+        return self._port
+    @port.setter
+    def port(self, port):
+        self._port = port
 
 
-class OutputIP(Output):
-    """docstring for IP"""
-    def __init__(self, ip='127.0.0.1', udp=1234):
-        super(OutputIP, self).__init__()
+class OutputUdp(Output):
+    """
+    OutputUdp is a based class for all UDP based output
+    You can use it if you want to send raw UDP.
+    If you want to send OSC through UDP, please use OutputOsc as it checks if your OSC messages
+    are correctly formatted.
+    We might create a new class : OutputOsc as a subclass of OutputUdp.
+    It should be used to double check that you send a correct OSC format message/bundle.
+    """
+    def __init__(self, parent, ip='127.0.0.1', udp=1234):
+        super(OutputUdp, self).__init__(parent)
         self._udp = udp
         self._ip = ip
+        if self.name == 'Untitled Output':
+            self.name = 'Untitled Udp Output'
 
     @property
     def udp(self):
@@ -55,30 +69,3 @@ class OutputIP(Output):
     @ip.setter
     def ip(self, ip):
         self._ip = ip
-
-
-class OSC(OutputIP):
-    """Create an OSC output"""
-    def __init__(self):
-        super(OSC, self).__init__()
-
-    @property
-    def protocol(self):
-        """
-        get the protocol for this output
-        """
-        return 'OSC'
-
-
-class PJLINK(OutputIP):
-    """Create a PJLINK output"""
-    def __init__(self):
-        super(PJLINK, self).__init__()
-        self._udp = 4352
-
-    @property
-    def protocol(self):
-        """
-        get the protocol for this output
-        """
-        return 'PJLINK'

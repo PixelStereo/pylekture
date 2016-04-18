@@ -26,13 +26,10 @@ import datetime
 from pylekture import __version__
 from pylekture.node import Node
 from pylekture.scenario import Scenario
-from pylekture.output import OSC, MIDI, PJLINK
+from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
-from pylekture.event import OSC as EventOSC
-from pylekture.event import Event
-from pylekture.event import Wait as EventWait
-from pylekture.event import MidiNote as EventMidiNote
+from pylekture.event import Osc, MidiNote, Event, Wait
 
 def new_project():
     """
@@ -41,7 +38,7 @@ def new_project():
     """
     try:
         size = len(_projects)
-        _projects.append(Project())
+        _projects.append(Project('root'))
         return _projects[size]
     except Exception as problem:
         print('ERROR 22' + str(problem))
@@ -54,13 +51,15 @@ def projects():
     return _projects
 
 
-class Project(Node):
+class Project(Event):
     """
     A project handles everything you need.
     Ouputs and scenarios are all project-relative
     """
-    def __init__(self):
-        super(Project, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(Project, self).__init__(*args, **kwargs)
+        if self.name == 'Untitled Event':
+            self.name = 'Untitled Project'
         self._version = __version__
         self._path = None
         self._lastopened = None
@@ -73,13 +72,14 @@ class Project(Node):
         self._events = [] 
 
     def __repr__(self):
-        s = "Project (path={path}, autoplay={autoplay}, loop={loop}, " \
-            "scenarios={scenarios})"
+        s = "Project (name={name}, path={path}, autoplay={autoplay}, loop={loop}, " \
+            "scenarios={scenarios}, events={events})"
         return s.format(name=self.name,
                         path=self.path,
                         autoplay=self.autoplay,
                         loop=self.loop,
-                        scenarios=len(self.scenarios))
+                        scenarios=len(self.scenarios),
+                        events=len(self.events))
 
     @property
     def output(self):
@@ -284,6 +284,8 @@ class Project(Node):
         else:
             savepath = self._path
         if savepath:
+            if savepath.endswith("/"):
+                savepath = savepath + self.name
             # make sure we will write a file with json extension
             if not savepath.endswith(".lekture"):
                 savepath = savepath + ".lekture"
@@ -299,11 +301,16 @@ class Project(Node):
             project.setdefault("attributes", self._export_attributes())
             project.setdefault("outputs", self._export_outputs())
             project.setdefault("events", self.export_events())
-            out_file.write(json.dumps(project, sort_keys=True, indent=4,\
-                                      ensure_ascii=False).encode("utf8"))
-            print("file has been written in " + savepath)
-            return True
+            try:
+                out_file.write(json.dumps(project, sort_keys=True, indent=4,\
+                                          ensure_ascii=False).encode("utf8"))
+                print("file has been written in " + savepath)
+                return True
+            except TypeError as Error:
+                print('ERROR 99 ' + str(Error))
+                return False
         else:
+            print('no filepath. Where do you want I save the project?')
             return False
 
     def play(self):
@@ -363,7 +370,7 @@ class Project(Node):
         if self.outputs:
             outputs = []
             for out in self.outputs:
-                if protocol == out.protocol:
+                if protocol == out.service:
                     outputs.append(out)
             return outputs
         else:
@@ -373,7 +380,7 @@ class Project(Node):
         """return the protocols available for this project"""
         protocols = []
         for out in self.outputs:
-            proto = out.protocol
+            proto = out.service
             if not proto in protocols:
                 protocols.append(proto)
         if protocols == []:
@@ -390,11 +397,9 @@ class Project(Node):
         """
         taille = len(self._outputs)
         if protocol == "OSC":
-            output = OSC()
+            output = OutputUdp(self)
         elif protocol == "MIDI":
-            output = MIDI()
-        elif protocol == "PJLINK":
-            output = PJLINK()
+            output = OutputMidi(self)
         else:
             output = None
         if output:
@@ -423,8 +428,8 @@ class Project(Node):
     def new_scenario(self, **kwargs):
         """
         Create a new scenario for this Project
-            args:Optional args are every attributes of the scenario, associated with a keyword
-            rtype:Scenario object
+            :args: Optional args are every attributes of the scenario, associated with a keyword
+            :rtype: Scenario object
         """
         taille = len(self._scenarios)
         scenario = Scenario(self)
@@ -462,10 +467,7 @@ class Project(Node):
             events = []
             for event in scenario.events:
                 events.append(self.events.index(event))
-            scenarios.append({"output":self.outputs.index(scenario.output), \
-                              "name":scenario.name, "description":scenario.description, \
-                              "events":events
-                              })
+            scenarios.append(prop_dict(scenario))
         return scenarios
 
     @property
@@ -475,7 +477,7 @@ class Project(Node):
         """
         return self._events
 
-    def new_event(self, event_type, command, **kwargs):
+    def new_event(self, event_type, command=None, **kwargs):
         """
         create a new event for this scenario
         """
@@ -483,11 +485,21 @@ class Project(Node):
         the_event = None
         self.events.append(the_event)
         if event_type == 'OSC':
-            self.events[taille] = EventOSC(self, command)
+            if command == None:
+                command = ['/lekture', 10]
+            self.events[taille] = Osc(self, command)
         elif event_type == 'WAIT':
-            self.events[taille] = EventWait(self, command)
+            if command == None:
+                command = 1000
+            self.events[taille] = Wait(self, command)
         elif event_type == 'MidiNote':
-            self.events[taille] = EventMidiNote(self, command)
+            if command == None:
+                command = [1, 64, 100]
+            self.events[taille] = MidiNote(self, command)
+        elif event_type == 'PjLink':
+            if command == None:
+                command = ['shutter', True]
+            self.events[taille] = PjLink(self, command)
         for key, value in kwargs.items():
             setattr(self.events[taille], key, value)
         return self.events[taille]
@@ -520,8 +532,5 @@ class Project(Node):
         """
         events = []
         for event in self.events:
-            events.append({'output':event._output, 'name':event.name,\
-                           'description':event.description, 'command':event.command, \
-                           'protocol':event.protocol
-                          })
+            events.append(prop_dict(event))
         return events
