@@ -88,6 +88,85 @@ EVENTS
 An Event is a command + a trigger
 
 
+Project.play
+=> Scenario.play
+=> Event.play
+=> my_param.value = 2
+=> my_param.ramp(value, 10, 2000) # ramp a value from it sate to 10 in 2 seconds
+=> my_param.join() # equivalent to WAIT 2000
+=> my_sensor.value.connect(my_param.value) # connect my_sensor to my_param / linear mapping
+
+
+class Node():
+
+    @property
+    name
+    description
+    output
+
+
+class Leaf(Node):
+
+    def send(self):
+        self.output._send(self.value)
+        self.output._send(State(self.value))
+        self.output._send(Ramp(self.value, 100, 2000))
+
+
+class Parameter(Node):
+
+    @property
+    def value(self):
+        self.send()
+        return self._value
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+    def export(self):
+        export = prop_dict(self)
+        print(self.__class__.__name__)
+        return export
+
+
+-------------------------------------------------------------------------------
+OUTPUTS
+-------------------------------------------------------------------------------
+
+Make a save state action when save in a init sate executed when loadfing the project
+
+- OSC(ip, port, feedback=9000)
+    - Osc_Message(address, args=[arguments])
+    - Osc_Bundle(address, args=[arguments])
+    - Osc_Blob
+- MODUL8(OSC)(ip, port=8000, feedback=9000)
+    - M8_Master
+    - M8_Layer(index)
+    - M8_Mask
+- MIDI(port, feedback=port)
+    - Midi_Note (channel, pitch, velocity)
+    - Midi_Control (channel, controler, value)
+    - Midi_Bend(channel, value1, value2)
+    - Midi_TimeCode
+- PJLINK(OSC)(ip, port=4352)
+    - Pj_Power
+    - Pj_Shutter
+    - Pj_Input
+- LOCAL()
+    - Scenario_Play
+    - Scenario_Stop
+    - Scenario_Loop
+    - Event_Play
+    - Event_Stop
+    - Event_Loop
+- ISCORE(OSC)(ip, port=13579, feedback=9998)
+    - Iscore_Play
+    - Iscore_Stop
+    - Iscore_Loop
+    - Iscore_State_Play
+    - Iscore_Timenode_Play
+    - Iscore_Process_Play
+    - Iscore_Process_Stop
 
 -------------------------------------------------------------------------------
 TODO
