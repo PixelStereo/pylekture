@@ -18,33 +18,11 @@ class Scenario(Event):
     """Create a new scenario"""
     def __init__(self, parent, name=None, description='write a comment', output=None, wait=0, post_wait=0):
         super(Scenario, self).__init__(parent, name, description, output, wait, post_wait)
-        if self.name == 'Untitled Event':
+        if self.name == 'Untitled Node':
             self.name = 'Untitled Scenario'
         self.project = self.parent
         self.index = 0
-        self._loop = False
         self._events = []
-
-    @property
-    def loop(self):
-        """
-        The loop attribute. If true, the loop plays again when it reach its end.
-            :arg: Boolean
-        """
-        return self._loop
-    @loop.setter
-    def loop(self, loop):
-        self._loop = loop
-
-    def play(self, index=0):
-        """
-        Play a scenario
-        It creates a new object play in a separate thread.
-        """
-        player = self.Play(self, index)
-        if player:
-            player.join()
-        return player
 
     @property
     def events(self):
@@ -90,7 +68,7 @@ class Scenario(Event):
     class Play(threading.Thread):
         """Instanciate a thread for Playing a scenario
         Allow to start twice or more each scenario in the same time"""
-        def __init__(self, scenario, index):
+        def __init__(self, scenario, index=0):
             threading.Thread.__init__(self)
             self.scenario = scenario
             self.index = index
@@ -115,11 +93,14 @@ class Scenario(Event):
                 dbg = '>>>>> scenario-play: {scenario} from index {index} in {thread} at {time}'
                 print(dbg.format(scenario=self.scenario, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
             for event in self.scenario.events[index:]:
+                print(event.command)
                 # play each event
                 player = event.play()
                 if player:
                     player.join()
-            #return player
+            if debug >= 3:
+                dbg = '>>>>> scenario-ends: {scenario} in {thread} at {time}'
+                print(dbg.format(scenario=self.scenario, thread=threading.current_thread().name, time=datetime.datetime.now()))
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
                 if debug >= 3:
@@ -129,10 +110,6 @@ class Scenario(Event):
             # scenario is now finish
             return True
 
-        def join(self, timeout=None):
-            if debug >= 3:
-                dbg = '>>>>> scenario-ends: {scenario} in {thread} at {time}'
-                print(dbg.format(scenario=self.scenario, thread=threading.current_thread().name, time=datetime.datetime.now()))
 
     def getduration(self):
         """return the duration of the scenario

@@ -75,12 +75,12 @@ class TestAll(unittest.TestCase):
         #self.assertEqual(my_scenario.output.name, "no-name")
 
         # fill in scenario with events
-        my_event = my_project.new_event('Osc', command=["/previous", 232, "ramp", 500])
+        my_event = my_project.new_event('Osc', command=["/previous", 232, "ramp", 0.5])
         my_scenario.add_event(my_event)
-        my_second_event = my_project.new_event('Wait', command=200)
+        my_second_event = my_project.new_event('Wait', command=2)
         my_scenario.add_event(my_second_event)
         my_third_event = my_project.new_event('Osc', command=["/zob", 232, "list", "uno", 2])
-        my_forth_event = my_project.new_event('Wait', command=200)
+        my_forth_event = my_project.new_event('Wait', command=2)
         my_fifth_event = my_project.new_event('Osc', command="/address_only")
         my_scenario.add_event(my_forth_event)
         my_scenario.add_event(my_third_event)

@@ -27,6 +27,7 @@ class Ramp(threading.Thread):
             print('ramp starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
         index = self.args.index('ramp')
         ramp = self.args[index+1]
+        ramp = int(ramp * 1000)
         dest = self.args[index-1]
         dest = checkType(dest)
         ramp = checkType(ramp)

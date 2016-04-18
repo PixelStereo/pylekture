@@ -31,6 +31,7 @@ class Event(Node):
         self._output = output
         self._wait = wait
         self._post_wait = post_wait
+        self._loop = False
 
     @property
     def command(self):
@@ -97,6 +98,17 @@ class Event(Node):
     @post_wait.setter
     def post_wait(self, post_wait):
         self._post_wait = post_wait
+    
+    @property
+    def loop(self):
+        """
+        The loop attribute. If true, the loop plays again when it reach its end.
+            :arg: Boolean
+        """
+        return self._loop
+    @loop.setter
+    def loop(self, loop):
+        self._loop = loop
 
     def getduration(self):
         """
@@ -113,7 +125,17 @@ class Event(Node):
         if classname == 'Ramp':
             duration += self.duration
         return duration
-    
+
+    def play(self, index=0):
+        """
+        Play a scenario
+        It creates a new object play in a separate thread.
+        """
+        player = self.Play(self)
+        if player:
+            player.join()
+        return player
+
 
 class Osc(Event):
     """
@@ -167,51 +189,48 @@ class Osc(Event):
                     msg.add(args)
                 liblo.send(target, msg)
 
-    def play(self):
-        """
-        Play an EventOSC
-        """
-        player = self.Play(self)
-        return player
-
 
 class Wait(Node):
     """
     Play an EventWait
     """
-    def __init__(self, parent, duration, *args, **kwargs):
+    def __init__(self, parent, duration=1, *args, **kwargs):
         super(Wait, self).__init__(parent, *args, **kwargs)
-        self.duration = duration
+        self._command = duration
 
     class Play(threading.Thread):
         """docstring for Sleep"""
-        def __init__(self, duration):
+        def __init__(self, event):
             threading.Thread.__init__(self)
-            self.duration = duration
+            self.command = event.command
             self.start()
 
         def run(self):
             if debug >= 3:
                 print('sleep starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
-            sleep(self.duration)
+            sleep(self.command)
             if debug >= 3:
                 print('sleep ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
 
-    def play(self):
-        """
-        Play an EventOSC
-        """
-        wait = self.Play(self.duration)
-
     @property
-    def duration(self):
-        return self._duration
-    @duration.setter
-    def duration(self, duration):
-        self._duration = duration
+    def command(self):
+        return self._command
+    @command.setter
+    def command(self, command):
+        self._command = command
 
     def getduration(self):
-        return self.duration
+        return self.command
+
+    def play(self, index=0):
+        """
+        Play a scenario
+        It creates a new object play in a separate thread.
+        """
+        player = self.Play(self)
+        if player:
+            player.join()
+        return player
 
 
 class MidiNote(Event):
@@ -226,9 +245,9 @@ class MidiNote(Event):
 
     class Play(threading.Thread):
         """docstring for PlayOsc"""
-        def __init__(self, out, event):
+        def __init__(self, event):
             threading.Thread.__init__(self)
-            self.out = out
+            self.out = event.output
             self.command = event.command
             self.event = event
             self.start()
@@ -238,9 +257,3 @@ class MidiNote(Event):
             Play the MidiNote
             """
             pass
-
-    def play(self):
-        """
-        Play an EventOSC
-        """
-        pass
