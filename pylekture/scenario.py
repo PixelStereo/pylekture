@@ -93,7 +93,6 @@ class Scenario(Event):
                 dbg = '>>>>> scenario-play: {scenario} from index {index} in {thread} at {time}'
                 print(dbg.format(scenario=self.scenario, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
             for event in self.scenario.events[index:]:
-                print(event.command)
                 # play each event
                 player = event.play()
                 if player:
