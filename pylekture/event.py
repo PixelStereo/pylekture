@@ -14,6 +14,7 @@ from pylekture.node import Node
 from pylekture.constants import debug
 from pylekture.functions import checkType
 from pylekture.animations import Ramp
+from pylekture.errors import LektureTypeError
 
 
 class Event(Node):
@@ -21,40 +22,108 @@ class Event(Node):
     an Event is like a step of a Scenario.
     It could be a delay, a goto value, a random process,
     a loop process or everything you can imagine """
-    def __init__(self, scenario, command=None, output=None):
-        super(Event, self).__init__()
+    def __init__(self, parent, name=None, description='A few words about this event', command=None, output=None, wait=0, post_wait=0):
+        super(Event, self).__init__(parent)
+        self.scenario = parent
+        if name == None:
+            self.name = 'Untitled Event'
         self._command = command
         self._output = output
-        self.scenario = scenario
-
-    @property
-    def output(self):
-        if self._output:
-            return self._output
-        else:
-            return self.scenario.output
-    @output.setter
-    def output(self, output):
-        self._output = output
+        self._wait = wait
+        self._post_wait = post_wait
 
     @property
     def command(self):
+        """
+        The content of the event
+        It is a command that will be executate.
+        """
         return self._command
     @command.setter
     def command(self, command):
-        self._command = command
+        output = self.output.__class__.__name__
+        name = self.__class__.__name__
+        if name == 'Osc':
+            if isinstance(command, list) or isinstance(command, basestring):
+                self._command = command
+        elif name == 'Wait':
+            if isinstance(command, int):
+                self._command = command
+        elif name == 'MidiNote' or 'MidiControl':
+            if isinstance(command, list) and len(command) == 3:
+                self._command = command
 
+    @property
+    def output(self):
+        """
+        The port to output this scenario
+        Initialised to None if user does not set it.
+        """
+        if self._output:
+            return self._output
+        else:
+            return self.parent.output
+    @output.setter
+    def output(self, output):
+        output = output.__class__.__name__
+        name = self.__class__.__name__
+        if output == "OutputUdp":
+            if name == 'Osc':
+                self._output = output
+        elif output == 'OutputMidi':
+            if name == 'MidiNote' or 'MidiControl' or 'MidiBend':
+                self._output = output
+        else:
+            raise LektureTypeError('Output', output)
 
-class OSC(Event):
+    @property
+    def wait(self):
+        """
+        Wait time in seconds
+        """
+        return self._wait
+    @wait.setter
+    def wait(self, wait):
+        self._wait = wait
+
+    @property
+    def post_wait(self):
+        """
+        Time to wait after all events played and before the end of this scenario
+        unit:
+        seconds
+        """
+        return self._post_wait
+    @post_wait.setter
+    def post_wait(self, post_wait):
+        self._post_wait = post_wait
+
+    def getduration(self):
+        """
+        Computed duration of the event
+        Read-Only
+
+        :returns: Duration of the item
+        :rtype: integer
+        """
+        duration = 0
+        duration += self.wait
+        duration += self.post_wait
+        classname = self.__class__.__name__
+        if classname == 'Ramp':
+            duration += self.duration
+        return duration
+    
+
+class Osc(Event):
     """
     An OSC event is an Event designed to be outputed via OSC
     """
     def __init__(self, scenario, command, *args, **kwargs):
-        super(OSC, self).__init__(scenario, command, *args, **kwargs)
+        super(Osc, self).__init__(scenario, command, *args, **kwargs)
         self.address = command[0]
         if len(command) > 1:
             self.args = command[:1]
-            self.protocol = 'OSC'
 
     class Play(threading.Thread):
         """docstring for PlayOsc"""
@@ -109,14 +178,13 @@ class OSC(Event):
         return player
 
 
-class Wait(Event):
+class Wait(Node):
     """
     Play an EventWait
     """
-    def __init__(self, duration, *args, **kwargs):
-        super(Wait, self).__init__(duration, *args, **kwargs)
+    def __init__(self, parent, duration, *args, **kwargs):
+        super(Wait, self).__init__(parent, *args, **kwargs)
         self.duration = duration
-        self.protocol = 'WAIT'
 
     class Play(threading.Thread):
         """docstring for Sleep"""
@@ -136,7 +204,17 @@ class Wait(Event):
         """
         Play an EventOSC
         """
-        wait = Wait(self.duration)
+        wait = self.Play(self.duration)
+
+    @property
+    def duration(self):
+        return self._duration
+    @duration.setter
+    def duration(self, duration):
+        self._duration = duration
+
+    def getduration(self):
+        return self.duration
 
 
 class MidiNote(Event):
@@ -148,7 +226,6 @@ class MidiNote(Event):
         self.address = command[0]
         if len(command) > 1:
             self.args = command[:1]
-        self.protocol = 'MidiNote'
 
     class Play(threading.Thread):
         """docstring for PlayOsc"""

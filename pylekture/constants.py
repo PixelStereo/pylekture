@@ -6,4 +6,4 @@
 debug = 1
 _projects = []
 
-protocols = ['OSC']
+protocols = ['OSC', 'MIDI']
