@@ -145,7 +145,10 @@ class Osc(Event):
         super(Osc, self).__init__(scenario, command, *args, **kwargs)
 
     class Play(threading.Thread):
-        """docstring for PlayOsc"""
+        """
+        Event Player
+        It plays the event in a separate Thread
+        """
         def __init__(self, event):
             threading.Thread.__init__(self)
             self.output = event.output
@@ -190,7 +193,7 @@ class Osc(Event):
                 liblo.send(target, msg)
 
 
-class Wait(Node):
+class Wait(Event):
     """
     Play an EventWait
     """
@@ -199,10 +202,15 @@ class Wait(Node):
         self._command = duration
 
     class Play(threading.Thread):
-        """docstring for Sleep"""
+        """
+        Event Player
+        It plays the event in a separate Thread
+        """
         def __init__(self, event):
             threading.Thread.__init__(self)
+            self.output = event.output
             self.command = event.command
+            self.event = event
             self.start()
 
         def run(self):
@@ -244,10 +252,13 @@ class MidiNote(Event):
             self.args = command[:1]
 
     class Play(threading.Thread):
-        """docstring for PlayOsc"""
+        """
+        Event Player
+        It plays the event in a separate Thread
+        """
         def __init__(self, event):
             threading.Thread.__init__(self)
-            self.out = event.output
+            self.output = event.output
             self.command = event.command
             self.event = event
             self.start()
