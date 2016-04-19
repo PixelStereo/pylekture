@@ -9,9 +9,7 @@
 **pylekture** can be defined as a framework for real-time intermedia applications.
 It is an API for creating and organising Scenario in a Project-based architecture that can be easily accessed through OSC (Open Sound Control) messages.
 
-It uses **pybush** that offers a way to organise your application hierarchicaly.
-
-For the moment, **pylekture** iscapable of:
+For the moment, **pylekture** is capable of:
 
 -  Create projects that contains dynamic scenario and events through Open Sound Control Messages
 -  Save projects to json files
