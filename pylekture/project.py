@@ -249,15 +249,7 @@ class Project(Event):
                 service = out.pop('service')
                 self.new_output(service, **out)
             scenarios = loaded.pop('scenarios')
-            # dump scenario
-            for scenario in scenarios:
-                service = scenario.pop('service')
-                output = scenario['output']
-                if output != None:
-                    # refer to the corresponding output instance object
-                    scenario['output'] = self.outputs[output]
-                self.new_scenario(**scenario)
-            # dump events after scenario, because event can reference a scenario
+            # dump events before scenario, because a scenario contains events
             events = loaded.pop("events")
             for event in events:
                 service = event.pop('service')
@@ -269,6 +261,14 @@ class Project(Event):
                     # if output is set to None, do the same, it means 'use parent output'
                     event.pop('output')
                 self.new_event(service, **event)
+            # dump scenario
+            for scenario in scenarios:
+                service = scenario.pop('service')
+                output = scenario['output']
+                if output != None:
+                    # refer to the corresponding output instance object
+                    scenario['output'] = self.outputs[output]
+                self.new_scenario(**scenario)
             if loaded == {}:
                 # project has been loaded, lastopened date changed
                 # we have a path because we loaded a file from somewhere
@@ -459,6 +459,7 @@ class Project(Event):
         for key, value in kwargs.items():
             if key == 'events':
                 for event in value:
+                    print(len(self.events), event)
                     scenario.add_event(self.events[event])
             else:
                 setattr(self._scenarios[taille], key, value)
@@ -475,8 +476,6 @@ class Project(Event):
                 scenario.del_event(event)
             # delete the scenario itself
             self._scenarios.remove(scenario)
-            if debug:
-                print("delete scenario", scenario, len(self._scenarios))
         else:
             if debug:
                 print("ERROR - trying to delete a scenario which not exists \
