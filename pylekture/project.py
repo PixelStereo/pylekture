@@ -312,8 +312,13 @@ class Project(Event):
             project.setdefault("outputs", self._export_outputs())
             project.setdefault("events", self.export_events())
             try:
-                out_file.write(json.dumps(project, sort_keys=True, indent=4,\
-                                          ensure_ascii=False).encode("utf8"))
+                the_dump = json.dumps(project, sort_keys=True, indent=4,\
+                                      ensure_ascii=False).encode("utf8")
+            except TypeError as Error:
+                print('ERROR 98 ' + str(Error))
+                return False
+            try:
+                out_file.write(the_dump)
                 print("file has been written in " + savepath)
                 return True
             except TypeError as Error:
