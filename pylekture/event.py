@@ -44,15 +44,25 @@ class Event(Node):
     def command(self, command):
         output = self.output.__class__.__name__
         name = self.__class__.__name__
+        command = checkType(command)
+        flag = False
         if name == 'Osc':
             if isinstance(command, list) or isinstance(command, basestring):
                 self._command = command
+                flag = True
         elif name == 'Wait':
-            if isinstance(command, int):
+            if isinstance(command, int) or isinstance(command, float):
                 self._command = command
+                flag = True
         elif name == 'MidiNote' or 'MidiControl':
             if isinstance(command, list) and len(command) == 3:
                 self._command = command
+                flag = True
+        if flag:
+            return True
+        else:
+            print(name + '.command must be something else than a ' + str(type(command)))
+            return False
 
     @property
     def output(self):
@@ -85,7 +95,9 @@ class Event(Node):
         return self._wait
     @wait.setter
     def wait(self, wait):
-        self._wait = wait
+        if isinstance(wait, int) or isinstance(wait, float):
+            self._wait = wait
+            return True
 
     @property
     def post_wait(self):
@@ -97,7 +109,9 @@ class Event(Node):
         return self._post_wait
     @post_wait.setter
     def post_wait(self, post_wait):
-        self._post_wait = post_wait
+        if isinstance(post_wait, int) or isinstance(post_wait, float):
+            self._post_wait = post_wait
+            return True
     
     @property
     def loop(self):
@@ -127,8 +141,8 @@ class Event(Node):
         duration += self.wait
         duration += self.post_wait
         classname = self.__class__.__name__
-        if classname == 'Ramp':
-            duration += self.duration
+        if classname == 'Wait':
+            duration += self.command
         return duration
 
     def play(self, index=0):
@@ -206,6 +220,16 @@ class Wait(Event):
         super(Wait, self).__init__(parent, *args, **kwargs)
         self._command = duration
 
+    def play(self, index=0):
+        """
+        Play a scenario
+        It creates a new object play in a separate thread.
+        """
+        player = self.Play(self)
+        if player:
+            player.join()
+        return player
+
     class Play(threading.Thread):
         """
         Event Player
@@ -224,26 +248,6 @@ class Wait(Event):
             sleep(self.command)
             if debug >= 3:
                 print('sleep ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
-
-    @property
-    def command(self):
-        return self._command
-    @command.setter
-    def command(self, command):
-        self._command = command
-
-    def getduration(self):
-        return self.command
-
-    def play(self, index=0):
-        """
-        Play a scenario
-        It creates a new object play in a separate thread.
-        """
-        player = self.Play(self)
-        if player:
-            player.join()
-        return player
 
 
 class MidiNote(Event):
