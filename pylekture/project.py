@@ -331,10 +331,11 @@ class Project(Event):
         """
         Play the whole project from the beginning.
         If you provide index argument, you can specify where to start the project playing.
-            project.play(index=4) will start from the forth scenario of the project.
-            If if does not exist, it will return False.
+        project.play(index=4) will start from the forth scenario of the project.
+        If if does not exist, it will return False.
 
-        
+        :param index: Optional
+        :type index: integer
         """
         if self.scenarios:
             player = self.Play(self)
