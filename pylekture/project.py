@@ -487,9 +487,11 @@ class Project(Event):
         scenarios = []
         for scenario in self.scenarios:
             events = []
+            export = prop_dict(scenario)
+            export['events'] = []
             for event in scenario.events:
-                events.append(self.events.index(event))
-            scenarios.append(prop_dict(scenario))
+                export['events'].append(self.events.index(event))
+            scenarios.append(export)
         return scenarios
 
     @property
