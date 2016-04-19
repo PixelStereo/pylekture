@@ -235,31 +235,41 @@ class Project(Event):
             for attribute, value in attributes.items():
                 if attribute == "created":
                     self._created = value
-                if attribute == "version":
+                elif attribute == "version":
                     self._version = value
-                if attribute == "autoplay":
+                elif attribute == "autoplay":
                     self.autoplay = value
-                if attribute == "loop":
+                elif attribute == "loop":
                     self.loop = value
-                if attribute == "name":
+                elif attribute == "name":
                     self.name= value
             self._lastopened = str(datetime.datetime.now())
             # dump outputs
             outputs = loaded.pop('outputs')
             for out in outputs:
-                self.new_output(**out)
+                service = out.pop('service')
+                self.new_output(service, **out)
             scenarios = loaded.pop('scenarios')
             # dump scenario
             for scenario in scenarios:
+                service = scenario.pop('service')
                 output = scenario['output']
                 if output != None:
                     # refer to the corresponding output instance object
                     scenario['output'] = self.outputs[output]
-                    scenar = self.new_scenario(**scenario)
+                scenar = self.new_scenario(**scenario)
             # dump events after scenario, because event can reference a scenario
             events = loaded.pop("events")
             for event in events:
-                self.new_event(event['protocol'], **event)
+                service = event.pop('service')
+                output = event['output']
+                if output != None:
+                    # refer to the corresponding output instance object
+                    event['output'] = self.outputs[output]
+                else:
+                    # if output is set to None, do the same, it means 'use parent output'
+                    event.pop('output')
+                self.new_event(service, **event)
             if loaded == {}:
                 # project has been loaded, lastopened date changed
                 # we have a path because we loaded a file from somewhere
@@ -267,7 +277,7 @@ class Project(Event):
                 self.write()
                 return True
             else:
-                print('ERROIR 906 - loaded file has not been totally loaded', loaded )
+                print('ERROIR 906 - loaded file has not been totally loaded', loaded)
                 return False
         # catch error if file is not valid or if file is not a lekture project
         except (IOError, ValueError) as Error:
@@ -396,17 +406,19 @@ class Project(Event):
         rtype:Output object
         """
         taille = len(self._outputs)
-        if protocol == "OSC":
+        if protocol == "OSC" or protocol == 'OutputUdp':
             output = OutputUdp(self)
-        elif protocol == "MIDI":
+        elif protocol == "MIDI" or protocol == 'OutputMidi':
             output = OutputMidi(self)
         else:
             output = None
         if output:
             self._outputs.append(output)
-        for key, value in kwargs.items():
-            setattr(self._outputs[taille], key, value)
-        return self._outputs[taille]
+            for key, value in kwargs.items():
+                setattr(self._outputs[taille], key, value)
+            return self._outputs[taille]
+        else:
+            return False
 
     def _export_outputs(self):
         """export outputs of the project"""
