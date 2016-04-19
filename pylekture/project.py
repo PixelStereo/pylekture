@@ -532,22 +532,16 @@ class Project(Event):
         delete an event, by index or with object instance
         """
         used = False
-        if isinstance(index, int):
-            index -= 1
-            for scenario in self.scenarios:
-                for event in scenario.events:
-                    if event == self.events[index]:
-                        print('WARNING - this event is still referenced in scenario ' + scenario.name)
-                        used = True
-            if not used:
-                self.events.pop(index)
+        for scenario in self.scenarios:
+            if index in scenario.events:
+                print('WARNING 2 - this event is still referenced in scenario ' + scenario.name)
+                used = True
+        if not used:
+            index = self.events.index(index)
+            self.events.pop(index)
+            return True
         else:
-            for scenario in self.scenarios:
-                for index in scenario.events:
-                    print('WARNING - this event is still referenced in scenario ' + scenario.name)
-                    used = True
-            if not used:
-                self.events.remove(index)
+            return False
 
     def export_events(self):
         """
