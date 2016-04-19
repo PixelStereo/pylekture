@@ -2,7 +2,10 @@ sudo: required
 dist: trusty
 language: python
 python:
+- '2.5'
+- '2.6'
 - '2.7'
+- '3.2'
 - '3.3'
 - '3.4'
 - '3.5'
@@ -12,13 +15,11 @@ install:
 - pip install -r requirements.txt
 - pip install coverage
 - pip install codacy-coverage
-- pip install travis-sphinx
+- pip install https://github.com/Syntaf/travis-sphinx/archive/master.zip
 script:
 - cd tests
 - coverage run --omit ../pylekture/_version.py --include=../pylekture/"*" test_.py
-- coverage xml
-- coverage report -m
-- python-codacy-coverage -r coverage.xml
+- sh run_tests.sh
 - cd ../
 - travis-sphinx build
 after_success:

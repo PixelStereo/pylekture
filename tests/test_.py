@@ -90,7 +90,7 @@ class TestAll(unittest.TestCase):
         my_scenario.add_event(my_second_event)
         my_third_event = my_project.new_event('Osc', command=["/zob", 232, "list", "uno", 2])
         my_forth_event = my_project.new_event('Wait', command=0.3)
-        my_project.new_event('Osc', command="/address_only")
+        my_fifth_event = my_project.new_event('Osc', command="/address_only")
         my_scenario.add_event(my_forth_event)
         my_scenario.add_event(my_third_event)
         other_event = my_project.new_event('MidiNote', command=[16, 64, 100])
@@ -113,10 +113,10 @@ class TestAll(unittest.TestCase):
         my_project.loop = 1
         # calling del event must check first if the event is in other place.
         self.assertEqual(len(my_project.events), 6)
-        my_project.del_event(5)
+        my_project.del_event(my_fifth_event)
         self.assertEqual(len(my_project.events), 5)
         # try to delete an event present in other scenario
-        my_project.del_event(3)
+        my_project.del_event(my_forth_event)
         self.assertEqual(len(my_project.events), 5)
 
         self.assertEqual(my_project.getprotocols(), ["OutputUdp", "OutputMidi"])
