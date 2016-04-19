@@ -191,7 +191,11 @@ class Project(Event):
             return False
         else:
             print("loading project in " + path)
-            return self.load(path)
+            if self.load(path):
+                self.write(path)
+                return True
+            else:
+                return False
 
     def load(self, path):
         """
@@ -273,7 +277,6 @@ class Project(Event):
                 # project has been loaded, lastopened date changed
                 # we have a path because we loaded a file from somewhere
                 print("project loaded")
-                self.write()
                 return True
             else:
                 print('ERROIR 906 - loaded file has not been totally loaded', loaded)
