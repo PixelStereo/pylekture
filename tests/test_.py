@@ -11,7 +11,6 @@ from pylekture.functions import checkType
 from pylekture.constants import protocols
 from pylekture.project import new_project, projects
 from pylekture.errors import LektureTypeError
-from pylekture.output import OutputMidi, OutputUdp
 
 
 class TestAll(unittest.TestCase):
@@ -30,7 +29,7 @@ class TestAll(unittest.TestCase):
         p = new_project()
         o = p.new_output()
         try:
-            raise LektureTypeError(OutputMidi, o)
+            raise LektureTypeError('o', 'b')
         except LektureTypeError:
             print('we raised LektureTypeError')
 
