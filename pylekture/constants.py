@@ -3,7 +3,7 @@
 
 """a few constants for the project"""
 
-debug = 1
+debug = 3
 _projects = []
 
-protocols = ['OSC']
+protocols = ['OSC', 'MIDI']

@@ -26,9 +26,10 @@ import datetime
 from pylekture import __version__
 from pylekture.node import Node
 from pylekture.scenario import Scenario
-from pylekture.output import OSC, MIDI, PJLINK
+from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
+from pylekture.event import Osc, MidiNote, Event, Wait
 
 def new_project():
     """
@@ -37,7 +38,7 @@ def new_project():
     """
     try:
         size = len(_projects)
-        _projects.append(Project())
+        _projects.append(Project('root'))
         return _projects[size]
     except Exception as problem:
         print('ERROR 22' + str(problem))
@@ -50,13 +51,15 @@ def projects():
     return _projects
 
 
-class Project(Node):
+class Project(Event):
     """
     A project handles everything you need.
     Ouputs and scenarios are all project-relative
     """
-    def __init__(self):
-        super(Project, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(Project, self).__init__(*args, **kwargs)
+        if self.name == 'Untitled Event':
+            self.name = 'Untitled Project'
         self._version = __version__
         self._path = None
         self._lastopened = None
@@ -66,15 +69,17 @@ class Project(Node):
         self._output = None
         self._outputs = []
         self._scenarios = []
+        self._events = [] 
 
     def __repr__(self):
-        s = "Project (path={path}, autoplay={autoplay}, loop={loop}, " \
-            "scenarios={scenarios})"
+        s = "Project (name={name}, path={path}, autoplay={autoplay}, loop={loop}, " \
+            "scenarios={scenarios}, events={events})"
         return s.format(name=self.name,
                         path=self.path,
                         autoplay=self.autoplay,
                         loop=self.loop,
-                        scenarios=len(self.scenarios))
+                        scenarios=len(self.scenarios),
+                        events=len(self.events))
 
     @property
     def output(self):
@@ -95,16 +100,6 @@ class Project(Node):
             self._output = output
         else:
             raise LektureTypeError('Wait for an Output but receive a', output.__class__, output)
-
-    @property
-    def scenarios(self):
-        """
-        Report existing scenarios
-
-        :return: All Scenario of this project
-        :rtype: list
-        """
-        return self._scenarios
 
     @property
     def lastopened(self):
@@ -164,6 +159,12 @@ class Project(Node):
     @loop.setter
     def loop(self, value):
         self._loop = value
+
+    def _export_attributes(self):
+        """export attributes of the project"""
+        attributes = {"name":self._name, "created":self._created, "version":self.version, \
+                      "lastopened":self.lastopened, "loop":self._loop, "autoplay":self._autoplay}
+        return attributes
 
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
@@ -234,33 +235,50 @@ class Project(Node):
             for attribute, value in attributes.items():
                 if attribute == "created":
                     self._created = value
-                if attribute == "version":
+                elif attribute == "version":
                     self._version = value
-                if attribute == "autoplay":
+                elif attribute == "autoplay":
                     self.autoplay = value
-                if attribute == "loop":
+                elif attribute == "loop":
                     self.loop = value
-                if attribute == "name":
+                elif attribute == "name":
                     self.name= value
             self._lastopened = str(datetime.datetime.now())
             # dump outputs
             outputs = loaded.pop('outputs')
             for out in outputs:
-                self.new_output(**out)
+                service = out.pop('service')
+                self.new_output(service, **out)
             scenarios = loaded.pop('scenarios')
             # dump scenario
             for scenario in scenarios:
+                service = scenario.pop('service')
                 output = scenario['output']
                 if output != None:
+                    # refer to the corresponding output instance object
                     scenario['output'] = self.outputs[output]
-                events = scenario.pop("events")
                 scenar = self.new_scenario(**scenario)
-                for event in events:
-                    scenar.new_event('OSC', **event)
-            if loaded != {}:
-                print('ERROIR 906 - loaded file has not been totally loaded', loaded )
-            print("project loaded")
-            return True
+            # dump events after scenario, because event can reference a scenario
+            events = loaded.pop("events")
+            for event in events:
+                service = event.pop('service')
+                output = event['output']
+                if output != None:
+                    # refer to the corresponding output instance object
+                    event['output'] = self.outputs[output]
+                else:
+                    # if output is set to None, do the same, it means 'use parent output'
+                    event.pop('output')
+                self.new_event(service, **event)
+            if loaded == {}:
+                # project has been loaded, lastopened date changed
+                # we have a path because we loaded a file from somewhere
+                print("project loaded")
+                self.write()
+                return True
+            else:
+                print('ERROIR 906 - loaded file has not been totally loaded', loaded)
+                return False
         # catch error if file is not valid or if file is not a lekture project
         except (IOError, ValueError) as Error:
             if debug:
@@ -276,6 +294,8 @@ class Project(Node):
         else:
             savepath = self._path
         if savepath:
+            if savepath.endswith("/"):
+                savepath = savepath + self.name
             # make sure we will write a file with json extension
             if not savepath.endswith(".lekture"):
                 savepath = savepath + ".lekture"
@@ -290,11 +310,22 @@ class Project(Node):
             project.setdefault("scenarios", self._export_scenario())
             project.setdefault("attributes", self._export_attributes())
             project.setdefault("outputs", self._export_outputs())
-            out_file.write(json.dumps(project, sort_keys=True, indent=4,\
-                                      ensure_ascii=False).encode("utf8"))
-            print("file has been written in " + savepath)
-            return True
+            project.setdefault("events", self.export_events())
+            try:
+                the_dump = json.dumps(project, sort_keys=True, indent=4,\
+                                      ensure_ascii=False).encode("utf8")
+            except TypeError as Error:
+                print('ERROR 98 ' + str(Error))
+                return False
+            try:
+                out_file.write(the_dump)
+                print("file has been written in " + savepath)
+                return True
+            except TypeError as Error:
+                print('ERROR 99 ' + str(Error))
+                return False
         else:
+            print('no filepath. Where do you want I save the project?')
             return False
 
     def play(self):
@@ -354,7 +385,7 @@ class Project(Node):
         if self.outputs:
             outputs = []
             for out in self.outputs:
-                if protocol == out.protocol:
+                if protocol == out.service:
                     outputs.append(out)
             return outputs
         else:
@@ -364,26 +395,13 @@ class Project(Node):
         """return the protocols available for this project"""
         protocols = []
         for out in self.outputs:
-            proto = out.protocol
+            proto = out.service
             if not proto in protocols:
                 protocols.append(proto)
         if protocols == []:
             return None
         else:
             return protocols
-
-    def new_scenario(self, **kwargs):
-        """
-        Create a new scenario for this Project
-            args:Optional args are every attributes of the scenario, associated with a keyword
-            rtype:Scenario object
-        """
-        taille = len(self._scenarios)
-        scenario = Scenario(self)
-        self._scenarios.append(scenario)
-        for key, value in kwargs.items():
-            setattr(self._scenarios[taille], key, value)
-        return scenario
 
     def new_output(self, protocol="OSC", **kwargs):
         """
@@ -393,19 +411,53 @@ class Project(Node):
         rtype:Output object
         """
         taille = len(self._outputs)
-        if protocol == "OSC":
-            output = OSC()
-        elif protocol == "MIDI":
-            output = MIDI()
-        elif protocol == "PJLINK":
-            output = PJLINK()
+        if protocol == "OSC" or protocol == 'OutputUdp':
+            output = OutputUdp(self)
+        elif protocol == "MIDI" or protocol == 'OutputMidi':
+            output = OutputMidi(self)
         else:
             output = None
         if output:
             self._outputs.append(output)
+            for key, value in kwargs.items():
+                setattr(self._outputs[taille], key, value)
+            return self._outputs[taille]
+        else:
+            return False
+
+    def _export_outputs(self):
+        """export outputs of the project"""
+        outputs = []
+        for output in self.outputs:
+            outputs.append(prop_dict(output))
+        return outputs
+
+    @property
+    def scenarios(self):
+        """
+        Report existing scenarios
+
+        :return: All Scenario of this project
+        :rtype: list
+        """
+        return self._scenarios
+
+    def new_scenario(self, **kwargs):
+        """
+        Create a new scenario for this Project
+            :args: Optional args are every attributes of the scenario, associated with a keyword
+            :rtype: Scenario object
+        """
+        taille = len(self._scenarios)
+        scenario = Scenario(self)
+        self._scenarios.append(scenario)
         for key, value in kwargs.items():
-            setattr(self._outputs[taille], key, value)
-        return self._outputs[taille]
+            if key == 'events':
+                for event in value:
+                    scenario.add_event(self.events[event])
+            else:
+                setattr(self._scenarios[taille], key, value)
+        return scenario
 
     def del_scenario(self, scenario):
         """
@@ -425,24 +477,77 @@ class Project(Node):
                 print("ERROR - trying to delete a scenario which not exists \
                       in self._scenarios", scenario)
 
-    def _export_attributes(self):
-        """export attributes of the project"""
-        attributes = {"name":self._name, "created":self._created, "version":self.version, \
-                      "lastopened":self.lastopened, "loop":self._loop, "autoplay":self._autoplay}
-        return attributes
-
     def _export_scenario(self):
         """export scenario of the project"""
         scenarios = []
         for scenario in self.scenarios:
-            scenarios.append({"output":self.outputs.index(scenario.output), \
-                              "name":scenario.name, "description":scenario.description, \
-                              "events":scenario.export_events()})
+            events = []
+            for event in scenario.events:
+                events.append(self.events.index(event))
+            scenarios.append(prop_dict(scenario))
         return scenarios
 
-    def _export_outputs(self):
-        """export outputs of the project"""
-        outputs = []
-        for output in self.outputs:
-            outputs.append(prop_dict(output))
-        return outputs
+    @property
+    def events(self):
+        """
+        All the events of this scenario
+        """
+        return self._events
+
+    def new_event(self, event_type, command=None, **kwargs):
+        """
+        create a new event for this scenario
+        """
+        taille = len(self.events)
+        the_event = None
+        self.events.append(the_event)
+        if event_type == 'Osc':
+            if command == None:
+                command = ['/lekture', 10]
+            self.events[taille] = Osc(self, command)
+        elif event_type == 'Wait':
+            if command == None:
+                command = 1000
+            self.events[taille] = Wait(self, command)
+        elif event_type == 'MidiNote':
+            if command == None:
+                command = [1, 64, 100]
+            self.events[taille] = MidiNote(self, command)
+        elif event_type == 'PjLink':
+            if command == None:
+                command = ['shutter', True]
+            self.events[taille] = PjLink(self, command)
+        for key, value in kwargs.items():
+            setattr(self.events[taille], key, value)
+        return self.events[taille]
+
+    def del_event(self, index):
+        """
+        delete an event, by index or with object instance
+        """
+        used = False
+        if isinstance(index, int):
+            index -= 1
+            for scenario in self.scenarios:
+                for event in scenario.events:
+                    if event == self.events[index]:
+                        print('WARNING - this event is still referenced in scenario ' + scenario.name)
+                        used = True
+            if not used:
+                self.events.pop(index)
+        else:
+            for scenario in self.scenarios:
+                for index in scenario.events:
+                    print('WARNING - this event is still referenced in scenario ' + scenario.name)
+                    used = True
+            if not used:
+                self.events.remove(index)
+
+    def export_events(self):
+        """
+        export events of the project
+        """
+        events = []
+        for event in self.events:
+            events.append(prop_dict(event))
+        return events

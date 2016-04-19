@@ -10,10 +10,11 @@ Contains name / description
 
 class Node(object):
     """Create a new scenario"""
-    def __init__(self, name='no-name', description='write a comment'):
+    def __init__(self, parent, name='Untitled Node', description='write a comment'):
         super(Node, self).__init__()
         self._name = name
         self._description = description
+        self.parent = parent
 
     @property
     def name(self):
@@ -24,7 +25,7 @@ class Node(object):
 
         :Returns:String
         """
-        return self._name
+        return str(self._name)
     @name.setter
     def name(self, name):
         self._name = name
@@ -42,3 +43,7 @@ class Node(object):
     @description.setter
     def description(self, description):
         self._description = description
+
+    @property
+    def service(self):
+        return self.__class__.__name__

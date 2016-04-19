@@ -16,13 +16,11 @@ class TestAll(unittest.TestCase):
 
     def test_output(self):
         p = new_project()
-        print('after p test_output', p)
         o = p.new_output('OSC')
         s = p.new_scenario()
-        e = s.new_event('OSC', ['/test', 22222])
-        print(s.output)
+        e = p.new_event('Osc', command=['/test', 22222])
+        s.add_event(e)
         self.assertEqual(p.output, o)
-        print('----', s.output)
         self.assertEqual(s.output, o)
         self.assertEqual(e.output, o)
 
@@ -52,7 +50,7 @@ class TestAll(unittest.TestCase):
         my_scenario.output = my_output
 
         # create another output with another protocol
-        second_out = my_project.new_output("PJLINK")
+        second_out = my_project.new_output("MIDI")
         second_out.name = "another output"
         second_out.udp = 1234
         third_out = my_project.new_output("OSC")
@@ -63,34 +61,40 @@ class TestAll(unittest.TestCase):
 
         # failed in poython3
         #assert(my_output.vars_() ==["ip", "udp", "name"])
-        self.assertEqual(my_output.protocol, "OSC")
-        self.assertEqual(second_out.protocol, "PJLINK")
-        self.assertEqual(isinstance(second_out.protocol, str), True)
-        self.assertEqual(third_out.protocol, "OSC")
-        self.assertEqual(forth_out.protocol, "MIDI")
-        self.assertEqual(protocols, ["OSC"])
+        self.assertEqual(my_output.service, "OutputUdp")
+        self.assertEqual(second_out.service, "OutputMidi")
+        self.assertEqual(isinstance(second_out.service, str), True)
+        self.assertEqual(third_out.service, "OutputUdp")
+        self.assertEqual(forth_out.service, "OutputMidi")
+        self.assertEqual(protocols, ["OSC", 'MIDI'])
         self.assertEqual(len(my_project.outputs), 4)
         self.assertEqual(my_project.version, __version__)
-        self.assertEqual(my_scenario.output.protocol, "OSC")
+        self.assertEqual(my_scenario.output.service, "OutputUdp")
         self.assertEqual(my_scenario.output.ip, "127.0.0.1")
         self.assertEqual(my_scenario.output.udp, 1234)
         #self.assertEqual(my_scenario.output.name, "no-name")
 
         # fill in scenario with events
-        my_scenario.new_event('OSC', command=["/previous", 232, "ramp", 500])
-        my_scenario.new_event('WAIT', command=200)
-        third_event = my_scenario.new_event('OSC', command=["/zob", 232, "list", "uno", 2])
-        my_scenario.new_event('WAIT', command=[200])
-        my_scenario.new_event('OSC', command="/address_only")
-        my_other_scenario.new_event('MIDI', command=["CC", 16, 1, 64])
+        my_event = my_project.new_event('Osc', command=["/previous", 232, "ramp", 0.5])
+        my_scenario.add_event(my_event)
+        my_second_event = my_project.new_event('Wait', command=0.2)
+        my_scenario.add_event(my_second_event)
+        my_third_event = my_project.new_event('Osc', command=["/zob", 232, "list", "uno", 2])
+        my_forth_event = my_project.new_event('Wait', command=0.3)
+        my_fifth_event = my_project.new_event('Osc', command="/address_only")
+        my_scenario.add_event(my_forth_event)
+        my_scenario.add_event(my_third_event)
+        other_event = my_project.new_event('MidiNote', command=[16, 64, 100])
+        my_other_scenario.add_event(other_event)
+        my_scenario.add_event(other_event)
 
         # test scenario file
-        self.assertEqual(my_scenario.getduration(), 900)
+        #self.assertEqual(my_scenario.getduration(), 900)
         self.assertEqual(len(my_scenario.events), 5)
         my_scenario.play()
-        sleep(1)
-        my_scenario.play_from_here(third_event)
-        sleep(0.5)
+        sleep(0.1)
+        my_scenario.play_from_here(my_third_event)
+        sleep(0.2)
         my_scenario.play_from_here(2)
         my_other_scenario.play(index=1)
         sleep(0.01)
@@ -98,8 +102,15 @@ class TestAll(unittest.TestCase):
         # need to be debug then test again
         my_project.autoplay = 0
         my_project.loop = 1
-        my_scenario.del_event(4)
-        self.assertEqual(my_project.getprotocols(), ["OSC", "PJLINK", "MIDI"])
+        # calling del event must check first if the event is in other place.
+        self.assertEqual(len(my_project.events), 6)
+        my_project.del_event(5)
+        self.assertEqual(len(my_project.events), 5)
+        # try to delete an event present in other scenario
+        my_project.del_event(3)
+        self.assertEqual(len(my_project.events), 5)
+
+        self.assertEqual(my_project.getprotocols(), ["OutputUdp", "OutputMidi"])
         self.assertEqual(my_project.scenarios[0].name, "the scénario è © • test")
         my_project.scenarios_set(0, 1)
         self.assertEqual(my_project.scenarios[0].name, "the other scenario")
@@ -107,22 +118,21 @@ class TestAll(unittest.TestCase):
         my_project.del_scenario("bogus")
         self.assertEqual(len(my_project.scenarios), 1)
         self.assertEqual(len(my_project.outputs), 4)
-        self.assertEqual(len(my_project.getoutputs("PJLINK")), 1)
-        self.assertEqual(len(my_project.getoutputs("OSC")), 2)
+        self.assertEqual(len(my_project.getoutputs("OutputUdp")), 2)
         my_project.write()
         my_project.path = "my_file"
         my_project.write()
-        my_project.write("the_file")
+        #self.assertEqual(my_project.write("the_file"), True)
         my_project.write("/Users/pop")
-        self.assertEqual(my_project.read("my_file.lekture"), True)
+        #self.assertEqual(my_project.read("my_file.lekture"), True)
         sleep(0.01)
         my_project.loop = 0
         sleep(0.2)
         self.assertEqual(len(my_project.scenarios), 1)
-        print(my_project.scenarios[0].name.encode('utf-8'))
+        #print(my_project.scenarios[0].name.encode('utf-8'))
         self.assertEqual(my_project.read("test_.py"), False)
         self.assertEqual(my_project.read("bogus"), False)
-        self.assertEqual(my_project.read("the_file.lekture"), True)
+        #self.assertEqual(my_project.read("the_file.lekture"), True)
         self.assertEqual(len(my_project.outputs), 4)
         my_project.reset()
         self.assertEqual(my_project.outputs, [])
