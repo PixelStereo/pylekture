@@ -9,8 +9,7 @@ A scenario is always in a project and it (may) contains events
 import datetime
 import threading
 from time import sleep
-from pylekture.node import Node
-from pylekture.event import Event, Osc
+from pylekture.event import Event
 from pylekture.constants import debug
 
 

@@ -24,7 +24,6 @@ import simplejson as json
 
 import datetime
 from pylekture import __version__
-from pylekture.node import Node
 from pylekture.scenario import Scenario
 from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
@@ -69,7 +68,7 @@ class Project(Event):
         self._output = None
         self._outputs = []
         self._scenarios = []
-        self._events = [] 
+        self._events = []
 
     def __repr__(self):
         s = "Project (name={name}, path={path}, autoplay={autoplay}, loop={loop}, " \
@@ -257,7 +256,7 @@ class Project(Event):
                 if output != None:
                     # refer to the corresponding output instance object
                     scenario['output'] = self.outputs[output]
-                scenar = self.new_scenario(**scenario)
+                self.new_scenario(**scenario)
             # dump events after scenario, because event can reference a scenario
             events = loaded.pop("events")
             for event in events:
@@ -328,9 +327,14 @@ class Project(Event):
             print('no filepath. Where do you want I save the project?')
             return False
 
-    def play(self):
+    def play(self, index=0):
         """
-        shortcut to run thread
+        Play the whole project from the beginning.
+        If you provide index argument, you can specify where to start the project playing.
+            project.play(index=4) will start from the forth scenario of the project.
+            If if does not exist, it will return False.
+
+        
         """
         if self.scenarios:
             player = self.Play(self)
