@@ -10,6 +10,8 @@ from pylekture import __version__
 from pylekture.functions import checkType
 from pylekture.constants import protocols
 from pylekture.project import new_project, projects
+from pylekture.errors import LektureTypeError
+from pylekture.output import OutputMidi, OutputUdp
 
 
 class TestAll(unittest.TestCase):
@@ -23,6 +25,14 @@ class TestAll(unittest.TestCase):
         self.assertEqual(p.output, o)
         self.assertEqual(s.output, o)
         self.assertEqual(e.output, o)
+
+    def test_exceptions(self):
+        p = new_project()
+        o = p.new_output()
+        try:
+            raise LektureTypeError(OutputMidi, o)
+        except LektureTypeError:
+            print('we raised LektureTypeError')
 
     def test_project(self):
         # create projects
@@ -81,7 +91,7 @@ class TestAll(unittest.TestCase):
         my_scenario.add_event(my_second_event)
         my_third_event = my_project.new_event('Osc', command=["/zob", 232, "list", "uno", 2])
         my_forth_event = my_project.new_event('Wait', command=0.3)
-        my_fifth_event = my_project.new_event('Osc', command="/address_only")
+        my_project.new_event('Osc', command="/address_only")
         my_scenario.add_event(my_forth_event)
         my_scenario.add_event(my_third_event)
         other_event = my_project.new_event('MidiNote', command=[16, 64, 100])
