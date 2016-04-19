@@ -108,6 +108,11 @@ class Event(Node):
         return self._loop
     @loop.setter
     def loop(self, loop):
+        loop = checkType(loop)
+        if loop == 0:
+            loop = False
+        elif loop > 0:
+            loop = True
         self._loop = loop
 
     def getduration(self):
@@ -267,4 +272,4 @@ class MidiNote(Event):
             """
             Play the MidiNote
             """
-            pass
+            print('MidiNote is not ready for now… please wait a few months')
