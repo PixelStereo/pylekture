@@ -44,7 +44,7 @@ class TestAll(unittest.TestCase):
         print(my_project.path, my_project.autoplay, my_project.loop)
 
         # we should have two projects, as we created two of them
-        self.assertEqual(len(projects()), 3)
+        self.assertEqual(len(projects()), 4)
         self.assertEqual(my_project.version, __version__)
         my_scenario = my_project.new_scenario()
         my_other_scenario = my_project.new_scenario()
