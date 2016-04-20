@@ -375,6 +375,11 @@ class Project(Event):
                 # play the scenario
                 scenario.play()
 
+        def join(self):
+            if debug:
+                dbg = "project-ends: {project} in {thread} - it is {time}"
+                print(dbg.format(project=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
+
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""
         s_temp = self._scenarios[old]
