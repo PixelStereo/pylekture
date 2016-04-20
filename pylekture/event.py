@@ -163,12 +163,12 @@ class Event(Node):
         else:
             if 'ramp' in self.command:
                 index = self.command.index('ramp')
-                duration += self.command[index + 1]
+                duration += float(self.command[index + 1])
         return duration
 
-    def play(self, index=0):
+    def play(self):
         """
-        Play a scenario
+        Play an event
         It creates a new object play in a separate thread.
         """
         player = self.Play(self)
