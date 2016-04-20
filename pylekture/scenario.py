@@ -23,6 +23,14 @@ class Scenario(Event):
         self.index = 0
         self._events = []
 
+    def __repr__(self):
+        s = "Project (name={name}, loop={loop}, " \
+            "output={output}, events={events})"
+        return s.format(name=self.name,
+                        output=self.output,
+                        loop=self.loop,
+                        events=len(self.events))
+
     @property
     def events(self):
         """
