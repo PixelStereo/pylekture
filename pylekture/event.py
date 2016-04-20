@@ -73,7 +73,12 @@ class Event(Node):
         if self._output:
             return self._output
         else:
-            return self.parent.output
+            parent = self.getparent()
+            if parent:
+                return self.parent.output
+            else:
+                return self.parent.output
+
     @output.setter
     def output(self, output):
         output_class = output.__class__
@@ -86,7 +91,7 @@ class Event(Node):
             if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'scenario':
                 self._output = output
         else:
-            raise LektureTypeError('Output', output_class)
+            raise LektureTypeError('Output', output)
 
     @property
     def wait(self):
@@ -129,6 +134,17 @@ class Event(Node):
         elif loop > 0:
             loop = True
         self._loop = loop
+
+    def getparent(self):
+        """
+        Who is your parent bro?
+        """
+        # determine if it is in a scenario or not
+        for scenario in self.parent.scenarios:
+            if self in scenario.events:
+                return scenario
+        # it is not in a scenario, so it has no parent. Return False
+        return None
 
     def getduration(self):
         """
