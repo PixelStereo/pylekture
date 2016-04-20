@@ -85,7 +85,6 @@ class Event(Node):
         name = self.__class__.__name__
         if output_class.__name__ == "OutputUdp":
             if name == 'Osc' or 'scenario':
-                print(output, self._output)
                 self._output = output
         elif output_class.__name__ == 'OutputMidi':
             if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'scenario':
@@ -202,6 +201,9 @@ class Osc(Event):
                 print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
             out = self.output
             args = self.command
+            split = out.port.split(':')
+            ip = split[0]
+            udp = split[1]
             if isinstance(args, list):
                 # address is the first item of the list
                 address = args[0]
@@ -211,9 +213,9 @@ class Osc(Event):
                 address = args
                 args = None
             try:
-                target = liblo.Address(out.ip, int(out.udp))
+                target = liblo.Address(ip, int(udp))
                 if debug >= 3:
-                    print('connect to : ' + out.ip + ':' + str(out.udp))
+                    print('connect to : ' + ip + ':' + str(udp))
             except liblo.AddressError as err:
                 print('liblo.AddressError' + str(err))
             args[0] = checkType(args[0])
