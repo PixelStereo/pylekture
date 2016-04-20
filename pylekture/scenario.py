@@ -127,6 +127,20 @@ class Scenario(Event):
         duration += self.post_wait
         return duration
 
+    def play(self, index=0):
+        """
+        Play a scenario
+        It creates a new object play in a separate thread.
+        """
+        if self.events == []:
+            print('This scenario is empty')
+            return None
+        else:
+            player = self.Play(self)
+            if player:
+                player.join()
+            return player
+
     def play_from_here(self, index):
         """play scenario from a given index"""
         if not isinstance(index, int):
