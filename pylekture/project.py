@@ -256,6 +256,7 @@ class Project(Event):
             # dump events before scenario, because a scenario contains events
             events = loaded.pop("events")
             for event in events:
+                # remove the service name. We are in the event dict, so we are sure that it is an event
                 service = event.pop('service')
                 output = event['output']
                 if output != None:
@@ -493,6 +494,10 @@ class Project(Event):
             export['events'] = []
             for event in scenario.events:
                 export['events'].append(self.events.index(event))
+            if scenario.output:
+                export['output'] = self.outputs.index(scenario.output)
+            else:
+                export['output'] = None
             scenarios.append(export)
         return scenarios
 
