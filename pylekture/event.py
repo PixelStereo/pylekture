@@ -76,16 +76,17 @@ class Event(Node):
             return self.parent.output
     @output.setter
     def output(self, output):
-        output = output.__class__.__name__
+        output_class = output.__class__
         name = self.__class__.__name__
-        if output == "OutputUdp":
-            if name == 'Osc':
+        if output_class.__name__ == "OutputUdp":
+            if name == 'Osc' or 'scenario':
+                print(output, self._output)
                 self._output = output
-        elif output == 'OutputMidi':
-            if name == 'MidiNote' or 'MidiControl' or 'MidiBend':
+        elif output_class.__name__ == 'OutputMidi':
+            if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'scenario':
                 self._output = output
         else:
-            raise LektureTypeError('Output', output)
+            raise LektureTypeError('Output', output_class)
 
     @property
     def wait(self):
