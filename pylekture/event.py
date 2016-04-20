@@ -216,6 +216,7 @@ class Osc(Event):
                     print('connect to : ' + out.ip + ':' + str(out.udp))
             except liblo.AddressError as err:
                 print('liblo.AddressError' + str(err))
+            args[0] = checkType(args[0])
             if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
                     # this is a ramp, make it in a separate thread
                     ramp = Ramp(target, address, args)
