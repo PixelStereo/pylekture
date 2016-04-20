@@ -1,5 +1,5 @@
 pylekture.event
-==================
+===============
 .. automodule:: pylekture.event
     :members:
     :undoc-members:
