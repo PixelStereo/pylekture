@@ -170,10 +170,22 @@ class Event(Node):
         Play an event
         It creates a new object play in a separate thread.
         """
-        player = self.Play(self)
+        Player(self)
+
+
+class Player(threading.Thread):
+    """
+    A Player that play things
+    """
+    def __init__(self, parent):
+        super(Player, self).__init__()
+        self.parent = parent
+        self.start()
+    
+    def run(self):
+        player = self.parent.Play(self.parent)
         if player:
             player.join()
-        return player
 
 
 class Osc(Event):
@@ -234,6 +246,8 @@ class Osc(Event):
                 if args:
                     msg.add(args)
                 liblo.send(target, msg)
+            if debug >= 3:
+                print('event-ends: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
 
 
 class Wait(Event):

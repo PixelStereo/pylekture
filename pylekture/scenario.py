@@ -50,15 +50,12 @@ class Scenario(Event):
         else:
             self._events.insert(index, event)
 
-    def del_event(self, index):
+    def del_event(self, event):
         """
-        delete an event, by index or with object instance
+        Remove an event from the scenario
+        It won't delete the event, it just remove it of the scenario
         """
-        if isinstance(index, int):
-            index -= 1
-            self.events.pop(index)
-        else:
-            self.events.remove(index)
+        self.events.remove(event)
 
     def export_events(self):
         """
@@ -91,27 +88,27 @@ class Scenario(Event):
                 if self.scenario.wait:
                     # if there is a wait, please wait!!
                     if debug >= 3:
-                        print('>>>>> WAIT ',  self.scenario.name, 'DURING' , self.scenario.wait, 'SECONDS')
+                        print('wait ',  self.scenario.name, 'during' , self.scenario.wait, 'seconds')
                     sleep(self.scenario.wait)
             else:
                 # start from the index, we will skip the pre-wait sleep
                 index = self.index
             if debug >= 3:
-                dbg = '>>>>> scenario-play: {scenario} from index {index} in {thread} at {time}'
-                print(dbg.format(scenario=self.scenario, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
+                dbg = 'scenario-play: {name} from index {index} in {thread} at {time}'
+                print(dbg.format(name=self.scenario.name, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
             for event in self.scenario.events[index:]:
                 # play each event
                 player = event.play()
                 if player:
                     player.join()
             if debug >= 3:
-                dbg = '>>>>> scenario-ends: {scenario} in {thread} at {time}'
-                print(dbg.format(scenario=self.scenario, thread=threading.current_thread().name, time=datetime.datetime.now()))
+                dbg = 'scenario-ends: {name} in {thread} at {time}'
+                print(dbg.format(name=self.scenario.name, thread=threading.current_thread().name, time=datetime.datetime.now()))
             if self.scenario.post_wait:
                 # if there is a wait after the scenario, please wait!!
                 if debug >= 3:
-                    print('>>>>> POST_WAIT ' , self.scenario, \
-                          ' DURING ' , self.scenario.post_wait, ' SECONDS')
+                    print('post_wait ' , self.scenario, \
+                          ' during ' , self.scenario.post_wait, ' seconds')
                 sleep(self.scenario.post_wait)
             # scenario is now finish
             return True

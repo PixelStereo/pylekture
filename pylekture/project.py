@@ -361,9 +361,9 @@ class Project(Event):
         def __init__(self, project):
             self.project = project
             threading.Thread.__init__(self)
-            if debug:
-                dbg = "project-play: {project} in {thread} - it is {time}"
-                print(dbg.format(project=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
+            if debug >= 3:
+                dbg = "project-play: {name} in {thread} - it is {time}"
+                print(dbg.format(name=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
             self.start()
 
         def run(self):
@@ -374,11 +374,9 @@ class Project(Event):
                 wait = wait + scenario.wait + scenario.post_wait
                 # play the scenario
                 scenario.play()
-
-        def join(self):
-            if debug:
-                dbg = "project-ends: {project} in {thread} - it is {time}"
-                print(dbg.format(project=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
+            if debug >= 3:
+                dbg = "project-ends: {name} in {thread} - it is {time}"
+                print(dbg.format(name=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
 
     def scenarios_set(self, old, new):
         """Change order of a scenario in the scenario list of the project"""

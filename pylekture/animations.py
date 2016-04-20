@@ -41,3 +41,5 @@ class Ramp(threading.Thread):
             sleep(0.00072)
             msg.add(value)
             liblo.send(self.target, msg)
+        if debug >= 3:
+            print('ramp ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
