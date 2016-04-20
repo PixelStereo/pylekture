@@ -165,11 +165,12 @@ class Event(Node):
                 duration += float(self.command[index + 1])
         return duration
 
-    def play(self):
+    def play(self, index=0):
         """
         Play an event
         It creates a new object play in a separate thread.
         """
+
         Player(self)
 
 
@@ -258,15 +259,6 @@ class Wait(Event):
         super(Wait, self).__init__(parent, *args, **kwargs)
         self._command = duration
 
-    def play(self, index=0):
-        """
-        Play a scenario
-        It creates a new object play in a separate thread.
-        """
-        player = self.Play(self)
-        if player:
-            player.join()
-        return player
 
     class Play(threading.Thread):
         """
