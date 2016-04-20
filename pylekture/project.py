@@ -29,6 +29,7 @@ from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
 from pylekture.event import Osc, MidiNote, Event, Wait
+from pylekture.errors import OutputZeroError
 
 def new_project():
     """
@@ -84,7 +85,7 @@ class Project(Event):
     def output(self):
         """
         The port to output this project
-        Initialised to the first output (created when creating a project)
+        Initialised to the first output
         """
         if self._output:
             return self._output
@@ -92,7 +93,7 @@ class Project(Event):
             if self._outputs:
                 return self._outputs[0]
             else:
-                raise OutputZeroError('This project has no output')
+                raise OutputZeroError()
     @output.setter
     def output(self, output):
         if output.__class__ == 'Output':
@@ -463,7 +464,6 @@ class Project(Event):
         for key, value in kwargs.items():
             if key == 'events':
                 for event in value:
-                    print(len(self.events), event)
                     scenario.add_event(self.events[event])
             else:
                 setattr(self._scenarios[taille], key, value)
@@ -472,13 +472,10 @@ class Project(Event):
     def del_scenario(self, scenario):
         """
         delete a scenario of this project
-        This function will delete events of the scenario
+        This function won't delete events of the scenario
         """
         if scenario in self.scenarios:
-            # delete events of this scenario
-            for event in scenario.events:
-                scenario.del_event(event)
-            # delete the scenario itself
+            # delete the scenario
             self._scenarios.remove(scenario)
         else:
             if debug:
@@ -559,3 +556,16 @@ class Project(Event):
         for event in self.events:
             events.append(prop_dict(event))
         return events
+
+    def del_output(self, output):
+        """
+        delete an output of this project
+        This function will delete  of the scenario
+        """
+        if output in self.outputs:
+            # delete the output
+            self._outputs.remove(output)
+        else:
+            if debug:
+                print("ERROR - trying to delete an output which not exists \
+                      in self._outputs", output)
