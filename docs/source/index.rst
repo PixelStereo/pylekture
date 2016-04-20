@@ -11,8 +11,12 @@ pylekture
    project
    node
    output
+   event
    scenario
    functions
+   animations
+   constants
+   errors
 
 Index
 =====
