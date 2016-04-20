@@ -79,8 +79,8 @@ class TestAll(unittest.TestCase):
         self.assertEqual(len(my_project.outputs), 4)
         self.assertEqual(my_project.version, __version__)
         self.assertEqual(my_scenario.output.service, "OutputUdp")
-        self.assertEqual(my_scenario.output.ip, "127.0.0.1")
-        self.assertEqual(my_scenario.output.udp, 1234)
+        self.assertEqual(my_scenario.output.port.split(':')[0], "127.0.0.1")
+        self.assertEqual(int(my_scenario.output.port.split(':')[1]), 1234)
         #self.assertEqual(my_scenario.output.name, "no-name")
 
         # fill in scenario with events
