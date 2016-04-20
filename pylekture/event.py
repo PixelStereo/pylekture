@@ -144,6 +144,10 @@ class Event(Node):
         classname = self.__class__.__name__
         if classname == 'Wait':
             duration += self.command
+        else:
+            if 'ramp' in self.command:
+                index = self.command.index('ramp')
+                duration += self.command[index + 1]
         return duration
 
     def play(self, index=0):
