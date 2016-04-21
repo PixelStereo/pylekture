@@ -17,7 +17,9 @@ install:
 script:
 - cd tests
 - coverage run --omit ../pylekture/_version.py --include=../pylekture/"*" test_.py
-- sh run_tests.sh
+- if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then coverage xml; fi
+- if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then coverage report -m; fi
+- if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then python-codacy-coverage -r coverage.xml; fi
 - cd ../
 - travis-sphinx build
 after_success:
