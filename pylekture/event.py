@@ -22,47 +22,26 @@ class Event(Node):
     an Event is like a step of a Scenario.
     It could be a delay, a goto value, a random process,
     a loop process or everything you can imagine """
-    def __init__(self, parent, command=None, name=None, description='A few words about this event', output=None, wait=0, post_wait=0):
-        super(Event, self).__init__(parent)
-        self.scenario = parent
-        if name == None:
-            self.name = 'Untitled Event'
-        self._command = command
-        self._output = output
-        self._wait = wait
-        self._post_wait = post_wait
+    def __init__(self,*args, **kwargs):
+        super(Event, self).__init__(*args, **kwargs)
+        self.name = 'Untitled Event'        
+        self.description = "I'm an event"
+        self.wait = 0
+        self._output = None
+        self.post_wait = 0
         self._loop = False
+        self._autoplay = False
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
-    @property
-    def command(self):
-        """
-        The content of the event
-        It is a command that will be executate.
-        """
-        return self._command
-    @command.setter
-    def command(self, command):
-        output = self.output.__class__.__name__
-        name = self.__class__.__name__
-        command = checkType(command)
-        flag = False
-        if name == 'Osc':
-            if isinstance(command, list) or isinstance(command, basestring):
-                self._command = command
-                flag = True
-        elif name == 'Wait':
-            if isinstance(command, int) or isinstance(command, float):
-                self._command = command
-                flag = True
-        elif name == 'MidiNote' or 'MidiControl':
-            if isinstance(command, list) and len(command) == 3:
-                self._command = command
-                flag = True
-        if flag:
-            return True
-        else:
-            print(name + '.command must be something else than a ' + str(type(command)))
-            return False
+    def __repr__(self):
+        s = "Event (name={name}, parent={parent}, description={description}, tags={tags}, autoplay={autoplay}, loop={loop}"
+        return s.format(name=self.name,
+                        parent=self.parent,
+                        description=self.description,
+                        tags=self.tags,
+                        autoplay=self.autoplay,
+                        loop=self.loop)
 
     @property
     def output(self):
@@ -78,7 +57,6 @@ class Event(Node):
                 return self.parent.output
             else:
                 return self.parent.output
-
     @output.setter
     def output(self, output):
         output_class = output.__class__
@@ -119,6 +97,22 @@ class Event(Node):
             return True
     
     @property
+    def autoplay(self):
+        """
+        The autplay attribute. If true, the project plays when finish loading from hard drive
+            :arg: Boolean
+        """
+        return self._autoplay
+    @autoplay.setter
+    def autoplay(self, autoplay):
+        autoplay = checkType(autoplay)
+        if autoplay == 0:
+            autoplay = False
+        elif autoplay > 0:
+            autoplay = True
+        self._autoplay = autoplay
+
+    @property
     def loop(self):
         """
         The loop attribute. If true, the loop plays again when it reach its end.
@@ -138,6 +132,7 @@ class Event(Node):
         """
         Who is your parent bro?
         """
+        print('parent', self.name, self.parent)
         # determine if it is in a scenario or not
         for scenario in self.parent.scenarios:
             if self in scenario.events:
@@ -160,9 +155,11 @@ class Event(Node):
         if classname == 'Wait':
             duration += self.command
         else:
-            if 'ramp' in self.command:
-                index = self.command.index('ramp')
-                duration += float(self.command[index + 1])
+            print(self.command)
+            if self.command:
+                if 'ramp' in self.command:
+                    index = self.command.index('ramp')
+                    duration += float(self.command[index + 1])
         return duration
 
     def play(self, index=0):
@@ -173,6 +170,51 @@ class Event(Node):
 
         Player(self)
 
+
+class Command(Event):
+    """docstring for Command"""
+    def __init__(self, project, command, port):
+        super(Command, self).__init__(project, command, port)
+        self._command = command
+
+    def __repr__(self):
+        s = "Command (name={name}, self.parent={parent}, description={description}, command={command} tags={tags}, autoplay={autoplay}, loop={loop}"
+        return s.format(name=self.name,
+                        parent=self.parent,
+                        description=self.description,
+                        command=self.command,
+                        tags=self.tags,
+                        autoplay=self.autoplay,
+                        loop=self.loop)
+
+    @property
+    def command(self):
+        """
+        The content of the event
+        It is a command that will be executate.
+        """
+        return self._command
+    @command.setter
+    def command(self, command, toto):
+        print('ppappappapap', toto, command)
+        output = self.output.__class__.__name__
+        name = self.__class__.__name__
+        command = checkType(command)
+        flag = False
+        if name == 'Wait':
+            if isinstance(command, int) or isinstance(command, float):
+                self._command = command
+                flag = True
+        elif name == 'MidiNote' or 'MidiControl':
+            if isinstance(command, list) and len(command) == 3:
+                self._command = command
+                flag = True
+        if flag:
+            return True
+        else:
+            print(name + '.command must be something else than a ' + str(type(command)))
+            return False
+        
 
 class Player(threading.Thread):
     """
@@ -189,12 +231,28 @@ class Player(threading.Thread):
             player.join()
 
 
-class Osc(Event):
+class Osc(Command):
     """
     An OSC event is an Event designed to be outputed via OSC
     """
-    def __init__(self, scenario, command=None, *args, **kwargs):
-        super(Osc, self).__init__(scenario, command, *args, **kwargs)
+    def __init__(self, project, command=['/lekture', 10], port='127.0.0.1:1234'):
+        super(Osc, self).__init__(project, command, port)
+
+    @property
+    def command(self):
+        """
+        The content of the event
+        It is a command that will be executate.
+        """
+        return self._command
+    @command.setter
+    def command(self):
+        output = self.output.__class__.__name__
+        command = checkType(command)
+        flag = False
+        if isinstance(command, list) or isinstance(command, basestring):
+            self._command = command
+            flag = True
 
     class Play(threading.Thread):
         """
@@ -251,13 +309,12 @@ class Osc(Event):
                 print('event-ends: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
 
 
-class Wait(Event):
+class Wait(Command):
     """
     Play an EventWait
     """
-    def __init__(self, parent, duration=1, *args, **kwargs):
-        super(Wait, self).__init__(parent, *args, **kwargs)
-        self._command = duration
+    def __init__(self, project, command=1, port=None):
+        super(Wait, self).__init__(project, command, port)
 
 
     class Play(threading.Thread):
@@ -280,12 +337,12 @@ class Wait(Event):
                 print('sleep ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
 
 
-class MidiNote(Event):
+class MidiNote(Command):
     """
     An OSC event is an Event designed to be outputed via OSC
     """
-    def __init__(self, scenario, command, *args, **kwargs):
-        super(MidiNote, self).__init__(scenario, command, *args, **kwargs)
+    def __init__(self, project, command=[1, 64, 100], port=None):
+        super(MidiNote, self).__init__(project, command, port)
         self.address = command[0]
         if len(command) > 1:
             self.args = command[:1]

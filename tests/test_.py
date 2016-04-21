@@ -10,19 +10,36 @@ from pylekture import __version__
 from pylekture.functions import checkType
 from pylekture.constants import protocols
 from pylekture.project import new_project, projects
-from pylekture.errors import LektureTypeError
+from pylekture.errors import LektureTypeError, OutputZeroError
 
 
 class TestAll(unittest.TestCase):
 
     def test_output(self):
         p = new_project()
+        try:
+            p.output
+        except OutputZeroError:
+            print('OutputZeroError')
         o = p.new_output('OSC')
+        try:
+            p.output = 'bogus'
+        except LektureTypeError:
+            print('LektureTypeError')
+        p.output = o
+        print(p.output)
         s = p.new_scenario()
+        print('-------------------')
         e = p.new_event('Osc', command=['/test', 22222])
+        print e
+        print('-------------------')
         s.add_event(e)
-        self.assertEqual(p.output, o)
-        self.assertEqual(s.output, o)
+        #self.assertEqual(p.output, o)
+        #self.assertEqual(s.output, o)
+        print('------------------aaiaiaiiaiaiaiai------------------')
+        print(e.output)
+
+        
         self.assertEqual(e.output, o)
 
     def test_exceptions(self):
@@ -41,6 +58,7 @@ class TestAll(unittest.TestCase):
         my_project.getprotocols()
         new_project()
         print(my_project.path, my_project.autoplay, my_project.loop)
+
 
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 4)
@@ -70,15 +88,15 @@ class TestAll(unittest.TestCase):
 
         # failed in poython3
         #assert(my_output.vars_() ==["ip", "udp", "name"])
-        self.assertEqual(my_output.service, "OutputUdp")
-        self.assertEqual(second_out.service, "OutputMidi")
-        self.assertEqual(isinstance(second_out.service, str), True)
-        self.assertEqual(third_out.service, "OutputUdp")
-        self.assertEqual(forth_out.service, "OutputMidi")
+        self.assertEqual(my_output.__class__.__name__, "OutputUdp")
+        self.assertEqual(second_out.__class__.__name__, "OutputMidi")
+        self.assertEqual(isinstance(second_out.__class__.__name__, str), True)
+        self.assertEqual(third_out.__class__.__name__, "OutputUdp")
+        self.assertEqual(forth_out.__class__.__name__, "OutputMidi")
         self.assertEqual(protocols, ["OSC", 'MIDI'])
         self.assertEqual(len(my_project.outputs), 4)
         self.assertEqual(my_project.version, __version__)
-        self.assertEqual(my_scenario.output.service, "OutputUdp")
+        self.assertEqual(my_scenario.output.__class__.__name__, "OutputUdp")
         self.assertEqual(my_scenario.output.port.split(':')[0], "127.0.0.1")
         self.assertEqual(int(my_scenario.output.port.split(':')[1]), 1234)
         #self.assertEqual(my_scenario.output.name, "no-name")
@@ -96,6 +114,7 @@ class TestAll(unittest.TestCase):
         other_event = my_project.new_event('MidiNote', command=[16, 64, 100])
         my_other_scenario.add_event(other_event)
         my_scenario.add_event(other_event)
+        my_event.output = second_out
 
         # test scenario file
         #self.assertEqual(my_scenario.getduration(), 900)
@@ -131,9 +150,9 @@ class TestAll(unittest.TestCase):
         my_project.write()
         my_project.path = "my_file"
         my_project.write()
-        #self.assertEqual(my_project.write("the_file"), True)
+        self.assertEqual(my_project.write("the_file"), True)
         my_project.write("/Users/pop")
-        #self.assertEqual(my_project.read("my_file.lekture"), True)
+        self.assertEqual(my_project.read("my_file.lekture"), True)
         sleep(0.01)
         my_project.loop = 0
         sleep(0.2)
@@ -141,7 +160,7 @@ class TestAll(unittest.TestCase):
         #print(my_project.scenarios[0].name.encode('utf-8'))
         self.assertEqual(my_project.read("test_.py"), False)
         self.assertEqual(my_project.read("bogus"), False)
-        #self.assertEqual(my_project.read("the_file.lekture"), True)
+        self.assertEqual(my_project.read("the_file.lekture"), True)
         self.assertEqual(len(my_project.outputs), 4)
         my_project.reset()
         self.assertEqual(my_project.outputs, [])
@@ -169,7 +188,6 @@ class TestAll(unittest.TestCase):
         except NameError:
             # this is python 3
             self.assertEqual(isinstance(uni, (str, bytes)), True)
-
 
 if __name__ == "__main__":
     unittest.main()

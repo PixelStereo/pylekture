@@ -14,20 +14,29 @@ from pylekture.constants import debug
 
 
 class Scenario(Event):
-    """Create a new scenario"""
-    def __init__(self, parent, name=None, description='write a comment', output=None, wait=0, post_wait=0):
-        super(Scenario, self).__init__(parent, name, description, output, wait, post_wait)
-        if self.name == 'Untitled Node':
+    """
+    A scenario is always created in a project.
+    It contains events and have all the attributes of an event
+    (name, description, tags, loop, autoplay, (service))
+    """
+    def __init__(self, *args, **kwargs):
+        super(Scenario, self).__init__(*args, **kwargs)
+        print(kwargs)
+        if self.name == 'Untitled Event':
             self.name = 'Untitled Scenario'
+        if self.description == "I'm an event":
+            self.description = "I'm a scenario"
         self.project = self.parent
         self.index = 0
         self._events = []
 
     def __repr__(self):
-        s = "Project (name={name}, loop={loop}, " \
-            "output={output}, events={events})"
+        s = "Scenario (name={name}, description={description}, tags={tags}, autoplay={autoplay}, loop={loop}, " \
+            "events={events})"
         return s.format(name=self.name,
-                        output=self.output,
+                        description=self.description,
+                        tags=self.tags,
+                        autoplay=self.autoplay,
                         loop=self.loop,
                         events=len(self.events))
 
