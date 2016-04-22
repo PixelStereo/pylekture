@@ -11,24 +11,18 @@ from pprint import pprint
 
 p = new_project()
 osc = p.new_output('OSC')
+s = p.new_scenario()
+e = p.new_event('Osc')
+midi = p.new_output('MIDI')
+my_event = p.new_event('Osc', ["/previous", 232, "ramp", 0.5])
+
+s.add_event(e)
+
 export = p.export()
 pprint(export)
 quit()
 
 
-s = p.new_scenario()
-
-#pprint(p.export())
-#print(p, p.name)
-midi = p.new_output('MIDI')
-#print(midi)
-
-#print(osc)
-
-#print(s)
-e = p.new_event('Osc')
-
-#s.add_event(e)
 #s.add_event(e)
 
 #pprint(e.__dict__)

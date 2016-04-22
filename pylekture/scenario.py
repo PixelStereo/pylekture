@@ -21,7 +21,6 @@ class Scenario(Event):
     """
     def __init__(self, *args, **kwargs):
         super(Scenario, self).__init__(*args, **kwargs)
-        print(kwargs)
         if self.name == 'Untitled Event':
             self.name = 'Untitled Scenario'
         if self.description == "I'm an event":
