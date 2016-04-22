@@ -53,6 +53,5 @@ class OutputUdp(Output):
     """
     def __init__(self, parent, port='127.0.0.1:1234'):
         super(OutputUdp, self).__init__(parent, port)
-        print('UDPPARENT', parent)
         if self.name == 'Untitled Output':
             self.name = 'Untitled Udp Output'

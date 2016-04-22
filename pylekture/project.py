@@ -316,26 +316,17 @@ class Project(Event):
 
         Return a dict
         """
-        print(self.outputs)
+        #print(self.outputs)
         export = prop_dict(self)
-        #from pprint import pprint
-        #pprint(export)
         # outputs, events and scenario needs to be referenced by an index
         for output in export['outputs']:
             index = export['outputs'].index(output)
             export['outputs'][index] = output.export()
-        print('')
-        print('')
-        print(self.outputs)
-        print('')
-        print('')
         for event in export['events']:
             index = export['events'].index(event)
             export['events'][index] =  event.export()
             # output must be referenced by an index
             if export['events'][index]['output']:
-                print('LIST', self.outputs)
-                print('OOOUUUUTTTT', self._outputs)
                 export['events'][index]['output'] = self.outputs.index(event.output)
         for scenario in export['scenarios']:
             index = export['scenarios'].index(scenario)
@@ -451,7 +442,6 @@ class Project(Event):
             for key, value in kwargs.items():
                 setattr(output, key, value)
             self._outputs.append(output)
-            print('xxxxxxx', self._outputs)
             return self._outputs[taille]
         else:
             return False
