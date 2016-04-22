@@ -132,7 +132,6 @@ class Event(Node):
         """
         Who is your parent bro?
         """
-        print('parent', self.name, self.parent)
         # determine if it is in a scenario or not
         for scenario in self.parent.scenarios:
             if self in scenario.events:
@@ -155,7 +154,6 @@ class Event(Node):
         if classname == 'Wait':
             duration += self.command
         else:
-            print(self.command)
             if self.command:
                 if 'ramp' in self.command:
                     index = self.command.index('ramp')
@@ -196,7 +194,6 @@ class Command(Event):
         return self._command
     @command.setter
     def command(self, command, toto):
-        print('ppappappapap', toto, command)
         output = self.output.__class__.__name__
         name = self.__class__.__name__
         command = checkType(command)
@@ -235,8 +232,10 @@ class Osc(Command):
     """
     An OSC event is an Event designed to be outputed via OSC
     """
-    def __init__(self, project, command=['/lekture', 10], port='127.0.0.1:1234'):
+    def __init__(self, project, command=None, port='127.0.0.1:1234'):
         super(Osc, self).__init__(project, command, port)
+        if self._command == None:
+            self._command = ['/lekture', 10]
 
     @property
     def command(self):
@@ -247,7 +246,6 @@ class Osc(Command):
         return self._command
     @command.setter
     def command(self):
-        output = self.output.__class__.__name__
         command = checkType(command)
         flag = False
         if isinstance(command, list) or isinstance(command, basestring):
@@ -272,50 +270,52 @@ class Osc(Command):
                 print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
             out = self.output
             args = self.command
-            split = out.port.split(':')
-            ip = split[0]
-            udp = split[1]
-            if isinstance(args, list):
-                # address is the first item of the list
-                address = args[0]
-                args = args[1:]
-            else:
-                # this is a adress_only without arguments
-                address = args
-                args = None
-            try:
-                target = liblo.Address(ip, int(udp))
+            if out.port:
+                split = out.port.split(':')
+                ip = split[0]
+                udp = split[1]
+                if isinstance(args, list):
+                    # address is the first item of the list
+                    address = args[0]
+                    args = args[1:]
+                else:
+                    # this is a adress_only without arguments
+                    address = args
+                    args = None
+                try:
+                    target = liblo.Address(ip, int(udp))
+                    if debug >= 3:
+                        print('connect to : ' + ip + ':' + str(udp))
+                except liblo.AddressError as err:
+                    print('liblo.AddressError' + str(err))
+                args[0] = checkType(args[0])
+                if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
+                        # this is a ramp, make it in a separate thread
+                        ramp = Ramp(target, address, args)
+                        ramp.join()
+                elif isinstance(args, list):
+                    msg = liblo.Message(address)
+                    for arg in args:
+                        arg = checkType(arg)
+                        msg.add(arg)
+                    liblo.send(target, msg)
+                else:
+                    msg = liblo.Message(address)
+                    if args:
+                        msg.add(args)
+                    liblo.send(target, msg)
                 if debug >= 3:
-                    print('connect to : ' + ip + ':' + str(udp))
-            except liblo.AddressError as err:
-                print('liblo.AddressError' + str(err))
-            args[0] = checkType(args[0])
-            if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
-                    # this is a ramp, make it in a separate thread
-                    ramp = Ramp(target, address, args)
-                    ramp.join()
-            elif isinstance(args, list):
-                msg = liblo.Message(address)
-                for arg in args:
-                    arg = checkType(arg)
-                    msg.add(arg)
-                liblo.send(target, msg)
-            else:
-                msg = liblo.Message(address)
-                if args:
-                    msg.add(args)
-                liblo.send(target, msg)
-            if debug >= 3:
-                print('event-ends: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
+                    print('event-ends: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
 
 
 class Wait(Command):
     """
     Play an EventWait
     """
-    def __init__(self, project, command=1, port=None):
+    def __init__(self, project, command=None, port=None):
         super(Wait, self).__init__(project, command, port)
-
+        if self._command == None:
+            self._command = 1
 
     class Play(threading.Thread):
         """

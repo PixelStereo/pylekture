@@ -23,8 +23,8 @@ midi = p.new_output('MIDI')
 #print(s)
 e = p.new_event('Osc')
 
-#s.add_event(e)
-#s.add_event(e)
+s.add_event(e)
+s.add_event(e)
 
 #pprint(e.__dict__)
 
@@ -64,11 +64,11 @@ from pprint import pprint
 print('------------------------ EVENTS ------------------------------')
 for event in p.events:
 	print('------EVENT--------')
-	#pprint(event.export())
+	pprint(event.export())
 print('----------------------------- OUTPUTS ------------------------------')
-#pprint(osc.export())
+pprint(osc.export())
 print('------------------------------ SCENARIO ------------------------------')
-#pprint(s.export())
+pprint(s.export())
 print('------- EXPORT -------')
 print(p.write('/Users/reno/Desktop/'))
 print(len(s.events))

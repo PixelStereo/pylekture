@@ -6,6 +6,7 @@ lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
 from pylekture.project import new_project
+from pylekture.functions import prop_dict
 
 from pprint import pprint
 
@@ -13,13 +14,36 @@ p = new_project()
 osc = p.new_output('OSC')
 s = p.new_scenario()
 e = p.new_event('Osc')
+w = p.new_event('Wait')
 midi = p.new_output('MIDI')
 my_event = p.new_event('Osc', ["/previous", 232, "ramp", 0.5])
 
+e.output = osc
+s.output = midi
 s.add_event(e)
+s.add_event(my_event)
+s.add_event(e)
+s.add_event(w)
+s.add_event(my_event)
+#s.add_event(my_event)
 
-export = p.export()
-pprint(export)
+print('---------------- EVENT ------------------')
+pprint(e.export())
+print('---------------- SCENARIO ------------------')
+pprint(s.export()) 
+pprint(prop_dict(s)['events'])
+print('---------------- OSC ------------------')
+pprint(osc.export())
+print('---------------- WAIT ------------------')
+pprint(w.export())
+print('---------------- MIDI ------------------')
+pprint(midi.export())
+print('---------------- PROJECT ------------------')
+pprint(p.export())
+pprint(prop_dict(p)['events'])
+pprint(prop_dict(p)['scenarios'])
+print('')
+print('')
 quit()
 
 

@@ -65,17 +65,6 @@ class Scenario(Event):
         """
         self.events.remove(event)
 
-    def export_events(self):
-        """
-        export events of the project
-        """
-        events = []
-        for event in self.events:
-            events.append({'output':event._output, 'name':event.name,\
-                           'description':event.description, 'command':event.command
-                            })
-        return events
-
 
     class Play(threading.Thread):
         """Instanciate a thread for Playing a scenario

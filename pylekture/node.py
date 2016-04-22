@@ -78,6 +78,9 @@ class Node(object):
         :Returns:List of Strings
         """
         return self._tags
+    @tags.setter
+    def tags(self, tags):
+        self._tags = tags
 
     def add_tag(self, tag):
         if tag in self._tags:
@@ -92,13 +95,45 @@ class Node(object):
             if debug >= 3:
                 print('not in')
 
+    @property
+    def service(self):
+        """
+        Return the class name as a string
+        """
+        return self.__class__.__name__
+
     def export(self):
         """
         export the content 
         """
-        export = prop_dict(self)
+        # create a dict to export the content of the node
+        export = {}
+        # this is the dictionary of all props (output is already processed)
+        props = prop_dict(self)
+        # just the keys please
+        keys = props.keys()
+        for key in keys:
+            # for an output, we just need the index, not the output object
+            if key == 'output':
+                if props['output']:
+                    if props['output'] in self.parent.outputs:
+                        export.setdefault('output', self.parent.outputs.index(props['output']))
+                else:
+                    export.setdefault('output', None)
+            elif key == 'events':
+                # for an event, we just need the index, not the event object
+                export.setdefault('events', [])
+                if props['events']:
+                    for event in props['events']:
+                        export['events'].append(self.parent.events.index(event))
+                else:
+                    export.setdefault(['events'], [])
+            else:
+                # this is just a property, dump them all !!
+                export.setdefault(key, props[key])
+        # we don't need parent in an export, because the JSON/dict export format do that
         export.pop('parent')
-        return prop_dict(self)
+        return export
 
     def getstate(self):
         # what should I return that will be common for all nodes.

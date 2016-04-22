@@ -19,6 +19,7 @@ You can here create a project, or make a list of projects available.
 """
 
 import os
+import copy
 import threading
 import simplejson as json
 
@@ -155,8 +156,10 @@ class Project(Event):
         self._path = None
         # reset outputs
         self._outputs = []
-        # reset scenarios and events
+        # reset scenarios
         self._scenarios = []
+        # reset  events
+        self._events = []
 
     def read(self, path):
         """
@@ -175,7 +178,10 @@ class Project(Event):
         else:
             print("loading project in " + path)
             if self.load(path):
+                self._path = path
                 self.write(path)
+                if self._autoplay:
+                    self.play()
                 return True
             else:
                 return False
@@ -189,22 +195,19 @@ class Project(Event):
 
             :rtype:True if the project has been correctly loaded, False otherwise
         """
+        flag = False
         try:
             with open(path) as in_file:
                 # clear the project
                 loaded = json.load(in_file)
-                in_file.close()
-                # reset project
-                self.reset()
-                # create objects from loaded file
-                flag = self.fillin(loaded)
+                flag = True
         # catch error if file is not valid or if file is not a lekture project
         except (IOError, ValueError):
             print("ERROR 906 - project not loaded, this is not a lekture-project file")
             return False
-        self._path = path
-        if self._autoplay:
-            self.play()
+        if flag:
+            # create objects from loaded file
+            flag = self.fillin(loaded)
         return flag
 
     def fillin(self, loaded):
@@ -216,6 +219,8 @@ class Project(Event):
         :rtype: boolean
         """
         try:
+            # reset project
+            self.reset()
             # dump attributes
             attributes = loaded.pop('attributes')
             for attribute, value in attributes.items():
@@ -312,32 +317,32 @@ class Project(Event):
 
     def export(self):
         """
-        export the whole project
-
-        Return a dict
+        export a project into a dict/json string
         """
-        #print(self.outputs)
-        export = prop_dict(self)
-        # outputs, events and scenario needs to be referenced by an index
-        for output in export['outputs']:
-            index = export['outputs'].index(output)
-            export['outputs'][index] = output.export()
-        for event in export['events']:
-            index = export['events'].index(event)
-            export['events'][index] =  event.export()
-            # output must be referenced by an index
-            if export['events'][index]['output']:
-                export['events'][index]['output'] = self.outputs.index(event.output)
-        for scenario in export['scenarios']:
-            index = export['scenarios'].index(scenario)
-            export['scenarios'][index] = scenario.export()
-            if scenario._output:
-                # output must be referenced by an index
-                export['scenarios'][index]['output'] = self.outputs.index(scenario.output)
-            if export['scenarios'][index]['events']:
-                # event must be referenced by an index
-                for event in scenario.events:
-                    export['scenarios'][index]['events'][event] = self.events.index(event)
+        export = {}
+        export.setdefault('attributes', {})
+        for key, value in prop_dict(self).items():
+            if key == 'events':
+                events = []
+                for event in value:
+                    index = value.index(event)
+                    events.append(event.export())
+                export.setdefault('events', events)
+            elif key == 'outputs':
+                outputs = []
+                for output in value:
+                    index = value.index(output)
+                    outputs.append(output.export())
+                export.setdefault('outputs', outputs)
+            elif key == 'scenarios':
+                scenarios = []
+                for scenario in value:
+                    index = value.index(scenario)
+                    scenarios.append(scenario.export())
+                export.setdefault('scenarios', scenarios)
+            else:
+                export['attributes'].setdefault(key, value)
+        export['attributes'].pop('parent')
         return export
 
     def play(self, index=0):
@@ -515,12 +520,8 @@ class Project(Event):
         if event_type == 'Osc':
             event = Osc(self, command=command)
         elif event_type == 'Wait':
-            if command == None:
-                command = 1000
             event = Wait(self, command=command)
         elif event_type == 'MidiNote':
-            if command == None:
-                command = [1, 64, 100]
             event = MidiNote(self, command=command)
         elif event_type == 'PjLink':
             if command == None:

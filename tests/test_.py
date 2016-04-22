@@ -8,10 +8,11 @@ from time import sleep
 sys.path.append(os.path.abspath("./../"))
 from pylekture import __version__
 from pylekture.functions import checkType
-from pylekture.constants import protocols
+from pylekture.constants import protocols, debug
 from pylekture.project import new_project, projects
 from pylekture.errors import LektureTypeError, OutputZeroError
 
+debug = 3
 
 class TestAll(unittest.TestCase):
 
@@ -20,26 +21,20 @@ class TestAll(unittest.TestCase):
         try:
             p.output
         except OutputZeroError:
-            print('OutputZeroError')
+            pass
         o = p.new_output('OSC')
         try:
             p.output = 'bogus'
         except LektureTypeError:
-            print('LektureTypeError')
+            pass
         p.output = o
         print(p.output)
         s = p.new_scenario()
-        print('-------------------')
         e = p.new_event('Osc', command=['/test', 22222])
-        print e
-        print('-------------------')
         s.add_event(e)
-        #self.assertEqual(p.output, o)
-        #self.assertEqual(s.output, o)
-        print('------------------aaiaiaiiaiaiaiai------------------')
+        self.assertEqual(p.output, o)
+        self.assertEqual(s.output, o)
         print(e.output)
-
-        
         self.assertEqual(e.output, o)
 
     def test_exceptions(self):
@@ -48,7 +43,7 @@ class TestAll(unittest.TestCase):
         try:
             raise LektureTypeError('o', 'b')
         except LektureTypeError:
-            print('we raised LektureTypeError')
+            pass
 
     def test_project(self):
         # create projects
@@ -58,7 +53,6 @@ class TestAll(unittest.TestCase):
         my_project.getprotocols()
         new_project()
         print(my_project.path, my_project.autoplay, my_project.loop)
-
 
         # we should have two projects, as we created two of them
         self.assertEqual(len(projects()), 4)
@@ -162,6 +156,8 @@ class TestAll(unittest.TestCase):
         self.assertEqual(my_project.read("bogus"), False)
         self.assertEqual(my_project.read("the_file.lekture"), True)
         self.assertEqual(len(my_project.outputs), 4)
+        self.assertEqual(len(my_project.events), 5)
+        self.assertEqual(len(my_project.scenarios), 1)
         my_project.reset()
         self.assertEqual(my_project.outputs, [])
         self.assertEqual(my_project.scenarios, [])
