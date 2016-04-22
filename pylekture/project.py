@@ -334,10 +334,10 @@ class Project(Event):
             if scenario._output:
                 # output must be referenced by an index
                 export['scenarios'][index]['output'] = self.outputs.index(scenario.output)
-            if scenario.events:
+            if export['scenarios'][index]['events']:
                 # event must be referenced by an index
                 for event in scenario.events:
-                    export['scenarios'][scenario]['events'][event] = self.events.index(event)
+                    export['scenarios'][index]['events'][event] = self.events.index(event)
         return export
 
     def play(self, index=0):
