@@ -37,7 +37,8 @@ class Node(object):
 
         :Returns:String
         """
-        return self._name
+        # be sure to return a string
+        return str(self._name)
     @name.setter
     def name(self, name):
         self._name = name
@@ -51,7 +52,7 @@ class Node(object):
         :Args:String
         :Returns:String
         """
-        return self._description
+        return str(self._description)
     @description.setter
     def description(self, description):
         self._description = description
