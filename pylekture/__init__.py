@@ -38,6 +38,13 @@ Project has a few attributes:
 Changelog
 -------------------------------------------------------------------------------
 
+- v0.3 - Apr. 24 2016
+    - Fix output hierarchy. parent is the default output. Project default output is the first one
+    - redefine str() buildtin to unicode() for python 2
+    - add export method to all nodes return a dict. Might be a json string in the future
+    - all outputs now have a port attribute. Midi port for Midi, ip:udp for Udp
+    - all events now have a command attribute which hosts the command of the event
+
 - v0.2.2 - Apr. 19 2016
     - Massive Revamp
         - outputs is now attribute of project

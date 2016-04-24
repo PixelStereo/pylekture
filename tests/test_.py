@@ -16,6 +16,7 @@ class TestAll(unittest.TestCase):
 
     def test_a0_first(self):
         debug = 3
+        self.assertEqual(debug, 3)
 
     def test_checkType(self):
         uni = u"22"
