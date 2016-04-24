@@ -307,6 +307,7 @@ class Project(Event):
             try:
                 out_file.write(the_dump)
                 print("file has been written in " + savepath)
+                out_file.close()
                 return True
             except TypeError as Error:
                 print('ERROR 99 ' + str(Error))
