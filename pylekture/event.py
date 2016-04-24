@@ -165,7 +165,7 @@ class Event(Node):
         Play an event
         It creates a new object play in a separate thread.
         """
-        Player(self, output=output)
+        return Player(self, output=output)
 
 
 class Command(Event):
@@ -209,7 +209,7 @@ class Command(Event):
         else:
             print(name + '.command must be something else than a ' + str(type(command)))
             return False
-        
+
 
 class Player(threading.Thread):
     """

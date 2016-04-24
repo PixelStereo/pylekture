@@ -40,6 +40,7 @@ class TestAll(unittest.TestCase):
     def test_exceptions(self):
         p = new_project()
         o = p.new_output()
+        print(o)
         try:
             raise LektureTypeError('o', 'b')
         except LektureTypeError:

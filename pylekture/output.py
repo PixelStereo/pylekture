@@ -9,7 +9,7 @@ Maybe we might use some plug in pybush to have in/out access for a bunch of node
 
 from pylekture.node import Node
 
-       
+
 class Output(Node):
     """
     Create a new output

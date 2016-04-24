@@ -108,7 +108,7 @@ class Node(object):
 
     def export(self):
         """
-        export the content 
+        export the content
         """
         # create a dict to export the content of the node
         export = {}

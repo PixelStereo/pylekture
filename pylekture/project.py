@@ -330,13 +330,11 @@ class Project(Event):
             elif key == 'outputs':
                 outputs = []
                 for output in value:
-                    index = value.index(output)
                     outputs.append(output.export())
                 export.setdefault('outputs', outputs)
             elif key == 'scenarios':
                 scenarios = []
                 for scenario in value:
-                    index = value.index(scenario)
                     scenarios.append(scenario.export())
                 export.setdefault('scenarios', scenarios)
             else:
