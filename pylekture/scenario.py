@@ -95,7 +95,7 @@ class Scenario(Event):
                 print(dbg.format(name=self.scenario.name, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
             for event in self.scenario.events[index:]:
                 # play each event
-                player = event.play()
+                player = event.play(output=self.scenario.output)
                 if player:
                     player.join()
             if debug >= 3:

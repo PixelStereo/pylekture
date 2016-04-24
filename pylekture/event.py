@@ -160,13 +160,12 @@ class Event(Node):
                     duration += float(self.command[index + 1])
         return duration
 
-    def play(self, index=0):
+    def play(self, output=None):
         """
         Play an event
         It creates a new object play in a separate thread.
         """
-
-        Player(self)
+        Player(self, output=output)
 
 
 class Command(Event):
@@ -217,13 +216,14 @@ class Player(threading.Thread):
     """
     A Player that play things
     """
-    def __init__(self, parent):
+    def __init__(self, parent, **kwargs):
         super(Player, self).__init__()
         self.parent = parent
+        self.kwargs = kwargs
         self.start()
     
     def run(self):
-        player = self.parent.Play(self.parent)
+        player = self.parent.Play(self.parent, self.kwargs)
         if player:
             player.join()
 
@@ -257,9 +257,12 @@ class Osc(Command):
         Event Player
         It plays the event in a separate Thread
         """
-        def __init__(self, event):
+        def __init__(self, event, output):
             threading.Thread.__init__(self)
-            self.output = event.output
+            if output['output']:
+                self.output = output['output']
+            else:
+                self.output = event.output
             self.command = event.command
             self.event = event
             self.start()
