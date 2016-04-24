@@ -44,6 +44,7 @@ class TestAll(unittest.TestCase):
             raise LektureTypeError('o', 'b')
         except LektureTypeError:
             pass
+        self.assertEqual(LektureTypeError.__name__, LektureTypeError.__name__)
 
     def test_project(self):
         # create projects

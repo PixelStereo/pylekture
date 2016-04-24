@@ -19,7 +19,6 @@ You can here create a project, or make a list of projects available.
 """
 
 import os
-import copy
 import threading
 import simplejson as json
 
@@ -326,7 +325,6 @@ class Project(Event):
             if key == 'events':
                 events = []
                 for event in value:
-                    index = value.index(event)
                     events.append(event.export())
                 export.setdefault('events', events)
             elif key == 'outputs':

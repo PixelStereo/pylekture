@@ -105,7 +105,6 @@ del get_versions
 __release__ = __version__
 
 try:
-    basestring  # attempt to evaluate basestring
     str = unicode
     def is_string(test):
         return isinstance(test, basestring)

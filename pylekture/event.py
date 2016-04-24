@@ -24,7 +24,7 @@ class Event(Node):
     a loop process or everything you can imagine """
     def __init__(self,*args, **kwargs):
         super(Event, self).__init__(*args, **kwargs)
-        self.name = 'Untitled Event'        
+        self.name = 'Untitled Event'
         self.description = "I'm an event"
         self.wait = 0
         self._output = None
@@ -95,7 +95,7 @@ class Event(Node):
         if isinstance(post_wait, int) or isinstance(post_wait, float):
             self._post_wait = post_wait
             return True
-    
+
     @property
     def autoplay(self):
         """
@@ -193,7 +193,6 @@ class Command(Event):
         return self._command
     @command.setter
     def command(self, command, toto):
-        output = self.output.__class__.__name__
         name = self.__class__.__name__
         command = checkType(command)
         flag = False
@@ -251,6 +250,8 @@ class Osc(Command):
         if isinstance(command, list) or isinstance(command, basestring):
             self._command = command
             flag = True
+        return flag
+
 
     class Play(threading.Thread):
         """
