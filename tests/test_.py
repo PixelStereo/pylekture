@@ -16,6 +16,34 @@ debug = 3
 
 class TestAll(unittest.TestCase):
 
+    def test_checkType(self):
+        uni = u"22"
+        uni = checkType(uni)
+        self.assertEqual(isinstance(uni, int), True)
+        uni = u"22.22"
+        uni = checkType(uni)
+        self.assertEqual(isinstance(uni, float), True)
+        uni = u"twenty-two-22"
+        uni = checkType(uni)
+        try:
+            # this is python 2
+            self.assertEqual(isinstance(uni, basestring), True)
+        except NameError:
+            # this is python 3
+            self.assertEqual(isinstance(uni, (str, bytes)), True)
+
+    def test_exceptions(self):
+        self.assertEqual(len(projects()), 0)
+        p = new_project()
+        self.assertEqual(len(projects()), 1)
+        o = p.new_output()
+        print(o)
+        try:
+            raise LektureTypeError('o', 'b')
+        except LektureTypeError:
+            pass
+        self.assertEqual(LektureTypeError.__name__, LektureTypeError.__name__)
+
     def test_output(self):
         p = new_project()
         try:
@@ -31,21 +59,12 @@ class TestAll(unittest.TestCase):
         print(p.output)
         s = p.new_scenario()
         e = p.new_event('Osc', command=['/test', 22222])
+        print(e)
         s.add_event(e)
         self.assertEqual(p.output, o)
         self.assertEqual(s.output, o)
         print(e.output)
         self.assertEqual(e.output, o)
-
-    def test_exceptions(self):
-        p = new_project()
-        o = p.new_output()
-        print(o)
-        try:
-            raise LektureTypeError('o', 'b')
-        except LektureTypeError:
-            pass
-        self.assertEqual(LektureTypeError.__name__, LektureTypeError.__name__)
 
     def test_project(self):
         # create projects
@@ -56,8 +75,6 @@ class TestAll(unittest.TestCase):
         new_project()
         print(my_project.path, my_project.autoplay, my_project.loop)
 
-        # we should have two projects, as we created two of them
-        self.assertEqual(len(projects()), 4)
         self.assertEqual(my_project.version, __version__)
         my_scenario = my_project.new_scenario()
         my_other_scenario = my_project.new_scenario()
@@ -65,6 +82,7 @@ class TestAll(unittest.TestCase):
         my_other_scenario.name = "the other scenario"
         my_scenario.wait = 0.1
         my_scenario.post_wait = 0.05
+        print(my_scenario)
 
         # create an output
         my_output = my_project.new_output("OSC")
@@ -171,22 +189,6 @@ class TestAll(unittest.TestCase):
         import datetime
         timestamp = str(datetime.datetime.now())
         self.assertEqual(isinstance(timestamp, str), True)
-
-    def test_checkType(self):
-        uni = u"22"
-        uni = checkType(uni)
-        self.assertEqual(isinstance(uni, int), True)
-        uni = u"22.22"
-        uni = checkType(uni)
-        self.assertEqual(isinstance(uni, float), True)
-        uni = u"twenty-two-22"
-        uni = checkType(uni)
-        try:
-            # this is python 2
-            self.assertEqual(isinstance(uni, basestring), True)
-        except NameError:
-            # this is python 3
-            self.assertEqual(isinstance(uni, (str, bytes)), True)
 
 if __name__ == "__main__":
     unittest.main()

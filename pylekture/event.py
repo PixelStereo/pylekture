@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-The Scenario Class
-A scenario is always in a project and it (may) contains events
+The Event Class
+An Event is always in a project and it (may) be in one or several scenarios
+Event is the baseclass for Scenario and Project.
+It inherits from Node, and add 
 """
 
 import liblo
@@ -24,8 +26,10 @@ class Event(Node):
     a loop process or everything you can imagine """
     def __init__(self,*args, **kwargs):
         super(Event, self).__init__(*args, **kwargs)
-        self.name = 'Untitled Event'
-        self.description = "I'm an event"
+        if self.name == 'Untitled Node':
+            self.name = 'Untitled Event'
+        if self.description == "I'm a node":
+            self.description = "I'm an event"
         self.wait = 0
         self._output = None
         self.post_wait = 0
@@ -35,10 +39,11 @@ class Event(Node):
             setattr(self, key, value)
 
     def __repr__(self):
-        s = "Event (name={name}, parent={parent}, description={description}, tags={tags}, autoplay={autoplay}, loop={loop}"
+        s = "Event (name={name}, parent={parent}, description={description}, \
+             duration={duration}, tags={tags}, autoplay={autoplay}, loop={loop}"
         return s.format(name=self.name,
-                        parent=self.parent,
                         description=self.description,
+                        duration=self.getduration(),
                         tags=self.tags,
                         autoplay=self.autoplay,
                         loop=self.loop)
@@ -220,7 +225,7 @@ class Player(threading.Thread):
         self.parent = parent
         self.kwargs = kwargs
         self.start()
-    
+
     def run(self):
         player = self.parent.Play(self.parent, self.kwargs)
         if player:
@@ -345,11 +350,10 @@ class MidiNote(Command):
     """
     An OSC event is an Event designed to be outputed via OSC
     """
-    def __init__(self, project, command=[1, 64, 100], port=None):
+    def __init__(self, project, command=None, port=None):
         super(MidiNote, self).__init__(project, command, port)
-        self.address = command[0]
-        if len(command) > 1:
-            self.args = command[:1]
+        if self._command == None:
+            self._command = [1, 64, 100]
 
     class Play(threading.Thread):
         """
