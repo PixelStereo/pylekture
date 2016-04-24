@@ -12,9 +12,10 @@ from pylekture.constants import protocols, debug
 from pylekture.project import new_project, projects
 from pylekture.errors import LektureTypeError, OutputZeroError
 
-debug = 3
-
 class TestAll(unittest.TestCase):
+
+    def test_a0_first(self):
+        debug = 3
 
     def test_checkType(self):
         uni = u"22"
@@ -76,6 +77,9 @@ class TestAll(unittest.TestCase):
         print(my_project.path, my_project.autoplay, my_project.loop)
 
         self.assertEqual(my_project.version, __version__)
+
+    def test_scenario(self):
+        my_project = new_project()
         my_scenario = my_project.new_scenario()
         my_other_scenario = my_project.new_scenario()
         my_scenario.name = "the scénario è © • test"
@@ -189,6 +193,7 @@ class TestAll(unittest.TestCase):
         import datetime
         timestamp = str(datetime.datetime.now())
         self.assertEqual(isinstance(timestamp, str), True)
+
 
 if __name__ == "__main__":
     unittest.main()

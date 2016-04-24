@@ -21,13 +21,14 @@ class Node(object):
     It should be removed for the version 0.1
 
     """
-    def __init__(self, parent=None, name='Untitled Node', description="I'm a node", tags=[]):
+    def __init__(self, parent=None, name='Untitled Node', description="I'm a node", tags=None):
         super(Node, self).__init__()
         self._name = name
         self._description = description
-        self._tags = []
+        if tags == None:
+            self._tags = []
+            self._tags = tags
         self.parent = parent
-        #print('nodeparent', parent)
 
     @property
     def name(self):

@@ -5,7 +5,10 @@
 The Event Class
 An Event is always in a project and it (may) be in one or several scenarios
 Event is the baseclass for Scenario and Project.
-It inherits from Node, and add 
+It inherits from Node, and add some attributes as wait, post_wait, loop, autoplay and output.
+It add a few methods too as play(), getduration() and getparent()
+Event class is an abstract class.
+Create Osc, MidiNote, Wait events with the project.new_event() constructor.
 """
 
 import liblo
