@@ -8,6 +8,7 @@ Contains name / description
 """
 
 from pylekture.functions import prop_dict
+from pylekture import is_string
 
 class Node(object):
     """
@@ -38,7 +39,9 @@ class Node(object):
         :Returns:String
         """
         # be sure to return a string
-        return str(self._name)
+        if not is_string(self._name):
+            self._name = str(self._name)
+        return self._name
     @name.setter
     def name(self, name):
         self._name = name

@@ -325,7 +325,7 @@ class Wait(Command):
         Event Player
         It plays the event in a separate Thread
         """
-        def __init__(self, event):
+        def __init__(self, event, output):
             threading.Thread.__init__(self)
             self.output = event.output
             self.command = event.command
@@ -355,7 +355,7 @@ class MidiNote(Command):
         Event Player
         It plays the event in a separate Thread
         """
-        def __init__(self, event):
+        def __init__(self, event, output):
             threading.Thread.__init__(self)
             self.output = event.output
             self.command = event.command
