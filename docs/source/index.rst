@@ -5,6 +5,8 @@ pylekture
     :undoc-members:
     :show-inheritance:
 
+Index
+=====
 .. toctree::
    :maxdepth: 2
 
@@ -17,7 +19,3 @@ pylekture
    animations
    constants
    errors
-
-Index
-=====
-* :ref:`genindex`
