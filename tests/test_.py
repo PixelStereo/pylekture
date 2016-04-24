@@ -99,6 +99,7 @@ class TestAll(unittest.TestCase):
 
         # fill in scenario with events
         my_event = my_project.new_event('Osc', command=["/previous", 232, "ramp", 0.5])
+        my_event.play()
         my_scenario.add_event(my_event)
         my_second_event = my_project.new_event('Wait', command=0.2)
         my_scenario.add_event(my_second_event)
