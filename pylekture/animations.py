@@ -33,7 +33,7 @@ def Ramp(start, destination, duration):
     for i in xrange(int(steps)):
         # 200 fps
         value = float(value) + step
-        timer = Timer(0.0085, bogus, ())
+        timer = Timer(0.0095, bogus, ())
         timer.start()
         timer.join()
         yield float(value)

@@ -26,7 +26,7 @@ p.datatype = 'decimal'
 print(p.value)
 
 before = datetime.now()
-p.ramp(2.754, 1000)
+p.ramp(2.754, 10000)
 after = datetime.now()
 print(p.value, p.raw)
 print(after - before)
