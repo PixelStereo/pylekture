@@ -6,40 +6,34 @@ Animation's library
 """
 
 import datetime
-import threading
+from threading import Timer
 from pylekture.constants import debug
 from pylekture.functions import checkType
 import liblo
 from time import sleep
 
-class Ramp(threading.Thread):
-    """Instanciate a thread for Playing a ramp
-    Allow to do several ramps in a same scenario"""
-    def __init__(self, target, address, args):
-        threading.Thread.__init__(self)
-        self.args = args
-        self.address = address
-        self.target = target
-        self.start()
+def bogus():
+    pass
 
-    def run(self):
-        if debug >= 3:
-            print('ramp starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
-        index = self.args.index('ramp')
-        ramp = self.args[index+1]
-        ramp = int(float(ramp) * 1000)
-        dest = self.args[index-1]
-        dest = checkType(dest)
-        ramp = checkType(ramp)
-        value = 0
-        delta = dest - value
-        delta = float(delta)
-        step = delta / ramp
-        for millisec in range(ramp):
-            msg = liblo.Message(self.address)
-            value += step
-            sleep(0.00072)
-            msg.add(value)
-            liblo.send(self.target, msg)
-        if debug >= 3:
-            print('ramp ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
+def Ramp(start, destination, duration):
+    """
+    Instanciate a thread for Playing a ramp
+
+    step every 10 ms
+
+    Allow to do several ramps in a same project / scenario / event
+
+    :param target:
+    """
+    steps = duration / 10
+    delta = float(destination) - float(start)
+    step = delta / steps
+    value = start
+    print(start)
+    for i in xrange(int(steps)):
+        # 200 fps
+        value = float(value) + step
+        timer = Timer(0.0085, bogus, ())
+        timer.start()
+        timer.join()
+        yield float(value)

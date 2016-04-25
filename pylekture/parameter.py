@@ -9,6 +9,8 @@ Add methods increment, decrement, clip
 """
 
 from pylekture.node import Node
+from pylekture.animations import Ramp
+from threading import Timer
 
 class Parameter(Node):
     """
@@ -57,13 +59,27 @@ class Parameter(Node):
         clip a value to its domain according to its clipmode
             :return cliped value
         """
-        if self.clipmode == 'low' or self.clipmode == 'both':
-            if value < self.domain[0]:
-                value = self.domain[0]
-        if self.clipmode == 'high' or self.clipmode == 'both':
-            if value > self.domain[1]:
-                value = self.domain[1]
-        return value
+        if self.domain:
+            if self.clipmode == 'low' or self.clipmode == 'both':
+                if value < self.domain[0]:
+                    value = self.domain[0]
+            if self.clipmode == 'high' or self.clipmode == 'both':
+                if value > self.domain[1]:
+                    value = self.domain[1]
+            return value
+        else:
+            return None
+
+    def ramp(self, destination, duration):
+        """
+        Animate the parameter value
+
+        Specify a destination and a duration.
+        """
+        values = Ramp(self.value, destination, duration)
+        for value in values:
+            self.value = value
+
     @property
     def raw(self):
         """
@@ -78,14 +94,15 @@ class Parameter(Node):
         """
         Current value of the parameter
         """
-        if self.datatype == 'decimal':
-            value = self.clip(self._raw)
-            value = float(value)
-        elif self.datatype == 'string':
-            value = str(self._value)
-        elif self.datatype == 'integer':
-            value = self.clip(self._raw)
-            value = int(value)
+        if self.domain and self.datatype:
+            if self.datatype == 'decimal':
+                value = self.clip(self._raw)
+                value = float(value)
+            elif self.datatype == 'string':
+                value = str(self._value)
+            elif self.datatype == 'integer':
+                value = self.clip(self._raw)
+                value = int(value)
         else:
             value = self._value
         return value

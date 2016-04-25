@@ -10,14 +10,6 @@ sys.path.append(lib_path)
 from pylekture.parameter import Parameter
 
 
-def print_time():
-	print('---END---')
-
-def print_some_times():
-	print('---START---')
-	timer = Timer(5, print_time, ())
-	timer.start()
-	timer.join()
 	
 p = Parameter()
 #p = Parameter(datatype='integer', domain=[1,2])
@@ -33,10 +25,8 @@ print(p.value)
 p.datatype = 'decimal'
 print(p.value)
 
-quit()
-
-debut = datetime.now()
-print_some_times()
-fin = datetime.now()
-delta = fin - debut
-print(delta)
+before = datetime.now()
+p.ramp(2.754, 1000)
+after = datetime.now()
+print(p.value, p.raw)
+print(after - before)
