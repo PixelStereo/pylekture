@@ -16,17 +16,32 @@ and even more. If an output is specified for an event, it will be use to output 
 Even if it is different that the output associated with the parent scenario.
 
 In details:
-    - A project contains a list of Scenario and Outputs.
+    - A project contains a Scenario, Events and Outputs.
     - A scenario contains an ordered list of Events.
-    - A scenario outputs its events to a choosen Output.
+    - An Event can conains Commands (Osc, Wait, MidiNote command)
+    - Event, Scenario and Project can have wait, post_wait, loop
+    - If the Comand have an output, it is used. If not, parent's output will be used.
     - An output is a in/out protocol such as OSC, MIDI, Serial, Artnet etc…
+
+When creating a command, it will creates a parameter into a namespace dictionary.
+This namespace file is not saved.
+
+Namespace creation when loading a project
+If Minuit protocol is used, namespace will be first asked to the device.
+Update parameter settings if already exists
+Scan all commands and create the parameter corresponding to
+It is a reference, and will be saved through the namespace dictionary.
 
 Project has a few attributes:
     - version(read-only):the version of pylekture used to create this Project
-    - lastopened:timestamp of the last time pylekture opened this file
+    - lastopened(read-only):timestamp of the last time pylekture opened this file
     - created:timestamp of the creation of this file
     - autoplay:enable/disable play when file is loaded
+
+Project / Scenario / Event attributes:
     - loop:enable/disable play when project file reach ends of a play
+    - wait:time in seconds to wait before start when triggered
+    - post_wait:time in seconds to wait when finished before sending finish-message
 
 -------------------------------------------------------------------------------
 
