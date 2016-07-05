@@ -200,7 +200,7 @@ class Command(Event):
         """
         return self._command
     @command.setter
-    def command(self, command, toto):
+    def command(self, command):
         name = self.__class__.__name__
         command = checkType(command)
         flag = False
@@ -252,7 +252,7 @@ class Osc(Command):
         """
         return self._command
     @command.setter
-    def command(self):
+    def command(self, command):
         command = checkType(command)
         flag = False
         if isinstance(command, list) or isinstance(command, basestring):
