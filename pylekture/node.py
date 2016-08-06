@@ -132,7 +132,7 @@ class Node(object):
                     for event in props['events']:
                         export['events'].append(self.parent.events.index(event))
                 else:
-                    export.setdefault(['events'], [])
+                    export.setdefault('events', [])
             else:
                 # this is just a property, dump them all !!
                 export.setdefault(key, props[key])
