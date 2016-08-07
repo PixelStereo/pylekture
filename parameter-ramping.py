@@ -18,7 +18,7 @@ def print_some_times():
 	timer = Timer(5, print_time, ())
 	timer.start()
 	timer.join()
-	
+
 p = Parameter()
 #p = Parameter(datatype='integer', domain=[1,2])
 p.value = 42
