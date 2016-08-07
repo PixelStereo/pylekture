@@ -30,10 +30,11 @@ class Scenario(Event):
         self._events = []
 
     def __repr__(self):
-        s = "Scenario (name={name}, description={description}, duration={duration}, tags={tags}, autoplay={autoplay}, loop={loop}, " \
+        s = "Scenario (name={name}, description={description}, output={output}, duration={duration}, tags={tags}, autoplay={autoplay}, loop={loop}, " \
             "events={events})"
         return s.format(name=self.name,
                         description=self.description,
+                        output=self.output,
                         duration=self.getduration(),
                         tags=self.tags,
                         autoplay=self.autoplay,
