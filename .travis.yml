@@ -11,7 +11,6 @@ install:
 - sudo apt-get update
 - sudo apt-get -qq install python-setuptools liblo7
 - pip install --upgrade pip
-- sudo pip install Cython
 - pip install -r requirements.txt
 - pip install coverage
 - pip install codacy-coverage
