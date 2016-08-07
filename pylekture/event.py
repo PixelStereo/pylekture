@@ -278,11 +278,11 @@ class Osc(Command):
 
         def run(self):
             """play an OSC event"""
-            if debug >= 3:
-                print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
             out = self.output
             args = self.command
             if out.port:
+                if debug >= 3:
+                    print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
                 split = out.port.split(':')
                 ip = split[0]
                 udp = split[1]
@@ -290,6 +290,8 @@ class Osc(Command):
                     # address is the first item of the list
                     address = args[0]
                     args = args[1:]
+                    if len(args) == 0:
+                        args = None
                 else:
                     # this is a adress_only without arguments
                     address = args
@@ -300,21 +302,24 @@ class Osc(Command):
                         print('connect to : ' + ip + ':' + str(udp))
                 except liblo.AddressError as err:
                     print('liblo.AddressError' + str(err))
-                args[0] = checkType(args[0])
-                if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
+                if args:
+                    args[0] = checkType(args[0])
+                    if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
                         # this is a ramp, make it in a separate thread
                         ramp = Ramp(target, address, args)
                         ramp.join()
-                elif isinstance(args, list):
-                    msg = liblo.Message(address)
-                    for arg in args:
-                        arg = checkType(arg)
-                        msg.add(arg)
-                    liblo.send(target, msg)
+                    elif isinstance(args, list):
+                        # this is just a list of values to send
+                        msg = liblo.Message(address)
+                        for arg in args:
+                            arg = checkType(arg)
+                            msg.add(arg)
+                        liblo.send(target, msg)
+                    else:
+                        # what iss this case?????
+                        print("DEBUG", len(args), type(args))
                 else:
                     msg = liblo.Message(address)
-                    if args:
-                        msg.add(args)
                     liblo.send(target, msg)
                 if debug >= 3:
                     print('event-ends: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
