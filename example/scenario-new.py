@@ -6,7 +6,6 @@ lib_path = os.path.abspath('./../')
 sys.path.append(lib_path)
 
 from pylekture.project import new_project
-from pylekture.functions import prop_dict
 
 p = new_project()
 print('project ' + p.name)
