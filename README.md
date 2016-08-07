@@ -46,14 +46,14 @@ If you need/want to build the documentation from the repo, here are the steps :
 * ~~project-related commands (auto-play)~~
 * ~~Loop for project / scenario / event~~
 
-##### 0.2 - Apr. 2016 -> June. 2016
+##### 0.2 - Planned to late 2016 / 2017
 * Scenario behavior creates nice sequence (aka auto-cue / auto-follow)
 * OSC server for projects, scenario and events access
 * OSC listening creates Nodes, Models and Parameters
 * Namespace implementation for automagic events creation
 * Minuit implementation
 
-##### 0.3 - Jul. 2016 -> Dec. 2017
+##### 0.3 - Planned to late 2017
 * Graphic display of projects, scenario and events
 * Random generator
 * Artnet and MIDI in/out
