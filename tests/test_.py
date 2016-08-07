@@ -87,13 +87,15 @@ class TestAll(unittest.TestCase):
         my_other_scenario.name = "the other scenario"
         my_scenario.wait = 0.1
         my_scenario.post_wait = 0.05
-        print(my_scenario)
 
         # create an output
         my_output = my_project.new_output("OSC")
 
         # Attribute output to scenario
         my_scenario.output = my_output
+
+        # print the scenario
+        print(my_scenario)
 
         # create another output with another protocol
         second_out = my_project.new_output("MIDI")
