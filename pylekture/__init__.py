@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 """pylekture is a python package that provide an API to create scenario for intermedia projects.
 
