@@ -186,6 +186,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(len(my_project.outputs), 4)
         self.assertEqual(len(my_project.events), 5)
         self.assertEqual(len(my_project.scenarios), 1)
+        sleep(1)
         my_project.reset()
         self.assertEqual(my_project.outputs, [])
         self.assertEqual(my_project.scenarios, [])
