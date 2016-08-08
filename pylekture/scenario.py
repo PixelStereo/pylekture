@@ -13,6 +13,22 @@ from pylekture.event import Event
 from pylekture.constants import debug
 
 
+class Player(threading.Thread):
+    """
+    A Player that play things
+    """
+    def __init__(self, parent, **kwargs):
+        super(Player, self).__init__()
+        self.parent = parent
+        self.kwargs = kwargs
+        self.start()
+
+    def run(self):
+        player = self.parent.Play(self.parent, self.kwargs)
+        if player:
+            player.join()
+
+
 class Scenario(Event):
     """
     A scenario is always created in a project.
@@ -132,10 +148,7 @@ class Scenario(Event):
             print('This scenario is empty')
             return None
         else:
-            player = self.Play(self)
-            if player:
-                player.join()
-            return player
+            return Player(self)
 
     def play_from_here(self, index):
         """play scenario from a given index"""
