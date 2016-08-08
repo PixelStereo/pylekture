@@ -28,8 +28,9 @@ class Node(object):
             for item in name:
                 name_maker = name_maker + '_' +  item
             name = name_maker
-        if name.startswith('_'):
-            name = name[1:]
+        if name:
+            if name.startswith('_'):
+                name = name[1:]
         self._name = name
         self._description = description
         if tags == None:
@@ -136,9 +137,9 @@ class Node(object):
             if key == 'output':
                 if props['output']:
                     if props['output'] in self.parent.outputs:
-                        export.setdefault('output', self.parent.outputs.index(props['output']))
+                        export.setdefault('output', self.parent.outputs.index(props['output']) + 1)
                 else:
-                    export.setdefault('output', None)
+                    export.setdefault('output', 0)
             elif key == 'events':
                 # for an event, we just need the index, not the event object
                 export.setdefault('events', [])
