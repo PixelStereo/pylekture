@@ -26,11 +26,12 @@ class Node(object):
         if isinstance(name, list):
             name_maker = ""
             for item in name:
-                name_maker = name_maker + " " +  item
+                name_maker = name_maker + " " +  str(item)
             name = name_maker
         if name:
-            if name.startswith(" "):
-                name = name[1:]
+            if isinstance(name, str):
+                if name.startswith(" "):
+                    name = name[1:]
         self._name = name
         self._description = description
         if tags == None:
@@ -56,7 +57,7 @@ class Node(object):
         if isinstance(name, list):
             name_maker = ""
             for item in name:
-                name_maker = name_maker + " " +  item
+                name_maker = name_maker + " " +  str(item)
             name = name_maker
         if name:
             if name.startswith(" "):
