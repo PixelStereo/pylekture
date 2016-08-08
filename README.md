@@ -19,7 +19,7 @@ For the moment, **pylekture** is capable of:
 ##### Install
 Here is the way to install the master branch.
 
-    pip install https://github.com/hmarr/django-debug-toolbar-mongo/zipball/master    
+    pip install https://github.com/PixelStereo/pylekture/zipball/master    
 
 The tests.py file contains a script to understand what you can do with the package.
 
