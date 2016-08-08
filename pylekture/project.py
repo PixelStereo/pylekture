@@ -246,7 +246,8 @@ class Project(Event):
                 # remove the service name. We are in the event dict, so we are sure that it is an event
                 service = event.pop('service')
                 output = event['output']
-                if output != None:
+                if output != 0:
+                    output = output - 1
                     # refer to the corresponding output instance object
                     event['output'] = self.outputs[output]
                 else:
@@ -257,8 +258,9 @@ class Project(Event):
             for scenario in scenarios:
                 service = scenario.pop('service')
                 output = scenario['output']
-                if output != None:
+                if output != 0:
                     # refer to the corresponding output instance object
+                    output = output - 1
                     scenario['output'] = self.outputs[output]
                 self.new_scenario(**scenario)
             if loaded == {}:
