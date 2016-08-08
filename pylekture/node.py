@@ -23,6 +23,11 @@ class Node(object):
     """
     def __init__(self, parent=None, name='Untitled Node', description="I'm a node", tags=None):
         super(Node, self).__init__()
+        if isinstance(name, list):
+            name_maker = ""
+            for item in name:
+                name_maker = name_maker + '.' +  item
+            name = name_maker
         self._name = name
         self._description = description
         if tags == None:
@@ -45,6 +50,11 @@ class Node(object):
         return self._name
     @name.setter
     def name(self, name):
+        if isinstance(name, list):
+            name_maker = ""
+            for item in name:
+                name_maker = name_maker + '.' +  item
+            name = name_maker
         self._name = name
 
     @property
