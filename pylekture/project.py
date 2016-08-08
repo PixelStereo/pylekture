@@ -28,7 +28,7 @@ from pylekture.scenario import Scenario
 from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
-from pylekture.event import Osc, MidiNote, Event, Wait
+from pylekture.event import Osc, MidiNote, Event, Wait, ScenarioPlay
 from pylekture.errors import OutputZeroError, LektureTypeError
 
 def new_project():
@@ -522,6 +522,8 @@ class Project(Event):
             event = Wait(self, command=command)
         elif event_type == 'MidiNote':
             event = MidiNote(self, command=command)
+        elif event_type == 'ScenarioPlay':
+            event = ScenarioPlay(self, command=command)
         elif event_type == 'PjLink':
             if command == None:
                 command = ['shutter', True]

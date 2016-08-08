@@ -147,7 +147,13 @@ class Node(object):
                 export.setdefault('events', [])
                 if props['events']:
                     for event in props['events']:
-                        export['events'].append(self.parent.events.index(event))
+                        if event.__class__.__name__ == "ScenarioPlay":
+                            if event.command in self.parent.scenarios:
+                                export['events'].append(self.parent.scenarios.index(event.command))
+                            else:
+                                export['events'].append(0)
+                        else:
+                            export['events'].append(self.parent.events.index(event))
                 else:
                     export.setdefault('events', [])
             else:

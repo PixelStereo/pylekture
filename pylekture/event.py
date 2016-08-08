@@ -34,7 +34,7 @@ class Event(Node):
         if self.description == "I'm a node":
             self.description = "I'm an event"
         self.wait = 0
-        self._output = None
+        self._output = 0
         self.post_wait = 0
         self._loop = False
         self._autoplay = False
@@ -70,10 +70,10 @@ class Event(Node):
         output_class = output.__class__
         name = self.__class__.__name__
         if output_class.__name__ == "OutputUdp":
-            if name == 'Osc' or 'scenario':
+            if name == 'Osc' or 'Scenario':
                 self._output = output
         elif output_class.__name__ == 'OutputMidi':
-            if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'scenario':
+            if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'Scenario':
                 self._output = output
         elif output_class.__name__ == "NoneType":
             self._output = 0
@@ -165,9 +165,12 @@ class Event(Node):
             duration += self.command
         else:
             if self.command:
-                if 'ramp' in self.command:
-                    index = self.command.index('ramp')
-                    duration += float(self.command[index + 1])
+                try:
+                    if 'ramp' in self.command:
+                        index = self.command.index('ramp')
+                        duration += float(self.command[index + 1])
+                except Exception:
+                    pass
         return duration
 
     def play(self, output=None):
@@ -213,6 +216,10 @@ class Command(Event):
         elif name == 'MidiNote' or 'MidiControl':
             if isinstance(command, list) and len(command) == 3:
                 self._command = command
+                flag = True
+        elif name == 'ScenarioPlay':
+            if isinstance(command, list) and len(command) == 1:
+                self._command = checkType(command)
                 flag = True
         if flag:
             return True
@@ -382,3 +389,30 @@ class MidiNote(Command):
             Play the MidiNote
             """
             print('MidiNote is not ready for now… please wait a few months')
+
+
+class ScenarioPlay(Command):
+    """
+    Play a Scenario
+    """
+    def __init__(self, project, command=None, port=None):
+        super(ScenarioPlay, self).__init__(project, command, port)
+
+    class Play(threading.Thread):
+        """
+        Event Player
+        It plays the event in a separate Thread
+        """
+        def __init__(self, event, output):
+            threading.Thread.__init__(self)
+            self.output = event.output
+            self.command = event.parent.scenarios[checkType(event.command[0])]
+            self.event = event
+            self.start()
+
+        def run(self):
+            if debug >= 3:
+                print('ScenarioPlay starts')
+            self.command.play()
+            if debug >= 3:
+                print('ScenarioPlay ends')

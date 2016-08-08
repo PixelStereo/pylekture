@@ -134,13 +134,15 @@ class TestAll(unittest.TestCase):
         my_scenario.add_event(my_forth_event)
         my_scenario.add_event(my_third_event)
         other_event = my_project.new_event('MidiNote', command=[16, 64, 100])
+        my_sixth_event = my_project.new_event('ScenarioPlay', command=my_other_scenario)
+        my_scenario.add_event(my_sixth_event)
         my_other_scenario.add_event(other_event)
         my_scenario.add_event(other_event)
         my_event.output = second_out
 
         # test scenario file
         #self.assertEqual(my_scenario.getduration(), 900)
-        self.assertEqual(len(my_scenario.events), 5)
+        self.assertEqual(len(my_scenario.events), 6)
         my_scenario.play()
         sleep(0.1)
         my_scenario.play_from_here(my_third_event)
@@ -153,12 +155,12 @@ class TestAll(unittest.TestCase):
         my_project.autoplay = 0
         my_project.loop = 1
         # calling del event must check first if the event is in other place.
-        self.assertEqual(len(my_project.events), 6)
+        self.assertEqual(len(my_project.events), 7)
         my_project.del_event(my_fifth_event)
-        self.assertEqual(len(my_project.events), 5)
+        self.assertEqual(len(my_project.events), 6)
         # try to delete an event present in other scenario
         my_project.del_event(my_forth_event)
-        self.assertEqual(len(my_project.events), 5)
+        self.assertEqual(len(my_project.events), 6)
 
         self.assertEqual(my_project.getprotocols(), ["OutputUdp", "OutputMidi"])
         self.assertEqual(my_project.scenarios[0].name, "the scénario è © • test")
