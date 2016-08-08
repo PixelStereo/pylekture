@@ -148,10 +148,7 @@ class Node(object):
                 if props['events']:
                     for event in props['events']:
                         if event.__class__.__name__ == "ScenarioPlay":
-                            if event.command in self.parent.scenarios:
-                                export['events'].append(self.parent.scenarios.index(event.command))
-                            else:
-                                export['events'].append(0)
+                            pass
                         else:
                             export['events'].append(self.parent.events.index(event))
                 else:
@@ -159,6 +156,13 @@ class Node(object):
             else:
                 # this is just a property, dump them all !!
                 export.setdefault(key, props[key])
+        # Itarate a second time to link ScenarioPlay obkects with Scenario
+        for key in keys:
+            if key == 'events':
+                if props['events']:
+                    for event in props['events']:
+                        if event.__class__.__name__ == "ScenarioPlay":
+                            export['events'].append(self.parent.scenarios.index(event.command))
         # we don't need parent in an export, because the JSON/dict export format do that
         export.pop('parent')
         return export
