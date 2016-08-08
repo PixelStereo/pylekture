@@ -53,6 +53,12 @@ Project / Scenario / Event attributes:
 Changelog
 -------------------------------------------------------------------------------
 
+- v0.3.1 - Aug. 8 2016
+    - Fix output menu now display the right output in scenario & events tables
+    - output 0 means "use parent" and output > 0 represents the index in the outputs list of the project
+    - Fix OSC message without arguments
+    - Fix events header
+
 - v0.3 - Apr. 24 2016
     - Fix output hierarchy. parent is the default output. Project default output is the first one
     - redefine str() buildtin to unicode() for python 2
@@ -69,7 +75,7 @@ Changelog
     - Revamp Output link to project / scenario / events
     - Revamp events. there is now a event.protocol value(OSC/MidiNote/PJLINK)
     - A scenario is now just a group of events
-    - Revamp new_event method. It must be attached to the project
+    - Revamp new_event method. It must be attached to the project and it is now
     - You specify protocol. For lekture, it formats the type of args.
 
 - v0.2.1 - Apr. 12th 2016
