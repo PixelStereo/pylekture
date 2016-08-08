@@ -134,7 +134,7 @@ class TestAll(unittest.TestCase):
         my_scenario.add_event(my_forth_event)
         my_scenario.add_event(my_third_event)
         other_event = my_project.new_event('MidiNote', command=[16, 64, 100])
-        my_sixth_event = my_project.new_event('ScenarioPlay', command=my_other_scenario)
+        my_sixth_event = my_project.new_event('ScenarioPlay', command=my_scenario)
         my_scenario.add_event(my_sixth_event)
         my_other_scenario.add_event(other_event)
         my_scenario.add_event(other_event)
