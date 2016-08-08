@@ -42,7 +42,7 @@ If you need/want to build the documentation from the repo, here are the steps :
 
 #### Roadmap
 ---
-##### 0.1 - Dec. 2015 -> March. 2016
+##### 0.1 - Late 2016
 * ~~Scenario and events sends OSC commands~~
 * ~~multiple projects architecture~~
 * ~~Python 2 and 3 compatibility~~
@@ -50,15 +50,21 @@ If you need/want to build the documentation from the repo, here are the steps :
 * ~~Nice and solid UTF8 Encoding everywhere~~
 * ~~project-related commands (auto-play)~~
 * ~~Loop for project / scenario / event~~
-
-##### 0.2 - Planned to late 2016 / 2017
 * Scenario behavior creates nice sequence (aka auto-cue / auto-follow)
+
+##### 0.2 - Early 2017
 * OSC server for projects, scenario and events access
 * OSC listening creates Nodes, Models and Parameters
 * Namespace implementation for automagic events creation
 * Minuit implementation
+* Keyboard customizable shortcuts
 
-##### 0.3 - Planned to late 2017
-* Graphic display of projects, scenario and events
+##### 0.3 - Planned
 * Random generator
+
+##### 0.4 - Planned
 * Artnet and MIDI in/out
+* PJLink / TCP / Serial support
+
+##### 0.5 - Planned
+* Graphic display of projects, scenario and events
