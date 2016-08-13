@@ -209,17 +209,21 @@ class Command(Event):
         name = self.__class__.__name__
         command = checkType(command)
         flag = False
-        if name == 'Wait':
+        if name == 'ScenarioPlay':
+            if isinstance(command, list) and len(command) == 1:
+                self._command = checkType(command[0])
+            if isinstance(self._command, int):
+                flag = True
+            else:
+                print(name + '.command for a ScenarioPlay must be an int')
+                return False
+        elif name == 'Wait':
             if isinstance(command, int) or isinstance(command, float):
                 self._command = command
                 flag = True
         elif name == 'MidiNote' or 'MidiControl':
             if isinstance(command, list) and len(command) == 3:
                 self._command = command
-                flag = True
-        elif name == 'ScenarioPlay':
-            if isinstance(command, list) and len(command) == 1:
-                self._command = checkType(command)
                 flag = True
         if flag:
             return True
@@ -395,7 +399,7 @@ class ScenarioPlay(Command):
     """
     Play a Scenario
     """
-    def __init__(self, project, command=None, port=None):
+    def __init__(self, project, command=0, port=None):
         super(ScenarioPlay, self).__init__(project, command, port)
 
     class Play(threading.Thread):
@@ -406,7 +410,8 @@ class ScenarioPlay(Command):
         def __init__(self, event, output):
             threading.Thread.__init__(self)
             self.output = event.output
-            self.command = event.parent.scenarios[checkType(event.command[0])]
+            if isinstance(event.command, int):
+                self.command = event.parent.scenarios[checkType(event.command)]
             self.event = event
             self.start()
 
