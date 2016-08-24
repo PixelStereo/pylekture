@@ -225,6 +225,8 @@ class Command(Event):
             if isinstance(command, list) and len(command) == 3:
                 self._command = command
                 flag = True
+            else:
+                print('Error 9876543 -', command)
         if flag:
             return True
         else:
@@ -412,6 +414,10 @@ class ScenarioPlay(Command):
             self.output = event.output
             if isinstance(event.command, int):
                 self.command = event.parent.scenarios[checkType(event.command)]
+            elif event.command.__class__.__name__ == 'Scenario':
+                self.command = event.command
+            else:
+                print('ERROR 987654345678', event)
             self.event = event
             self.start()
 
