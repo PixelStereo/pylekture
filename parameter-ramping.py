@@ -10,7 +10,6 @@ sys.path.append(lib_path)
 from pylekture.parameter import Parameter
 
 
-	
 p = Parameter()
 #p = Parameter(datatype='integer', domain=[1,2])
 p.value = 42
