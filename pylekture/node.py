@@ -8,6 +8,7 @@ Contains name / description
 """
 
 from pylekture.functions import prop_dict
+from pylekture.functions import checkType
 from pylekture import is_string
 
 class Node(object):
@@ -162,8 +163,7 @@ class Node(object):
                 if props['events']:
                     for event in props['events']:
                         if event.__class__.__name__ == "ScenarioPlay":
-                            print('------f-s-fs-qf-dsf-q-fq-sd-', len(self.parent.scenarios))
-                            export['events'].append(self.parent.scenarios.index(event.command))
+                            export['events'].append(checkType(event.command))
         # we don't need parent in an export, because the JSON/dict export format do that
         export.pop('parent')
         return export

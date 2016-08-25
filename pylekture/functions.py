@@ -17,6 +17,11 @@ def checkType(data):
         an integer or a float
     """
     try:
+        if len(data) == 1 and isinstance(data, list):
+            data = data[0]
+    except TypeError:
+        print('IndexError in CheckType for data :', data)
+    try:
         if data.isdigit():
             data = int(data)
         else:
