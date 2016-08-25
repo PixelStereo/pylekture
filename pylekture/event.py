@@ -259,6 +259,10 @@ class Osc(Command):
         if self._command == None:
             self._command = ['/lekture', 10]
 
+    def __repr__(self):
+        s = "OSC command command={command}, output"
+        return s.format(command=self.command, output=self.output)
+
     @property
     def command(self):
         """
@@ -321,7 +325,6 @@ class Osc(Command):
                     args[0] = checkType(args[0])
                     if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
                         # this is a ramp, make it in a separate thread
-                        print('------', target, address, args)
                         ramp = Ramp(target, address, args)
                         ramp.join()
                     elif isinstance(args, list):
@@ -405,6 +408,11 @@ class ScenarioPlay(Command):
     def __init__(self, project, command=0, port=None):
         super(ScenarioPlay, self).__init__(project, command, port)
 
+    def __repr__(self):
+        s = "Scenario Play command={command}"
+        return s.format(command=self.command)
+
+
     class Play(threading.Thread):
         """
         Event Player
@@ -413,18 +421,25 @@ class ScenarioPlay(Command):
         def __init__(self, event, output):
             threading.Thread.__init__(self)
             self.output = event.output
-            if isinstance(event.command, int):
-                self.command = event.parent.scenarios[checkType(event.command)]
-            elif event.command.__class__.__name__ == 'Scenario':
-                self.command = event.command
+            the_command = (checkType(event.command))
+            if isinstance(the_command, int):
+                # check if the value is an index of the scenario list)
+                try:
+                    the_command = event.parent.scenarios[the_command]
+                    print(the_command)
+                except IndexError:
+                    print('Scenario Index ' + str(the_command) + ' does not exist')
+            if the_command.__class__.__name__ == 'Scenario':
+                # check if the value is a Scenario Object
+                self.the_command = the_command
+                self.start()
             else:
-                print('ERROR 987654345678', event)
-            self.event = event
-            self.start()
+                print('ERROR 987654345678', type(event.command), event.command)
+                self.start()
 
         def run(self):
             if debug >= 3:
                 print('ScenarioPlay starts')
-            self.command.play()
+            self.the_command.play()
             if debug >= 3:
                 print('ScenarioPlay ends')
