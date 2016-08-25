@@ -503,6 +503,8 @@ class Project(Event):
         taille = len(self.events)
         the_event = None
         self.events.append(the_event)
+        if isinstance(command, Scenario):
+            command = self.scenarios.index(command)
         event = self.new_event_create(event_type, command)
         if event:
             self.events[taille] = event
