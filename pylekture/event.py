@@ -421,6 +421,7 @@ class ScenarioPlay(Command):
         def __init__(self, event, output):
             threading.Thread.__init__(self)
             self.output = event.output
+            self.flag = None
             the_command = (checkType(event.command))
             if isinstance(the_command, int):
                 # check if the value is an index of the scenario list)
@@ -432,14 +433,13 @@ class ScenarioPlay(Command):
             if the_command.__class__.__name__ == 'Scenario':
                 # check if the value is a Scenario Object
                 self.the_command = the_command
-                self.start()
-            else:
-                print('ERROR 987654345678', type(event.command), event.command)
-                self.start()
+                self.flag=True
+            self.start()
 
         def run(self):
-            if debug >= 3:
-                print('ScenarioPlay starts')
-            self.the_command.play()
-            if debug >= 3:
-                print('ScenarioPlay ends')
+            if self.flag:
+                if debug >= 3:
+                    print('ScenarioPlay starts')
+                self.the_command.play()
+                if debug >= 3:
+                    print('ScenarioPlay ends')
