@@ -186,7 +186,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(my_project.read("bogus"), False)
         self.assertEqual(my_project.read("the_file.lekture"), True)
         self.assertEqual(len(my_project.outputs), 4)
-        self.assertEqual(len(my_project.events), 5)
+        self.assertEqual(len(my_project.events), 6)
         self.assertEqual(len(my_project.scenarios), 1)
         sleep(1)
         my_project.reset()
