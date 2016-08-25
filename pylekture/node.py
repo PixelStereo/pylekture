@@ -149,7 +149,7 @@ class Node(object):
                 if props['events']:
                     for event in props['events']:
                         if event.__class__.__name__ == "ScenarioPlay":
-                            pass
+                            export.setdefault('events', [])
                         else:
                             export['events'].append(self.parent.events.index(event))
                 else:
@@ -163,7 +163,7 @@ class Node(object):
                 if props['events']:
                     for event in props['events']:
                         if event.__class__.__name__ == "ScenarioPlay":
-                            export['events'].append(checkType(event.command))
+                            export['events'].append(self.parent.events.index(event))
         # we don't need parent in an export, because the JSON/dict export format do that
         export.pop('parent')
         return export
