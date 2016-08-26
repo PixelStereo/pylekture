@@ -29,7 +29,7 @@ from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
 from pylekture.event import Osc, MidiNote, Event, Wait, ScenarioPlay
-from pylekture.errors import OutputZeroError, LektureTypeError
+from pylekture.errors import NoOutputError, LektureTypeError
 
 def new_project():
     """
@@ -95,7 +95,7 @@ class Project(Event):
             if self._outputs:
                 return self._outputs[0]
             else:
-                raise OutputZeroError()
+                raise NoOutputError()
     @output.setter
     def output(self, out):
         if out.__class__.__name__ == 'OutputUdp' or out.__class__.__name__ == 'OutputMidi':

@@ -10,7 +10,7 @@ from pylekture import __version__
 from pylekture.functions import checkType
 from pylekture.constants import protocols, debug
 from pylekture.project import new_project, projects
-from pylekture.errors import LektureTypeError, OutputZeroError
+from pylekture.errors import LektureTypeError, NoOutputError
 
 class TestAll(unittest.TestCase):
 
@@ -50,7 +50,7 @@ class TestAll(unittest.TestCase):
         p = new_project()
         try:
             p.output
-        except OutputZeroError:
+        except NoOutputError:
             pass
         o = p.new_output('OSC')
         try:

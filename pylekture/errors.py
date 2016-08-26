@@ -15,9 +15,9 @@ class LektureTypeError(Exception):
         dbg = 'Wait for an {expected} instance object but receive a {received}'
         print(dbg.format(expected=expected, received=received.__class__))
 
-class OutputZeroError(Exception):
+class NoOutputError(Exception):
 	"""
 	There is no output in this project
 	"""
 	def __init__(self):
-		super(OutputZeroError, self).__init__()
+		super(NoOutputError, self).__init__()
