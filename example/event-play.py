@@ -20,9 +20,12 @@ print(e.name)
 e.name = 'The ramp !!'
 s.add_event(e)
 e.play()
-sleep(1)
+print("a")
+#sleep(0.1)
 e.stop()
 quit()
+
+
 p.play()
 p.stop()
 p.write(os.path.abspath('./event-play_test'))
