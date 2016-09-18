@@ -75,7 +75,7 @@ class Event(Node):
         elif output_class.__name__ == 'OutputMidi':
             if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'Scenario':
                 self._output = output
-        elif output_class.__name__ == "NoneType":
+        elif output_class.__name__ == "NoneType" or output_class.__name__ == "int":
             self._output = 0
         else:
             raise LektureTypeError('Output', output)
