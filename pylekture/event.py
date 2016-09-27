@@ -178,15 +178,16 @@ class Event(Node):
         Play an event
         It creates a new object play in a separate thread.
         """
-        self.player = Player(self, output=output)
-        return 
+        self.current_player = Player(self, output=output)
+        return self.current_player
 
     def stop(self):
         """
         Stop an event
         It will destruct the player in the separate thread.
         """
-        self.player.stop()
+        #print(self.current_player)
+        print("stop is not yet implemented")
 
 class Command(Event):
     """docstring for Command"""
@@ -249,7 +250,8 @@ class Player(threading.Thread):
         super(Player, self).__init__()
         self.parent = parent
         self.kwargs = kwargs
-        self._stop = threading.Event()
+        self.player = self.parent.Play(self.parent, self.kwargs)
+        print( "thread init")
         self.start()
 
     def run(self):
