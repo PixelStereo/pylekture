@@ -5,5 +5,6 @@
 
 debug = 3
 _projects = []
+_file_extention = 'lekture'
 
 protocols = ['OSC', 'MIDI']
