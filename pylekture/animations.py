@@ -6,40 +6,37 @@ Animation's library
 """
 
 import datetime
-import threading
+from threading import Timer
 from pylekture.constants import debug
 from pylekture.functions import checkType
 import liblo
 from time import sleep
+from time import time
 
-class Ramp(threading.Thread):
-    """Instanciate a thread for Playing a ramp
-    Allow to do several ramps in a same scenario"""
-    def __init__(self, target, address, args):
-        threading.Thread.__init__(self)
-        self.args = args
-        self.address = address
-        self.target = target
-        self.start()
+current_milli_time = lambda: time() * 1000
 
-    def run(self):
-        if debug >= 3:
-            print('ramp starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
-        index = self.args.index('ramp')
-        ramp = self.args[index+1]
-        ramp = int(float(ramp) * 1000)
-        dest = self.args[index-1]
-        dest = checkType(dest)
-        ramp = checkType(ramp)
-        value = 0
-        delta = dest - value
-        delta = float(delta)
-        step = delta / ramp
-        for millisec in range(ramp):
-            msg = liblo.Message(self.address)
-            value += step
-            sleep(0.00072)
-            msg.add(value)
-            liblo.send(self.target, msg)
-        if debug >= 3:
-            print('ramp ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
+def bogus():
+    pass
+
+def Ramp(origin, destination, duration=1000, grain=10):
+    """
+    Instanciate a thread for Playing a ramp
+
+    step every 10 ms
+
+    Allow to do several ramps in a same project / scenario / event
+
+    :param target:
+    """
+    start = current_milli_time()
+    last = start
+    step = float( (destination - origin) / ( float(duration / grain) ))
+
+
+    while (current_milli_time() < (start + duration)):
+        while (current_milli_time() < last + grain):
+            pass # wait
+        last = current_milli_time()
+        origin += step
+        print(origin)
+    yield float(origin)

@@ -338,6 +338,7 @@ class Osc(Command):
                     args[0] = checkType(args[0])
                     if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
                         # this is a ramp, make it in a separate thread
+                        print('------', target, address, args)
                         ramp = Ramp(target, address, args)
                         ramp.join()
                     elif isinstance(args, list):
