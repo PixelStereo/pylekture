@@ -250,7 +250,7 @@ class Player(threading.Thread):
         super(Player, self).__init__()
         self.parent = parent
         self.kwargs = kwargs
-        self.player = self.parent.Play(self.parent, self.kwargs)
+        #self.player = self.parent.Play(self.parent, self.kwargs)
         print( "thread init")
         self.start()
 
@@ -337,10 +337,23 @@ class Osc(Command):
                 if args:
                     args[0] = checkType(args[0])
                     if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
-                        # this is a ramp, make it in a separate thread
-                        print('------', target, address, args)
-                        ramp = Ramp(target, address, args)
-                        ramp.join()
+                        # TODO : ASK ABOUT THE CURRENT VALUE OF THE ADDRESS
+                        origin = 0
+                        destination = float(args[0])
+                        rampindex = args.index('ramp')
+                        duration = int(args[rampindex+1])
+                        if 'grain' in args:
+                            grainindex = args.index('grain')
+                            grain = int(args[grainindex+1])
+                        else:
+                            grain = 10
+                        if duration < 10:
+                            duration = 10
+                        ramp = Ramp(origin, destination, duration, grain)
+                        for val in ramp:
+                            msg = liblo.Message(address)
+                            msg.add(val)
+                            liblo.send(target, msg)
                     elif isinstance(args, list):
                         # this is just a list of values to send
                         msg = liblo.Message(address)

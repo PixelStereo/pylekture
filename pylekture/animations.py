@@ -18,7 +18,7 @@ current_milli_time = lambda: time() * 1000
 def bogus():
     pass
 
-def Ramp(origin, destination, duration=1000, grain=10):
+def Ramp(origin=0, destination=1, duration=1000, grain=10):
     """
     Instanciate a thread for Playing a ramp
 
@@ -31,12 +31,9 @@ def Ramp(origin, destination, duration=1000, grain=10):
     start = current_milli_time()
     last = start
     step = float( (destination - origin) / ( float(duration / grain) ))
-
-
     while (current_milli_time() < (start + duration)):
         while (current_milli_time() < last + grain):
             pass # wait
         last = current_milli_time()
         origin += step
-        print(origin)
-    yield float(origin)
+        yield origin

@@ -63,6 +63,7 @@ class Project(Event):
         if self.description == "I'm an event":
             self.description = "I'm a project"
         self._version = __version__
+        self._path = None
         self._lastopened = None
         self._created = str(datetime.datetime.now())
         self._outputs = []
@@ -133,6 +134,20 @@ class Project(Event):
         """
         return self._version
 
+    @property
+    def path(self):
+        """
+        This is the filepath of the project.
+        It's initialised at None when created, and can be set to any valid path.
+
+        :param path: valid filepath. Return True if valid, False otherwise.
+        :type path: string
+        """
+        return self._path
+    @path.setter
+    def path(self, value):
+        self._path = value
+
     def reset(self):
         """reset a project by deleting project.attributes, scenarios, outputs and events related"""
         # reset project attributes
@@ -144,6 +159,163 @@ class Project(Event):
         self._scenarios = []
         # reset  events
         self._events = []
+
+    def read(self, path):
+        """
+        Read a lekture-project file from hard drive. Must be valid.
+        if valid it will be loaded and return True, otherwise, it will return False
+
+            :param path: Filepath to read from.
+            :type path: string
+            :returns: Boolean
+            :rtype: True if the project has been correctly loaded, False otherwise
+        """
+        path = os.path.abspath(path)
+        if not os.path.exists(path):
+            print("ERROR 901 - THIS PATH IS NOT VALID " + path)
+            return False
+        else:
+            print("loading project in " + path)
+            if self.load(path):
+                self._path = path
+                self.write(path)
+                if self._autoplay:
+                    self.play()
+                return True
+            else:
+                return False
+
+    def load(self, path):
+        """
+        Load a lekture-project from a file from hard drive
+        It will play the file after loading, according to autoplay attribute value
+
+            :arg: file to load. Filepath must be valid when provided, it must be checked before.
+
+            :rtype:True if the project has been correctly loaded, False otherwise
+        """
+        flag = False
+        try:
+            with open(path) as in_file:
+                # clear the project
+                loaded = json.load(in_file)
+                flag = True
+        # catch error if file is not valid or if file is not a lekture project
+        except (IOError, ValueError):
+            print("ERROR 906 - project not loaded, this is not a lekture-project file")
+            return False
+        if flag:
+            # create objects from loaded file
+            flag = self.fillin(loaded)
+        return flag
+
+    def fillin(self, loaded):
+        """
+        Creates Outputs, Scenario and Events obects
+        First, dump attributes, then outputs, scenario and finish with events.
+
+        :returns: True if file formatting is correct, False otherwise
+        :rtype: boolean
+        """
+        try:
+            # reset project
+            self.reset()
+            # dump attributes
+            attributes = loaded.pop('attributes')
+            for attribute, value in attributes.items():
+                if attribute == "created":
+                    self._created = value
+                elif attribute == "version":
+                    self._version = value
+                elif attribute == "autoplay":
+                    self.autoplay = value
+                elif attribute == "loop":
+                    self.loop = value
+                elif attribute == "name":
+                    self.name= value
+            self._lastopened = str(datetime.datetime.now())
+            # dump outputs
+            outputs = loaded.pop('outputs')
+            for out in outputs:
+                service = out.pop('service')
+                self.new_output(service, **out)
+            scenarios = loaded.pop('scenarios')
+            # dump events before scenario, because a scenario contains events
+            events = loaded.pop("events")
+            for event in events:
+                # remove the service name. We are in the event dict, so we are sure that it is an event
+                service = event.pop('service')
+                output = event['output']
+                if output != 0:
+                    output = output - 1
+                    # refer to the corresponding output instance object
+                    event['output'] = self.outputs[output]
+                else:
+                    # if output is set to None, do the same, it means 'use parent output'
+                    event.pop('output')
+                self.new_event(service, **event)
+            # dump scenario
+            for scenario in scenarios:
+                service = scenario.pop('service')
+                output = scenario['output']
+                if output != 0:
+                    # refer to the corresponding output instance object
+                    output = output - 1
+                    scenario['output'] = self.outputs[output]
+                self.new_scenario(**scenario)
+            if loaded == {}:
+                # project has been loaded, lastopened date changed
+                # we have a path because we loaded a file from somewhere
+                print("project loaded")
+                return True
+            else:
+                print('ERROIR 906 - loaded file has not been totally loaded', loaded)
+                return False
+        # catch error if file is not valid or if file is not a lekture project
+        except (IOError, ValueError) as Error:
+            if debug:
+                print(Error, "ERROR 907 - project not loaded, this is not a lekture-project file")
+            return False
+
+    def write(self, path=None):
+        """
+        Write a project on the hard drive.
+        """
+        if path:
+            savepath = path
+        else:
+            savepath = self._path
+        if savepath:
+            if savepath.endswith("/"):
+                savepath = savepath + self.name
+            # make sure we will write a file with json extension
+            if not savepath.endswith(".lekture"):
+                savepath = savepath + ".lekture"
+            try:
+                # create / open the file
+                out_file = open((savepath), "wb")
+            except IOError:
+                # path does not exists
+                print("ERROR 909 - path is not valid, could not save project - " + savepath)
+                return False
+            project = self.export()
+            try:
+                the_dump = json.dumps(project, sort_keys=True, indent=4,\
+                                      ensure_ascii=False).encode("utf8")
+            except TypeError as Error:
+                print('ERROR 98 ' + str(Error))
+                return False
+            try:
+                out_file.write(the_dump)
+                print("file has been written in " + savepath)
+                out_file.close()
+                return True
+            except TypeError as Error:
+                print('ERROR 99 ' + str(Error))
+                return False
+        else:
+            print('no filepath. Where do you want I save the project?')
+            return False
 
     def export(self):
         """
