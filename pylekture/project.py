@@ -28,7 +28,7 @@ from pylekture.scenario import Scenario
 from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
-from pylekture.event import Osc, MidiNote, Event, Wait
+from pylekture.event import Osc, MidiNote, Event, Wait, ScenarioPlay
 from pylekture.errors import OutputZeroError, LektureTypeError
 
 def new_project():
@@ -246,7 +246,8 @@ class Project(Event):
                 # remove the service name. We are in the event dict, so we are sure that it is an event
                 service = event.pop('service')
                 output = event['output']
-                if output != None:
+                if output != 0:
+                    output = output - 1
                     # refer to the corresponding output instance object
                     event['output'] = self.outputs[output]
                 else:
@@ -257,8 +258,9 @@ class Project(Event):
             for scenario in scenarios:
                 service = scenario.pop('service')
                 output = scenario['output']
-                if output != None:
+                if output != 0:
                     # refer to the corresponding output instance object
+                    output = output - 1
                     scenario['output'] = self.outputs[output]
                 self.new_scenario(**scenario)
             if loaded == {}:
@@ -520,6 +522,8 @@ class Project(Event):
             event = Wait(self, command=command)
         elif event_type == 'MidiNote':
             event = MidiNote(self, command=command)
+        elif event_type == 'ScenarioPlay':
+            event = ScenarioPlay(self, command=command)
         elif event_type == 'PjLink':
             if command == None:
                 command = ['shutter', True]

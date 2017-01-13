@@ -8,6 +8,7 @@ Contains name / description
 """
 
 from pylekture.functions import prop_dict
+from pylekture.functions import checkType
 from pylekture import is_string
 
 class Node(object):
@@ -23,6 +24,15 @@ class Node(object):
     """
     def __init__(self, parent=None, name='Untitled Node', description="I'm a node", tags=None):
         super(Node, self).__init__()
+        if isinstance(name, list):
+            name_maker = ""
+            for item in name:
+                name_maker = name_maker + " " +  str(item)
+            name = name_maker
+        if name:
+            if isinstance(name, str):
+                if name.startswith(" "):
+                    name = name[1:]
         self._name = name
         self._description = description
         if tags == None:
@@ -45,6 +55,14 @@ class Node(object):
         return self._name
     @name.setter
     def name(self, name):
+        if isinstance(name, list):
+            name_maker = ""
+            for item in name:
+                name_maker = name_maker + " " +  str(item)
+            name = name_maker
+        if name:
+            if name.startswith(" "):
+                name = name[1:]
         self._name = name
 
     @property
@@ -122,20 +140,30 @@ class Node(object):
             if key == 'output':
                 if props['output']:
                     if props['output'] in self.parent.outputs:
-                        export.setdefault('output', self.parent.outputs.index(props['output']))
+                        export.setdefault('output', self.parent.outputs.index(props['output']) + 1)
                 else:
-                    export.setdefault('output', None)
+                    export.setdefault('output', 0)
             elif key == 'events':
                 # for an event, we just need the index, not the event object
                 export.setdefault('events', [])
                 if props['events']:
                     for event in props['events']:
-                        export['events'].append(self.parent.events.index(event))
+                        if event.__class__.__name__ == "ScenarioPlay":
+                            pass
+                        else:
+                            export['events'].append(self.parent.events.index(event))
                 else:
-                    export.setdefault(['events'], [])
+                    export.setdefault('events', [])
             else:
                 # this is just a property, dump them all !!
                 export.setdefault(key, props[key])
+        # Itarate a second time to link ScenarioPlay obkects with Scenario
+        for key in keys:
+            if key == 'events':
+                if props['events']:
+                    for event in props['events']:
+                        if event.__class__.__name__ == "ScenarioPlay":
+                            export['events'].append(checkType(event.command))
         # we don't need parent in an export, because the JSON/dict export format do that
         export.pop('parent')
         return export

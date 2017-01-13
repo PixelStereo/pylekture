@@ -34,7 +34,7 @@ class Event(Node):
         if self.description == "I'm a node":
             self.description = "I'm an event"
         self.wait = 0
-        self._output = None
+        self._output = 0
         self.post_wait = 0
         self._loop = False
         self._autoplay = False
@@ -70,11 +70,13 @@ class Event(Node):
         output_class = output.__class__
         name = self.__class__.__name__
         if output_class.__name__ == "OutputUdp":
-            if name == 'Osc' or 'scenario':
+            if name == 'Osc' or 'Scenario':
                 self._output = output
         elif output_class.__name__ == 'OutputMidi':
-            if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'scenario':
+            if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'Scenario':
                 self._output = output
+        elif output_class.__name__ == "NoneType":
+            self._output = 0
         else:
             raise LektureTypeError('Output', output)
 
@@ -163,9 +165,12 @@ class Event(Node):
             duration += self.command
         else:
             if self.command:
-                if 'ramp' in self.command:
-                    index = self.command.index('ramp')
-                    duration += float(self.command[index + 1])
+                try:
+                    if 'ramp' in self.command:
+                        index = self.command.index('ramp')
+                        duration += float(self.command[index + 1])
+                except Exception:
+                    pass
         return duration
 
     def play(self, output=None):
@@ -200,11 +205,19 @@ class Command(Event):
         """
         return self._command
     @command.setter
-    def command(self, command, toto):
+    def command(self, command):
         name = self.__class__.__name__
         command = checkType(command)
         flag = False
-        if name == 'Wait':
+        if name == 'ScenarioPlay':
+            if isinstance(command, list) and len(command) == 1:
+                self._command = checkType(command[0])
+            if isinstance(self._command, int):
+                flag = True
+            else:
+                print(name + '.command for a ScenarioPlay must be an int')
+                return False
+        elif name == 'Wait':
             if isinstance(command, int) or isinstance(command, float):
                 self._command = command
                 flag = True
@@ -212,6 +225,8 @@ class Command(Event):
             if isinstance(command, list) and len(command) == 3:
                 self._command = command
                 flag = True
+            else:
+                print('Error 9876543 -', command)
         if flag:
             return True
         else:
@@ -252,7 +267,7 @@ class Osc(Command):
         """
         return self._command
     @command.setter
-    def command(self):
+    def command(self, command):
         command = checkType(command)
         flag = False
         if isinstance(command, list) or isinstance(command, basestring):
@@ -278,11 +293,11 @@ class Osc(Command):
 
         def run(self):
             """play an OSC event"""
-            if debug >= 3:
-                print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
             out = self.output
             args = self.command
             if out.port:
+                if debug >= 3:
+                    print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
                 split = out.port.split(':')
                 ip = split[0]
                 udp = split[1]
@@ -290,6 +305,8 @@ class Osc(Command):
                     # address is the first item of the list
                     address = args[0]
                     args = args[1:]
+                    if len(args) == 0:
+                        args = None
                 else:
                     # this is a adress_only without arguments
                     address = args
@@ -300,22 +317,25 @@ class Osc(Command):
                         print('connect to : ' + ip + ':' + str(udp))
                 except liblo.AddressError as err:
                     print('liblo.AddressError' + str(err))
-                args[0] = checkType(args[0])
-                if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
+                if args:
+                    args[0] = checkType(args[0])
+                    if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
                         # this is a ramp, make it in a separate thread
                         print('------', target, address, args)
                         ramp = Ramp(target, address, args)
                         ramp.join()
-                elif isinstance(args, list):
-                    msg = liblo.Message(address)
-                    for arg in args:
-                        arg = checkType(arg)
-                        msg.add(arg)
-                    liblo.send(target, msg)
+                    elif isinstance(args, list):
+                        # this is just a list of values to send
+                        msg = liblo.Message(address)
+                        for arg in args:
+                            arg = checkType(arg)
+                            msg.add(arg)
+                        liblo.send(target, msg)
+                    else:
+                        # what iss this case?????
+                        print("DEBUG", len(args), type(args))
                 else:
                     msg = liblo.Message(address)
-                    if args:
-                        msg.add(args)
                     liblo.send(target, msg)
                 if debug >= 3:
                     print('event-ends: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
@@ -376,3 +396,35 @@ class MidiNote(Command):
             Play the MidiNote
             """
             print('MidiNote is not ready for now… please wait a few months')
+
+
+class ScenarioPlay(Command):
+    """
+    Play a Scenario
+    """
+    def __init__(self, project, command=0, port=None):
+        super(ScenarioPlay, self).__init__(project, command, port)
+
+    class Play(threading.Thread):
+        """
+        Event Player
+        It plays the event in a separate Thread
+        """
+        def __init__(self, event, output):
+            threading.Thread.__init__(self)
+            self.output = event.output
+            if isinstance(event.command, int):
+                self.command = event.parent.scenarios[checkType(event.command)]
+            elif event.command.__class__.__name__ == 'Scenario':
+                self.command = event.command
+            else:
+                print('ERROR 987654345678', event)
+            self.event = event
+            self.start()
+
+        def run(self):
+            if debug >= 3:
+                print('ScenarioPlay starts')
+            self.command.play()
+            if debug >= 3:
+                print('ScenarioPlay ends')
