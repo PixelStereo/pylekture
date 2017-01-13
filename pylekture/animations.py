@@ -11,11 +11,14 @@ from pylekture.constants import debug
 from pylekture.functions import checkType
 import liblo
 from time import sleep
+from time import time
+
+current_milli_time = lambda: time() * 1000
 
 def bogus():
     pass
 
-def Ramp(start, destination, duration):
+def Ramp(origin, destination, duration=1000, grain=10):
     """
     Instanciate a thread for Playing a ramp
 
@@ -25,15 +28,15 @@ def Ramp(start, destination, duration):
 
     :param target:
     """
-    steps = duration / 10
-    delta = float(destination) - float(start)
-    step = delta / steps
-    value = start
-    print(start)
-    for i in xrange(int(steps)):
-        # 200 fps
-        value = float(value) + step
-        timer = Timer(0.0095, bogus, ())
-        timer.start()
-        timer.join()
-        yield float(value)
+    start = current_milli_time()
+    last = start
+    step = float( (destination - origin) / ( float(duration / grain) ))
+
+
+    while (current_milli_time() < (start + duration)):
+        while (current_milli_time() < last + grain):
+            pass # wait
+        last = current_milli_time()
+        origin += step
+        print(origin)
+    yield float(origin)
