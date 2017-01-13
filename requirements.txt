@@ -1,4 +1,4 @@
-Cython==0.24.0
-pyliblo==0.10.0
-simplejson==3.8.1
-sphinx_rtd_theme==0.1.9
+Cython
+pyliblo
+simplejson
+sphinx_rtd_theme
