@@ -52,6 +52,13 @@ class Event(Node):
                         loop=self.loop)
 
     @property
+    def is_template(self):
+        return self._is_template
+    @is_template.setter
+    def is_template(self, state):
+        self._is_template = m_bool(state)
+
+    @property
     def output(self):
         """
         The port to output this scenario
