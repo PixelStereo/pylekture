@@ -16,12 +16,12 @@ class Output(Node):
     Need to be revamped - protocol miqht be an attribute
     => and protocol-parameters might be in a dict inside the attributes dict?
     """
-    def __init__(self, parent, port=None):
-        super(Output, self).__init__(parent)
+    def __init__(self, name=None, description=None, parent=None, port=None):
+        super(Output, self).__init__(name=name, description=description, parent=parent)
         self._port = port
-        if self.name == 'Untitled Node':
+        if not self.name:
             self.name = 'Untitled Output'
-        if self.description == "I'm a node":
+        if not self.description:
             self.description = "I'm an output"
 
     @property
