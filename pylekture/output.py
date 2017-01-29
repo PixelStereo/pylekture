@@ -55,3 +55,4 @@ class OutputUdp(Output):
         super(OutputUdp, self).__init__(parent, port)
         if self.name == 'Untitled Output':
             self.name = 'Untitled Udp Output'
+        self._port = port
