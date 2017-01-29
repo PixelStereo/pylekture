@@ -17,7 +17,7 @@ import threading
 from time import sleep
 from pylekture.node import Node
 from pylekture.constants import debug
-from pylekture.functions import checkType
+from pylekture.functions import checkType, m_bool
 from pylekture.animations import Ramp
 from pylekture.errors import LektureTypeError
 
@@ -38,6 +38,7 @@ class Event(Node):
         self.post_wait = 0
         self._loop = False
         self._autoplay = False
+        self._is_template = False
         for key, value in kwargs.items():
             setattr(self, key, value)
 
