@@ -7,7 +7,7 @@ Ramp Animation is a basic animation
 
 from threading import Thread
 from time import time
-
+from pylekture.event import Event
 current_milli_time = lambda: time() * 1000
 
 
@@ -29,7 +29,7 @@ def ramp_generator(origin=0, destination=1, duration=1000, grain=10):
         yield origin
 
 
-class Ramp(object):
+class Ramp(Event):
     """
     The Ramp Object
     a ramp is an interpolation with time as input and a function as output
@@ -39,16 +39,18 @@ class Ramp(object):
     - duration (milliseconds)
     - grain (milliseconds)
     """
-    def __init__(self, origin=0, destination=1, duration=1000, grain=10):
+    def __init__(self, *args, **kwargs):
         super(Ramp, self).__init__()
-        self.origin = origin
-        self.destination = destination
-        self.duration = duration
-        self.grain = grain
+        self.parameter = None
+        self.destination = 1
+        self.duration = 1000
+        self.grain = 10
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def __repr__(self):
-        s = "Ramp (origin={origin}, destination={destination}, duration={duration}, grain={grain}"
-        return s.format(origin=self.origin,
+        s = "Ramp (parameter={parameter}, destination={destination}, duration={duration}, grain={grain}"
+        return s.format(parameter=self.parameter,
                         destination=self.destination,
                         duration=self.duration,
                         grain=self.grain,)
@@ -89,9 +91,9 @@ class Ramp(object):
             self.start()
 
         def run(self):
-            ramper = ramp_generator(self.ramp.origin, self.ramp.destination, self.ramp.duration, self.ramp.grain)
+            ramper = ramp_generator(self.ramp.parameter.value, self.ramp.destination, self.ramp.duration, self.ramp.grain)
             for val in ramper:
-                print('---  ' + str(round(val, 2)))
+                self.ramp.parameter.value = val
 
 
 class Player(Thread):

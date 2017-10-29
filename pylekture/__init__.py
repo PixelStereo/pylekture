@@ -2,35 +2,21 @@
 # -*- coding: utf-8 -*-
 """pylekture is a python package that provide an API to create scenario for intermedia projects.
 
-The API is designed around the concept of a project, that handles scenario and outputs.
-Each scenario contains events.
+The API is designed around the concept of a project, that handles Events.
+A Scenario is a bunch of events.
+An Event contain one or a thousand of Command
+A Command is a Parameter Value + an animation
 
-- Project: this is a bunch of Outputs and Scenario
-- Output: This is frome here that you output Events
-- Scenario:This is a bunch of Events
-- Event:This is a command for a device, or a wait for the the Scenario
-
-
-An output is associated to the project. But you can redirect each scenario to a different output
-and even more. If an output is specified for an event, it will be use to output this event.
-Even if it is different that the output associated with the parent scenario.
+- Project: this is a bunch of Scenario and Events
+- Scenario: This is a bunch of Events
+- Event: This is a bunch of commands
 
 In details:
-    - A project contains a Scenario, Events and Outputs.
+    - A project contains a Scenario, Events.
     - A scenario contains an ordered list of Events.
-    - An Event can conains Commands (Osc, Wait, MidiNote command)
-    - Event, Scenario and Project can have wait, post_wait, loop
-    - If the Comand have an output, it is used. If not, parent's output will be used.
-    - An output is a in/out protocol such as OSC, MIDI, Serial, Artnet etc…
-
-When creating a command, it will creates a parameter into a namespace dictionary.
-This namespace file is not saved.
-
-Namespace creation when loading a project
-If Minuit protocol is used, namespace will be first asked to the device.
-Update parameter settings if already exists
-Scan all commands and create the parameter corresponding to
-It is a reference, and will be saved through the namespace dictionary.
+    - An Event conains Commands.
+    - Commands are Parameter State with a Way to go there
+    - Event, Scenario and Project can have wait, post_wait, loop, autoplay.
 
 Project has a few attributes:
     - version(read-only):the version of pylekture used to create this Project
@@ -45,7 +31,7 @@ Project / Scenario / Event attributes:
 
 -------------------------------------------------------------------------------
 
-                Copyright (c) 2015 - 2016 Pixel Stereo
+                Copyright (c) 2015 - 2017 Pixel Stereo
 
 -------------------------------------------------------------------------------
 

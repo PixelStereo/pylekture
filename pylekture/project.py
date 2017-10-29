@@ -26,7 +26,7 @@ from pylekture import __version__
 from pylekture.scenario import Scenario
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
-from pylekture.event import Event
+from pylekture.ramp import Ramp
 from pylekture.errors import LektureTypeError
 
 def new_project(*args, **kwargs):
@@ -197,7 +197,7 @@ class Project(object):
 
     def fillin(self, loaded):
         """
-        Creates Outputs, Scenario and Events obects
+        Creates Scenario and Events obects
         First, dump attributes, then scenario and finish with events.
 
         :returns: True if file formatting is correct, False otherwise
@@ -258,6 +258,7 @@ class Project(object):
             if savepath.endswith("/"):
                 savepath = savepath + self.name
             # make sure we will write a file with json extension
+            # TODO : deal with a constant in the constants file
             if not savepath.endswith(".lekture"):
                 savepath = savepath + ".lekture"
             try:
@@ -265,6 +266,7 @@ class Project(object):
                 out_file = open((savepath), "wb")
             except IOError:
                 # path does not exists
+                # TODO : make rules and list for all errors
                 print("ERROR 909 - path is not valid, could not save project - " + savepath)
                 return False
             project = self.export()
@@ -374,7 +376,7 @@ class Project(object):
             :args: Optional args are every attributes of the scenario, associated with a keyword
             :rtype: Scenario object
         """
-        taille = len(self._scenarios)
+        size = len(self._scenarios)
         scenario = Scenario(parent=self)
         self._scenarios.append(scenario)
         for key, value in kwargs.items():
@@ -382,7 +384,7 @@ class Project(object):
                 for event in value:
                     scenario.add_event(self.events[event])
             else:
-                setattr(self._scenarios[taille], key, value)
+                setattr(self._scenarios[size], key, value)
         return scenario
 
     def del_scenario(self, scenario):
@@ -404,34 +406,33 @@ class Project(object):
         """
         return self._events
 
-    def new_event(self, parameter, command=None, **kwargs):
+    def new_ramp(self, *args, **kwargs):
         """
-        create a new event for this scenario
+        create a ramp object, that refer to a Parameter object
+        it has also a destination (value), a duration and a grain.
         """
-        taille = len(self.events)
+        size = len(self.events)
         the_event = None
         self.events.append(the_event)
-        if isinstance(command, Scenario):
-            command = self.scenarios.index(command)
-        event = Event(parameter=parameter, command=command)
-        if event:
-            self.events[taille] = event
+        ramp = Ramp(*args, **kwargs)
+        if ramp:
+            self.events[size] = ramp
             for key, value in kwargs.items():
                 # set all attributes provided of the new event
-                setattr(self.events[taille], key, value)
+                setattr(self.events[size], key, value)
                 # put the new event in the list of existing events for this project
-            return self.events[taille]
+            return self.events[size]
         else:
             return None
 
-    def del_event(self, index):
+    def del_ramp(self, index):
         """
         delete an event, by index or with object instance
         """
         used = False
         for scenario in self.scenarios:
             if index in scenario.events:
-                print('WARNING 2 - this event is still referenced in scenario ' + scenario.name)
+                print('WARNING 2 - this ramp is still referenced in scenario ' + scenario.name)
                 used = True
         if not used:
             index = self.events.index(index)
