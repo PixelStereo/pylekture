@@ -1,0 +1,98 @@
+From 5346cb4a746431dc1699963e37945151417ef63b Mon Sep 17 00:00:00 2001
+From: reno- <contact@rubiano.fr>
+Date: Sun, 29 Oct 2017 13:50:11 +0100
+Subject: [PATCH] classic for python
+
+---
+ .gitignore | 78 ++++++++++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 66 insertions(+), 12 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index 2cfff7b..c207caf 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,14 +1,68 @@
+-*.gz
+-MANIFEST
+-doc/_build
+-test_project.json
+-test.json
+-*.pyc
+-*.pyo
++# Byte-compiled / optimized / DLL files
++__pycache__/
++*.py[cod]
++*$py.class
++
++# C extensions
++*.so
++
++# Distribution / packaging
++.Python
++env/
++build/
++develop-eggs/
++dist/
++downloads/
++eggs/
++.eggs/
++lib/
++lib64/
++parts/
++sdist/
++var/
++*.egg-info/
++.installed.cfg
++*.egg
++
++# PyInstaller
++#  Usually these files are written by a python script from a template
++#  before PyInstaller builds the exe, so as to inject date/other infos into it.
++*.manifest
++*.spec
++
++# Installer logs
++pip-log.txt
++pip-delete-this-directory.txt
++
++# Unit test / coverage reports
++htmlcov/
++.tox/
+ .coverage
+-my_file.json
+-lastfailed
+-docs/source/_build
+-the_file.json
++.coverage.*
++.cache
++nosetests.xml
+ coverage.xml
+-*.lekture
++*,cover
++.hypothesis/
++
++# Translations
++*.mo
++*.pot
++
++# Django stuff:
++*.log
++
++# Sphinx documentation
++docs/_build/
++
++# PyBuilder
++target/
++
++#Ipython Notebook
++.ipynb_checkpoints
++docs/source/_build
++examples/.tempfiles
++tests/export-*.bush
++tests/BOGUS.bush
++pylint*
++*.bush
+\ No newline at end of file
+-- 
+2.10.1
+
