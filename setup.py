@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
+from setuptools import setup
 import versioneer
 import os, sys
 sys.path.append(os.path.abspath('./pylekture'))
@@ -20,6 +20,7 @@ setup(
   author = 'Pixel Stereo',
   url='https://github.com/PixelStereo/pylekture',
   download_url = 'https://github.com/PixelStereo/pylekture/tarball/' + __version__,
+  install_requires=['simplejson', 'sphinx_rtd_theme'],
   classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
