@@ -2,45 +2,46 @@
 # -*- coding: utf-8 -*-
 
 """
-Ramp Animation is a basic animation
+Random Animation is a basic animation
 """
 
 from threading import Thread
 from time import time
 from pylekture.event import Event
+from random import uniform
+
 current_milli_time = lambda: time() * 1000
 
-
-def ramp_generator(origin=0, destination=1, duration=1000, grain=10):
+def random_generator(origin=0, destination=1, duration=1000, grain=10):
     """
-    The Ramp Generator
-    step every 10 ms
-    Allow to do several ramps in a same project / scenario / event
+    The Random Generator
+    step every 10 ms (default)
+    Allow to do several random in a same project / scenario / event
     :param target:
     """
     start = current_milli_time()
     last = start
-    step = float( (destination - origin) / ( float(duration / grain) ))
     while (current_milli_time() < (start + duration)):
         while (current_milli_time() < last + grain):
             pass # wait
         last = current_milli_time()
-        origin += step
+        # uniform gives you a floating-point value
+        frand = uniform(0.0, 1.0)
         yield origin
 
 
-class Ramp(Event):
+class Random(Event):
     """
-    The Ramp Object
-    a ramp is an interpolation with time as input and a function as output
+    The Random Object
+    a random is a pseudo random generation
     it has
-    - origin (value)
+    - parameter (parameter.value)
     - destination (value)
     - duration (milliseconds)
     - grain (milliseconds)
     """
     def __init__(self, *args, **kwargs):
-        super(Ramp, self).__init__()
+        super(Random, self).__init__()
         self.parameter = None
         self.destination = 1
         self.duration = 1000
@@ -49,7 +50,7 @@ class Ramp(Event):
             setattr(self, key, value)
 
     def __repr__(self):
-        s = "Ramp (parameter={parameter}, destination={destination}, duration={duration}, grain={grain}"
+        s = "Random (parameter={parameter}, destination={destination}, duration={duration}, grain={grain}"
         return s.format(parameter=self.parameter,
                         destination=self.destination,
                         duration=self.duration,
@@ -58,7 +59,7 @@ class Ramp(Event):
     @property
     def parameter(self):
         """
-        Time to wait after all events played and before the end of this scenario
+        The parameter to control
         unit:
         seconds
         """
@@ -90,15 +91,15 @@ class Ramp(Event):
         Event Player
         It plays the event in a separate Thread
         """
-        def __init__(self, ramp):
+        def __init__(self, random):
             Thread.__init__(self)
-            self.ramp = ramp
+            self.random = random
             self.start()
 
         def run(self):
-            ramper = ramp_generator(self.ramp.parameter.value, self.ramp.destination, self.ramp.duration, self.ramp.grain)
-            for val in ramper:
-                self.ramp.parameter.value = val
+            randomer = random_generator(self.random.parameter.value, self.random.destination, self.random.duration, self.random.grain)
+            for val in randomer:
+                self.random.parameter.value = val
 
 
 class Player(Thread):

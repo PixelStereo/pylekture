@@ -237,7 +237,10 @@ class Event(object):
                     export.setdefault('events', [])
             else:
                 # this is just a property, dump them all !!
-                export.setdefault(key, props[key])
+                if key == 'parameter':
+                    export.setdefault(key, str(props[key].node))
+                else:
+                    export.setdefault(key, props[key])
         # Itarate a second time to link ScenarioPlay obkects with Scenario
         for key in keys:
             if key == 'events':
