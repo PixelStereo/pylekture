@@ -52,6 +52,9 @@ Project / Scenario / Event attributes:
 -------------------------------------------------------------------------------
 Changelog
 -------------------------------------------------------------------------------
+- v0.4.0 - work in progress
+    - No more output concept. Parameters outputs value
+    - Scenario is now just a bunch of events
 
 - v0.3.1 - Aug. 8 2016
     - Fix output menu now display the right output in scenario & events tables

@@ -61,7 +61,7 @@ class Ramp(object):
         self._is_template = m_bool(state)
 
 
-    def play(self, output=None):
+    def play(self):
         """
         Play an event
         It creates a new object play in a separate thread.

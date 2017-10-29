@@ -26,7 +26,7 @@ class Node(object):
         super(Node, self).__init__()
         self._name = 'Untitled Node'
         self._description = 'Node without a description'
-        self._tags = ['No Tags', 'no tag']
+        self._tags = ['No Tags', 'notag']
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -74,7 +74,7 @@ class Node(object):
         """
         It is the parent of the node.
         It is None for a project.
-        It is the project object for events, scenario and outputs
+        It is the project object for events and scenarios
 
         :Returns:String
         """
@@ -121,7 +121,7 @@ class Node(object):
         """
         # create a dict to export the content of the node
         export = {}
-        # this is the dictionary of all props (output is already processed)
+        # this is the dictionary of all props
         props = prop_dict(self)
         # just the keys please
         keys = props.keys()

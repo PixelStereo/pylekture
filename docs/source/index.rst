@@ -12,7 +12,6 @@ Index
 
    project
    node
-   output
    event
    scenario
    functions

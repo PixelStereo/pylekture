@@ -67,11 +67,5 @@ def prop_dict(the_class):
     plist = prop_list(the_class)
     pdict = {}
     for prop in plist:
-        if prop == 'output':
-            newprop = '_' + prop
-            newprop = getattr(the_class, newprop)
-            #newprop = newprop
-            pdict.setdefault(prop, newprop)
-        else:
             pdict.setdefault(prop, getattr(the_class, prop))
     return pdict

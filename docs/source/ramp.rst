@@ -1,6 +1,6 @@
-pylekture.animations
+pylekture.ramp
 ====================
-.. automodule:: pylekture.animations
+.. automodule:: pylekture.ramp
     :members:
     :undoc-members:
     :show-inheritance:

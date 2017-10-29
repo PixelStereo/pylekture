@@ -5,14 +5,14 @@
 The Event Class
 An Event is always in a project and it may be in one or several scenario.
 Event is the baseclass for Scenario and Project.
-It inherits from Node, and add some attributes as wait, post_wait, loop, autoplay and output.
+It inherits from Node, and add some attributes as wait, post_wait, loop and autoplay.
 It adds a few methods too as play(), getduration() and getparent()
 
 """
 
 from threading import Thread
 from pylekture.node import Node
-from pylekture.animations import Ramp
+from pylekture.ramp import Ramp
 from pylekture.errors import LektureTypeError
 
 
@@ -33,7 +33,8 @@ class Event(Node):
         self.post_wait = 0
         self._loop = False
         self._autoplay = False
-        self.parameter = None
+        self._parent = None
+        self._parameter = None
         self.value = None
         self.animation = None
         for key, value in kwargs.items():
@@ -140,12 +141,12 @@ class Event(Node):
                     pass
         return duration
 
-    def play(self, output=None):
+    def play(self, parameter=None):
         """
         Play an event
         It creates a new object play in a separate thread.
         """
-        self.current_player = Player(self, output=output)
+        self.current_player = Player(self)
         return self.current_player
 
     def stop(self):
