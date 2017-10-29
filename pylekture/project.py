@@ -278,6 +278,7 @@ class Project(object):
                 out_file.write(the_dump)
                 print("file has been written in " + savepath)
                 out_file.close()
+                self.path = os.path.realpath(savepath)
                 return True
             except TypeError as Error:
                 print('ERROR 99 ' + str(Error))
@@ -321,8 +322,6 @@ class Project(object):
             player = self.Play(self)
             player.join()
             # all scenario have been played
-            if self.loop:
-                self.play()
         else:
             if debug:
                 print("This project is empty")
