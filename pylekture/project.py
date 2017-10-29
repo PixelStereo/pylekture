@@ -10,8 +10,7 @@ Here is an example to create a project.
     from pylekture.project import new_project, projects
     my_project = new_project()
 
-Then, you can create an output and a scenario
-    my_out = my_project.new_output("OSC")
+Then, you can create a scenario
     my_scenario = my_project.new_scenario()
 
 
@@ -25,11 +24,10 @@ import simplejson as json
 import datetime
 from pylekture import __version__
 from pylekture.scenario import Scenario
-from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
-from pylekture.event import Osc, MidiNote, Event, Wait, ScenarioPlay
-from pylekture.errors import NoOutputError, LektureTypeError
+from pylekture.event import Event
+from pylekture.errors import LektureTypeError
 
 def new_project():
     """
@@ -56,19 +54,18 @@ class Project(Event):
     A project handles everything you need.
     Ouputs and scenarios are all project-relative
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super(Project, self).__init__(parent=None)
-        if self.name == 'Untitled Event':
-            self.name = 'Untitled Project'
-        if self.description == "I'm an event":
-            self.description = "I'm a project"
+        self.name = 'Untitled Project'
+        self.description = "I'm a project"
         self._version = __version__
         self._path = None
         self._lastopened = None
         self._created = str(datetime.datetime.now())
-        self._outputs = []
         self._scenarios = []
         self._events = []
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 
     def __repr__(self):
@@ -82,26 +79,6 @@ class Project(Event):
                         loop=self.loop,
                         scenarios=len(self.scenarios),
                         events=len(self.events))
-
-    @property
-    def output(self):
-        """
-        The port to output this project
-        Initialised to the first output
-        """
-        if self._output:
-            return self._output
-        else:
-            if self._outputs:
-                return self._outputs[0]
-            else:
-                raise NoOutputError()
-    @output.setter
-    def output(self, out):
-        if out.__class__.__name__ == 'OutputUdp' or out.__class__.__name__ == 'OutputMidi':
-            self._output = out
-        else:
-            raise LektureTypeError('Wait for an Output but receive a', out.__class__)
 
     @property
     def lastopened(self):
@@ -149,12 +126,10 @@ class Project(Event):
         self._path = value
 
     def reset(self):
-        """reset a project by deleting project.attributes, scenarios, outputs and events related"""
+        """reset a project by deleting project.attributes, scenarios and events related"""
         # reset project attributes
         self._version = None
         self._path = None
-        # reset outputs
-        self._outputs = []
         # reset scenarios
         self._scenarios = []
         # reset  events
@@ -212,7 +187,7 @@ class Project(Event):
     def fillin(self, loaded):
         """
         Creates Outputs, Scenario and Events obects
-        First, dump attributes, then outputs, scenario and finish with events.
+        First, dump attributes, then scenario and finish with events.
 
         :returns: True if file formatting is correct, False otherwise
         :rtype: boolean
@@ -234,34 +209,17 @@ class Project(Event):
                 elif attribute == "name":
                     self.name= value
             self._lastopened = str(datetime.datetime.now())
-            # dump outputs
-            outputs = loaded.pop('outputs')
-            for out in outputs:
-                service = out.pop('service')
-                self.new_output(service, **out)
+            # dump scenarios
             scenarios = loaded.pop('scenarios')
             # dump events before scenario, because a scenario contains events
             events = loaded.pop("events")
             for event in events:
                 # remove the service name. We are in the event dict, so we are sure that it is an event
                 service = event.pop('service')
-                output = event['output']
-                if output != 0:
-                    output = output - 1
-                    # refer to the corresponding output instance object
-                    event['output'] = self.outputs[output]
-                else:
-                    # if output is set to None, do the same, it means 'use parent output'
-                    event.pop('output')
                 self.new_event(service, **event)
             # dump scenario
             for scenario in scenarios:
                 service = scenario.pop('service')
-                output = scenario['output']
-                if output != 0:
-                    # refer to the corresponding output instance object
-                    output = output - 1
-                    scenario['output'] = self.outputs[output]
                 self.new_scenario(**scenario)
             if loaded == {}:
                 # project has been loaded, lastopened date changed
@@ -329,11 +287,6 @@ class Project(Event):
                 for event in value:
                     events.append(event.export())
                 export.setdefault('events', events)
-            elif key == 'outputs':
-                outputs = []
-                for output in value:
-                    outputs.append(output.export())
-                export.setdefault('outputs', outputs)
             elif key == 'scenarios':
                 scenarios = []
                 for scenario in value:
@@ -397,60 +350,6 @@ class Project(Event):
         self._scenarios.insert(new, s_temp)
 
     @property
-    def outputs(self):
-        """
-        return a list of outputs of this project
-        """
-        return self._outputs
-
-    def getoutputs(self, protocol):
-        """
-        return a list of available output for this protocol
-        """
-        if self.outputs:
-            outputs = []
-            for out in self.outputs:
-                if protocol == out.__class__.__name__:
-                    outputs.append(out)
-            return outputs
-        else:
-            return None
-
-    def getprotocols(self):
-        """return the protocols available for this project"""
-        protocols = []
-        for out in self.outputs:
-            proto = out.__class__.__name__
-            if not proto in protocols:
-                protocols.append(proto)
-        if protocols == []:
-            return None
-        else:
-            return protocols
-
-    def new_output(self, protocol="OSC", **kwargs):
-        """
-        Create a new output for this project
-        args:Mandatory argument is the protocol that you want to use for this output
-        (OSC, MIDI, serial, ArtNet)
-        rtype:Output object
-        """
-        taille = len(self._outputs)
-        if protocol == "OSC" or protocol == 'OutputUdp':
-            output = OutputUdp(parent=self)
-        elif protocol == "MIDI" or protocol == 'OutputMidi':
-            output = OutputMidi(parent=self)
-        else:
-            output = None
-        if output:
-            for key, value in kwargs.items():
-                setattr(output, key, value)
-            self._outputs.append(output)
-            return self._outputs[taille]
-        else:
-            return False
-
-    @property
     def scenarios(self):
         """
         Report existing scenarios
@@ -496,7 +395,7 @@ class Project(Event):
         """
         return self._events
 
-    def new_event(self, event_type, command=None, **kwargs):
+    def new_event(self, parameter, command=None, **kwargs):
         """
         create a new event for this scenario
         """
@@ -505,7 +404,7 @@ class Project(Event):
         self.events.append(the_event)
         if isinstance(command, Scenario):
             command = self.scenarios.index(command)
-        event = self.new_event_create(event_type, command)
+        event = Event(parameter=parameter, command=command)
         if event:
             self.events[taille] = event
             for key, value in kwargs.items():
@@ -515,23 +414,6 @@ class Project(Event):
             return self.events[taille]
         else:
             return None
-
-    def new_event_create(self, event_type, command):
-        event = None
-        if event_type == 'Osc':
-            event = Osc(self, command=command)
-        elif event_type == 'Wait':
-            event = Wait(self, command=command)
-        elif event_type == 'MidiNote':
-            event = MidiNote(self, command=command)
-        elif event_type == 'ScenarioPlay':
-            event = ScenarioPlay(self, command=command)
-        elif event_type == 'PjLink':
-            if command == None:
-                command = ['shutter', True]
-            event = PjLink(self, command=command)
-        return event
-
 
     def del_event(self, index):
         """
@@ -548,16 +430,3 @@ class Project(Event):
             return True
         else:
             return False
-
-    def del_output(self, output):
-        """
-        delete an output of this project
-        This function will delete  of the scenario
-        """
-        if output in self.outputs:
-            # delete the output
-            self._outputs.remove(output)
-        else:
-            if debug:
-                print("ERROR - trying to delete an output which not exists \
-                      in self._outputs", output)
