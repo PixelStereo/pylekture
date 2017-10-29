@@ -11,10 +11,9 @@ Index
    :maxdepth: 2
 
    project
-   node
    event
    scenario
    functions
-   animations
    constants
    errors
+   ramp
