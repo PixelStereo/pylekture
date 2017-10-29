@@ -28,7 +28,7 @@ from pylekture.scenario import Scenario
 from pylekture.output import OutputUdp, OutputMidi
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
-from pylekture.event import Osc, MidiNote, Event, Wait, ScenarioPlay
+from pylekture.event import Event
 from pylekture.errors import NoOutputError, LektureTypeError
 
 def new_project():
@@ -56,12 +56,10 @@ class Project(Event):
     A project handles everything you need.
     Ouputs and scenarios are all project-relative
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super(Project, self).__init__(parent=None)
-        if self.name == 'Untitled Event':
-            self.name = 'Untitled Project'
-        if self.description == "I'm an event":
-            self.description = "I'm a project"
+        self.name = 'Untitled Project'
+        self.description = "I'm a project"
         self._version = __version__
         self._path = None
         self._lastopened = None
@@ -69,6 +67,8 @@ class Project(Event):
         self._outputs = []
         self._scenarios = []
         self._events = []
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 
     def __repr__(self):
@@ -82,26 +82,6 @@ class Project(Event):
                         loop=self.loop,
                         scenarios=len(self.scenarios),
                         events=len(self.events))
-
-    @property
-    def output(self):
-        """
-        The port to output this project
-        Initialised to the first output
-        """
-        if self._output:
-            return self._output
-        else:
-            if self._outputs:
-                return self._outputs[0]
-            else:
-                raise NoOutputError()
-    @output.setter
-    def output(self, out):
-        if out.__class__.__name__ == 'OutputUdp' or out.__class__.__name__ == 'OutputMidi':
-            self._output = out
-        else:
-            raise LektureTypeError('Wait for an Output but receive a', out.__class__)
 
     @property
     def lastopened(self):
@@ -496,7 +476,7 @@ class Project(Event):
         """
         return self._events
 
-    def new_event(self, event_type, command=None, **kwargs):
+    def new_event(self, parameter, command=None, **kwargs):
         """
         create a new event for this scenario
         """
@@ -505,7 +485,7 @@ class Project(Event):
         self.events.append(the_event)
         if isinstance(command, Scenario):
             command = self.scenarios.index(command)
-        event = self.new_event_create(event_type, command)
+        event = Event(parameter=parameter, command=command)
         if event:
             self.events[taille] = event
             for key, value in kwargs.items():
@@ -515,23 +495,6 @@ class Project(Event):
             return self.events[taille]
         else:
             return None
-
-    def new_event_create(self, event_type, command):
-        event = None
-        if event_type == 'Osc':
-            event = Osc(self, command=command)
-        elif event_type == 'Wait':
-            event = Wait(self, command=command)
-        elif event_type == 'MidiNote':
-            event = MidiNote(self, command=command)
-        elif event_type == 'ScenarioPlay':
-            event = ScenarioPlay(self, command=command)
-        elif event_type == 'PjLink':
-            if command == None:
-                command = ['shutter', True]
-            event = PjLink(self, command=command)
-        return event
-
 
     def del_event(self, index):
         """

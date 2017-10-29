@@ -10,6 +10,10 @@ from pylekture.project import new_project
 from time import sleep
 
 p = new_project()
+p.name = 'la la land'
+print(p)
+p.write('./')
+quit()
 o = p.new_output('OSC')
 s = p.new_scenario()
 s.name = 'Scenar avec une ramp $%ù€ù€ÛÁ7å5»[«¶Û»'

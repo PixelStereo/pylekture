@@ -22,23 +22,13 @@ class Node(object):
     It should be removed for the version 0.1
 
     """
-    def __init__(self, parent=None, name='Untitled Node', description="I'm a node", tags=None):
+    def __init__(self, *args, **kwargs):
         super(Node, self).__init__()
-        if isinstance(name, list):
-            name_maker = ""
-            for item in name:
-                name_maker = name_maker + " " +  str(item)
-            name = name_maker
-        if name:
-            if isinstance(name, str):
-                if name.startswith(" "):
-                    name = name[1:]
-        self._name = name
-        self._description = description
-        if tags == None:
-            self._tags = []
-            self._tags = tags
-        self.parent = parent
+        self._name = 'Untitled Node'
+        self._description = 'Node without a description'
+        self._tags = ['No Tags', 'no tag']
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     @property
     def name(self):
@@ -136,14 +126,7 @@ class Node(object):
         # just the keys please
         keys = props.keys()
         for key in keys:
-            # for an output, we just need the index, not the output object
-            if key == 'output':
-                if props['output']:
-                    if props['output'] in self.parent.outputs:
-                        export.setdefault('output', self.parent.outputs.index(props['output']) + 1)
-                else:
-                    export.setdefault('output', 0)
-            elif key == 'events':
+            if key == 'events':
                 # for an event, we just need the index, not the event object
                 export.setdefault('events', [])
                 if props['events']:

@@ -39,21 +39,19 @@ class Ramp(object):
     - duration (milliseconds)
     - grain (milliseconds)
     """
-    def __init__(self, origin=0, destination=1, duration=1000, grain=10, loop=False):
+    def __init__(self, origin=0, destination=1, duration=1000, grain=10):
         super(Ramp, self).__init__()
         self.origin = origin
         self.destination = destination
         self.duration = duration
         self.grain = grain
-        self.loop = loop
 
     def __repr__(self):
-        s = "Ramp (origin={origin}, destination={destination}, duration={duration}, grain={grain}, loop={loop}"
+        s = "Ramp (origin={origin}, destination={destination}, duration={duration}, grain={grain}"
         return s.format(origin=self.origin,
                         destination=self.destination,
                         duration=self.duration,
-                        grain=self.grain,
-                        loop=self.loop)
+                        grain=self.grain,)
 
     @property
     def is_template(self):
@@ -61,18 +59,6 @@ class Ramp(object):
     @is_template.setter
     def is_template(self, state):
         self._is_template = m_bool(state)
-
-
-    @property
-    def loop(self):
-        """
-        The loop attribute. If true, the loop plays again when it reach its end.
-            :arg: Boolean
-        """
-        return self._loop
-    @loop.setter
-    def loop(self, loop):
-        self._loop = loop
 
 
     def play(self, output=None):

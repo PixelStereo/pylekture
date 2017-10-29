@@ -3,41 +3,39 @@
 
 """
 The Event Class
-An Event is always in a project and it (may) be in one or several scenarios
+An Event is always in a project and it may be in one or several scenario.
 Event is the baseclass for Scenario and Project.
 It inherits from Node, and add some attributes as wait, post_wait, loop, autoplay and output.
-It add a few methods too as play(), getduration() and getparent()
-Event class is an abstract class.
-Create Osc, MidiNote, Wait events with the project.new_event() constructor.
+It adds a few methods too as play(), getduration() and getparent()
+
 """
 
-import liblo
-import datetime
-import threading
-from time import sleep
+from threading import Thread
 from pylekture.node import Node
-from pylekture.constants import debug
-from pylekture.functions import checkType
 from pylekture.animations import Ramp
 from pylekture.errors import LektureTypeError
 
 
 class Event(Node):
-    """Create an Event
+    """
+    Create an Event
     an Event is like a step of a Scenario.
     It could be a delay, a goto value, a random process,
-    a loop process or everything you can imagine """
+    a loop process or everything you can imagine
+    An event is an address, a value, and optionally an animation
+    """
     def __init__(self,*args, **kwargs):
         super(Event, self).__init__(*args, **kwargs)
-        if self.name == 'Untitled Node':
-            self.name = 'Untitled Event'
-        if self.description == "I'm a node":
-            self.description = "I'm an event"
+        self.name = 'Untitled Event'
+        self.description = "I'm an event"
+        self._is_template = None
         self.wait = 0
-        self._output = 0
         self.post_wait = 0
         self._loop = False
         self._autoplay = False
+        self.parameter = None
+        self.value = None
+        self.animation = None
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -56,36 +54,8 @@ class Event(Node):
         return self._is_template
     @is_template.setter
     def is_template(self, state):
-        self._is_template = m_bool(state)
+        self._is_template = state
 
-    @property
-    def output(self):
-        """
-        The port to output this scenario
-        Initialised to None if user does not set it.
-        """
-        if self._output:
-            return self._output
-        else:
-            parent = self.getparent()
-            if parent:
-                return self.parent.output
-            else:
-                return self.parent.output
-    @output.setter
-    def output(self, output):
-        output_class = output.__class__
-        name = self.__class__.__name__
-        if output_class.__name__ == "OutputUdp":
-            if name == 'Osc' or 'Scenario':
-                self._output = output
-        elif output_class.__name__ == 'OutputMidi':
-            if name == 'MidiNote' or 'MidiControl' or 'MidiBend' or 'Scenario':
-                self._output = output
-        elif output_class.__name__ == "NoneType" or output_class.__name__ == "int":
-            self._output = 0
-        else:
-            raise LektureTypeError('Output', output)
 
     @property
     def wait(self):
@@ -122,11 +92,6 @@ class Event(Node):
         return self._autoplay
     @autoplay.setter
     def autoplay(self, autoplay):
-        autoplay = checkType(autoplay)
-        if autoplay == 0:
-            autoplay = False
-        elif autoplay > 0:
-            autoplay = True
         self._autoplay = autoplay
 
     @property
@@ -138,11 +103,6 @@ class Event(Node):
         return self._loop
     @loop.setter
     def loop(self, loop):
-        loop = checkType(loop)
-        if loop == 0:
-            loop = False
-        elif loop > 0:
-            loop = True
         self._loop = loop
 
     def getparent(self):
@@ -196,60 +156,8 @@ class Event(Node):
         #print(self.current_player)
         print("stop is not yet implemented")
 
-class Command(Event):
-    """docstring for Command"""
-    def __init__(self, project, command, port):
-        super(Command, self).__init__(project, command, port)
-        self._command = command
 
-    def __repr__(self):
-        s = "Command (name={name}, self.parent={parent}, description={description}, command={command} tags={tags}, autoplay={autoplay}, loop={loop}"
-        return s.format(name=self.name,
-                        parent=self.parent,
-                        description=self.description,
-                        command=self.command,
-                        tags=self.tags,
-                        autoplay=self.autoplay,
-                        loop=self.loop)
-
-    @property
-    def command(self):
-        """
-        The content of the event
-        It is a command that will be executate.
-        """
-        return self._command
-    @command.setter
-    def command(self, command):
-        name = self.__class__.__name__
-        command = checkType(command)
-        flag = False
-        if name == 'ScenarioPlay':
-            if isinstance(command, list) and len(command) == 1:
-                self._command = checkType(command[0])
-            if isinstance(self._command, int):
-                flag = True
-            else:
-                print(name + '.command for a ScenarioPlay must be an int')
-                return False
-        elif name == 'Wait':
-            if isinstance(command, int) or isinstance(command, float):
-                self._command = command
-                flag = True
-        elif name == 'MidiNote' or 'MidiControl':
-            if isinstance(command, list) and len(command) == 3:
-                self._command = command
-                flag = True
-            else:
-                print('Error 9876543 -', command)
-        if flag:
-            return True
-        else:
-            print(name + '.command must be something else than a ' + str(type(command)))
-            return False
-
-
-class Player(threading.Thread):
+class Player(Thread):
     """
     A Player that play things
     """
@@ -268,212 +176,3 @@ class Player(threading.Thread):
 
     def stop(self):
         self._stop.set()
-
-
-class Osc(Command):
-    """
-    An OSC event is an Event designed to be outputed via OSC
-    """
-    def __init__(self, project, command=None, port='127.0.0.1:1234'):
-        super(Osc, self).__init__(project, command, port)
-        if self._command == None:
-            self._command = ['/lekture', 10]
-
-    def __repr__(self):
-        s = "OSC command command={command}, output"
-        return s.format(command=self.command, output=self.output)
-
-    @property
-    def command(self):
-        """
-        The content of the event
-        It is a command that will be executate.
-        """
-        return self._command
-    @command.setter
-    def command(self, command):
-        command = checkType(command)
-        flag = False
-        if isinstance(command, list) or isinstance(command, basestring):
-            self._command = command
-            flag = True
-        return flag
-
-
-    class Play(threading.Thread):
-        """
-        Event Player
-        It plays the event in a separate Thread
-        """
-        def __init__(self, event, output):
-            threading.Thread.__init__(self)
-            if output['output']:
-                self.output = output['output']
-            else:
-                self.output = event.output
-            self.command = event.command
-            self.event = event
-            self.start()
-
-        def run(self):
-            """play an OSC event"""
-            out = self.output
-            args = self.command
-            if out.port:
-                if debug >= 3:
-                    print('event-play: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
-                split = out.port.split(':')
-                ip = split[0]
-                udp = split[1]
-                if isinstance(args, list):
-                    # address is the first item of the list
-                    address = args[0]
-                    args = args[1:]
-                    if len(args) == 0:
-                        args = None
-                else:
-                    # this is a adress_only without arguments
-                    address = args
-                    args = None
-                try:
-                    target = liblo.Address(ip, int(udp))
-                    if debug >= 3:
-                        print('connect to : ' + ip + ':' + str(udp))
-                except liblo.AddressError as err:
-                    print('liblo.AddressError' + str(err))
-                if args:
-                    args[0] = checkType(args[0])
-                    if (isinstance(args, list) and 'ramp' in args) and (isinstance(args[0], int) == True or isinstance(args[0], float) == True):
-                        # TODO : ASK ABOUT THE CURRENT VALUE OF THE ADDRESS
-                        origin = 0
-                        destination = float(args[0])
-                        rampindex = args.index('ramp')
-                        duration = int(args[rampindex+1])
-                        if 'grain' in args:
-                            grainindex = args.index('grain')
-                            grain = int(args[grainindex+1])
-                        else:
-                            grain = 10
-                        if duration < 10:
-                            duration = 10
-                        ramp = Ramp(origin, destination, duration, grain)
-                        for val in ramp:
-                            msg = liblo.Message(address)
-                            msg.add(val)
-                            liblo.send(target, msg)
-                    elif isinstance(args, list):
-                        # this is just a list of values to send
-                        msg = liblo.Message(address)
-                        for arg in args:
-                            arg = checkType(arg)
-                            msg.add(arg)
-                        liblo.send(target, msg)
-                    else:
-                        # what iss this case?????
-                        print("DEBUG", len(args), type(args))
-                else:
-                    msg = liblo.Message(address)
-                    liblo.send(target, msg)
-                if debug >= 3:
-                    print('event-ends: ' + self.event.name + ' in ' + str(threading.current_thread().name) + ' at ' + str(datetime.datetime.now()))
-
-
-class Wait(Command):
-    """
-    Play an EventWait
-    """
-    def __init__(self, project, command=None, port=None):
-        super(Wait, self).__init__(project, command, port)
-        if self._command == None:
-            self._command = 1
-
-    class Play(threading.Thread):
-        """
-        Event Player
-        It plays the event in a separate Thread
-        """
-        def __init__(self, event, output):
-            threading.Thread.__init__(self)
-            self.output = event.output
-            self.command = event.command
-            self.event = event
-            self.start()
-
-        def run(self):
-            if debug >= 3:
-                print('sleep starts in ' + self.name + ' at ' + str(datetime.datetime.now()))
-            sleep(self.command)
-            if debug >= 3:
-                print('sleep ends in ' + self.name + ' at ' + str(datetime.datetime.now()))
-
-
-class MidiNote(Command):
-    """
-    An OSC event is an Event designed to be outputed via OSC
-    """
-    def __init__(self, project, command=None, port=None):
-        super(MidiNote, self).__init__(project, command, port)
-        if self._command == None:
-            self._command = [1, 64, 100]
-
-    class Play(threading.Thread):
-        """
-        Event Player
-        It plays the event in a separate Thread
-        """
-        def __init__(self, event, output):
-            threading.Thread.__init__(self)
-            self.output = event.output
-            self.command = event.command
-            self.event = event
-            self.start()
-
-        def run(self):
-            """
-            Play the MidiNote
-            """
-            print('MidiNote is not ready for now… please wait a few months')
-
-
-class ScenarioPlay(Command):
-    """
-    Play a Scenario
-    """
-    def __init__(self, project, command=0, port=None):
-        super(ScenarioPlay, self).__init__(project, command, port)
-
-    def __repr__(self):
-        s = "Scenario Play command={command}"
-        return s.format(command=self.command)
-
-
-    class Play(threading.Thread):
-        """
-        Event Player
-        It plays the event in a separate Thread
-        """
-        def __init__(self, event, output):
-            threading.Thread.__init__(self)
-            self.output = event.output
-            self.flag = None
-            the_command = (checkType(event.command))
-            if isinstance(the_command, int):
-                # check if the value is an index of the scenario list)
-                try:
-                    the_command = event.parent.scenarios[the_command]
-                    print(the_command)
-                except IndexError:
-                    print('Scenario Index ' + str(the_command) + ' does not exist')
-            if the_command.__class__.__name__ == 'Scenario':
-                # check if the value is a Scenario Object
-                self.the_command = the_command
-                self.flag=True
-            self.start()
-
-        def run(self):
-            if self.flag:
-                if debug >= 3:
-                    print('ScenarioPlay starts')
-                self.the_command.play()
-                if debug >= 3:
-                    print('ScenarioPlay ends')

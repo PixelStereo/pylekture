@@ -1,20 +1,20 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os,sys
-lib_path = os.path.abspath('./../')
-sys.path.append(lib_path)
-
 from pylekture.project import new_project
+from pylekture.project import Project
 
 from pprint import pprint
 
-p = new_project()
+#p = new_project()
+p = Project(name='Np supa name')
+
+print(p)
 s = p.new_scenario()
-osc = p.new_output('OSC')
-#pprint(p.export())
-#print(p, p.name)
-midi = p.new_output('MIDI')
+
+pprint(p.export())
+print(p, p.name)
+print(p.write('./'))
 #print(midi)
 
 #print(osc)
@@ -34,7 +34,7 @@ s.add_event(e)
 #print('COMMAND : ' + str(e.command))
 
 
-
+quit()
 
 
 # fill in scenario with events
@@ -56,7 +56,7 @@ s.add_event(my_event)
 #s.add_event(other_event)
 
 
-my_event.output = osc
+
 
 
 from pprint import pprint

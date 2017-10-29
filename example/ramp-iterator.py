@@ -4,9 +4,9 @@
 from time import sleep
 from datetime import datetime
 
-from pylekture.animations import Ramp
+from pylekture.ramp import Ramp
 
-a = Ramp(origin=0, destination=100, duration=10000, grain=10)
+a = Ramp(origin=0, destination=100, duration=1000, grain=10)
 
 print(a)
 a.play()
