@@ -29,14 +29,14 @@ from pylekture.functions import prop_dict
 from pylekture.event import Event
 from pylekture.errors import LektureTypeError
 
-def new_project():
+def new_project(*args, **kwargs):
     """
     Create a new project
     :
     """
     try:
         size = len(_projects)
-        _projects.append(Project())
+        _projects.append(Project(*args, **kwargs))
         return _projects[size]
     except Exception as problem:
         print('ERROR 22' + str(problem))
@@ -49,36 +49,47 @@ def projects():
     return _projects
 
 
-class Project(Event):
+class Project(object):
     """
     A project handles everything you need.
-    Ouputs and scenarios are all project-relative
+    Scenarios and Events are all project-relative
     """
     def __init__(self, *args, **kwargs):
-        super(Project, self).__init__(parent=None)
+        super(Project, self).__init__()
         self.name = 'Untitled Project'
         self.description = "I'm a project"
         self._version = __version__
         self._path = None
+        self.service = self.__class__.__name__
         self._lastopened = None
         self._created = str(datetime.datetime.now())
         self._scenarios = []
+        self._autoplay = None
         self._events = []
         for key, value in kwargs.items():
             setattr(self, key, value)
 
 
     def __repr__(self):
-        s = "Project (name={name}, path={path}, description={description}, tags={tags}, autoplay={autoplay}, loop={loop}, " \
+        s = "Project (name={name}, path={path}, description={description}, autoplay={autoplay}, " \
             "scenarios={scenarios}, events={events})"
-        return s.format(name=self.name,
+        return s.format(name=str(self.name).encode('utf-8'),
                         path=self.path,
                         description=self.description,
-                        tags=self.tags,
                         autoplay=self.autoplay,
-                        loop=self.loop,
                         scenarios=len(self.scenarios),
                         events=len(self.events))
+
+    @property
+    def autoplay(self):
+        """
+        The autplay attribute. If true, the project plays when finish loading from hard drive
+            :arg: Boolean
+        """
+        return self._autoplay
+    @autoplay.setter
+    def autoplay(self, autoplay):
+        self._autoplay = autoplay
 
     @property
     def lastopened(self):
@@ -294,7 +305,6 @@ class Project(Event):
                 export.setdefault('scenarios', scenarios)
             else:
                 export['attributes'].setdefault(key, value)
-        export['attributes'].pop('parent')
         return export
 
     def play(self, index=0):

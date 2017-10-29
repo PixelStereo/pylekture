@@ -3,15 +3,15 @@ dist: trusty
 language: python
 python:
 - "2.7"
-- "3.5"
-- "3.5"
+- "3.4"
+- "3.5-dev"
 - "3.6"
+- "3.6-dev"
 - "nightly"
 install:
 - sudo apt-get update
-- sudo apt-get -qq install python-setuptools liblo7 liblo-dev liblo-tools
+- sudo apt-get -qq install python-setuptools python-dev
 - pip install --upgrade pip
-- pip install Cython
 - pip install -r requirements.txt
 - pip install coverage
 - pip install codacy-coverage
@@ -19,9 +19,9 @@ install:
 script:
 - cd tests
 - coverage run --omit ../pylekture/_version.py --include=../pylekture/"*" test_.py
-- if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then coverage xml; fi
-- if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then coverage report -m; fi
-- if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then python-codacy-coverage -r coverage.xml; fi
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then coverage xml; fi
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then coverage report -m; fi
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then python-codacy-coverage -r coverage.xml; fi
 - cd ../
 - travis-sphinx build
 after_success:
