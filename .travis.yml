@@ -25,6 +25,20 @@ script:
 - cd ../
 - travis-sphinx build
 after_success:
-- travis-sphinx deploy
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then travis-sphinx deploy; fi
 - cd tests
-- coveralls
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then coveralls; fi
+- cd ../
+- if [ -n "$TRAVIS_TAG" ]; then twine upload -u ${PyPiUser} -p ${PyPiWord} dist/pylekture*.whl; fi
+deploy:
+  - provider: releases
+    api_key:
+      secure: ${GH_TOKEN}
+    file_glob: true
+    file: dist/pyossia-*.whl
+    skip_cleanup: true
+    draft: false
+    prerelease: true
+    on:
+      repo: PixelStereo/pylekture
+      tags: true
