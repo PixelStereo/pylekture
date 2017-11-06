@@ -8,8 +8,7 @@ Random Animation is a basic animation
 from threading import Thread
 from time import time
 from pylekture.event import Event
-from random import uniform
-
+import random
 current_milli_time = lambda: time() * 1000
 
 def random_generator(origin=0, destination=1, duration=1000, grain=10):
@@ -26,8 +25,8 @@ def random_generator(origin=0, destination=1, duration=1000, grain=10):
             pass # wait
         last = current_milli_time()
         # uniform gives you a floating-point value
-        frand = uniform(0.0, 1.0)
-        yield origin
+        frand = round(random.random(), 6)
+        yield frand
 
 
 class Random(Event):

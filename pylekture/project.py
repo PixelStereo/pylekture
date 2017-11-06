@@ -27,7 +27,7 @@ from pylekture.scenario import Scenario
 from pylekture.constants import debug, _projects
 from pylekture.functions import prop_dict
 from pylekture.ramp import Ramp
-from pylekture.random import Random
+from pylekture.rand import Random
 from pylekture.errors import LektureTypeError
 
 def new_project(*args, **kwargs):
