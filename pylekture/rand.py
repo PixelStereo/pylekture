@@ -25,7 +25,7 @@ def random_generator(origin=0, destination=1, duration=1000, grain=10):
             pass # wait
         last = current_milli_time()
         # uniform gives you a floating-point value
-        frand = round(random.random(), 6)
+        frand = round(random.uniform(origin, destination), 6)
         yield frand
 
 
