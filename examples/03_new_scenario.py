@@ -29,5 +29,9 @@ print(a_ramp)
 
 print(a_scenario)
 
+a_scenario.del_event(2)
+print(a_scenario)
+
 my_project.play()
+
 

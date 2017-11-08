@@ -120,11 +120,3 @@ from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 __release__ = __version__
-
-try:
-    str = unicode
-    def is_string(test):
-        return isinstance(test, basestring)
-except NameError:
-    def is_string(test):
-        return isinstance(test, str)

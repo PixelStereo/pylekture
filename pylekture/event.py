@@ -10,8 +10,6 @@ It adds a few methods too as play(), getduration() and getparent()
 """
 
 from pylekture.functions import prop_dict
-from pylekture.functions import checkType
-from pylekture import is_string
 
 class Event(object):
     """
@@ -59,9 +57,6 @@ class Event(object):
 
         :Returns:String
         """
-        # be sure to return a string
-        if not is_string(self._name):
-            self._name = str(self._name)
         return self._name
     @name.setter
     def name(self, name):
@@ -202,7 +197,6 @@ class Event(object):
         duration = 0
         duration += self.wait
         duration += self.post_wait
-        classname = self.__class__.__name__
         duration += self.duration
         return duration
 

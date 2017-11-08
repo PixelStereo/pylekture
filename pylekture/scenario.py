@@ -78,10 +78,7 @@ class Scenario(Event):
         Remove an event from the scenario
         It won't delete the event, it just remove it of the scenario
         """
-        try:
-            self.events.remove(event)
-        except ValueError:
-            print('ERROR 1122 : No event is selected - cannot delete the event')
+        self.events.pop(event)
 
 
     class Play(threading.Thread):

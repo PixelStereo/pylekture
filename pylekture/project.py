@@ -420,70 +420,21 @@ class Project(object):
             the_event = None
         if the_event:
             self.events.append(the_event)
-            #for key, value in kwargs.items():
-            #    # set all attributes provided of the new event
-            #    setattr(self.events[size], key, value)
-            #    # put the new event in the list of existing events for this project
             return self.events[size]
         else:
             return None
 
-
-    def new_ramp(self, **kwargs):
-        """
-        create a ramp object, that refer to a Parameter object
-        it has also a destination (value), a duration and a grain.
-        """
-        
-        return ramp
-
-
-    def del_ramp(self, index):
+    def del_event(self, event):
         """
         delete an event, by index or with object instance
         """
         used = False
         for scenario in self.scenarios:
-            if index in scenario.events:
-                print('WARNING 2 - this ramp is still referenced in scenario ' + scenario.name)
+            if event in scenario.events:
+                print('WARNING - this event is still referenced in scenario ' + scenario.name)
                 used = True
         if not used:
-            index = self.events.index(index)
-            self.events.pop(index)
-            return True
-        else:
-            return False
-
-    def new_random(self, *args, **kwargs):
-        """
-        create a random object, that refer to a Parameter object
-        it has also a destination (value), a duration and a grain.
-        """
-        size = len(self.events)
-        the_event = None
-        self.events.append(the_event)
-        ramp = Random(*args, **kwargs)
-        if ramp:
-            self.events[size] = ramp
-            for key, value in kwargs.items():
-                # set all attributes provided of the new event
-                setattr(self.events[size], key, value)
-                # put the new event in the list of existing events for this project
-            return self.events[size]
-        else:
-            return None
-
-    def del_random(self, index):
-        """
-        delete an event, by index or with object instance
-        """
-        used = False
-        for scenario in self.scenarios:
-            if index in scenario.events:
-                print('WARNING 2 - this random is still referenced in scenario ' + scenario.name)
-                used = True
-        if not used:
-            index = self.events.index(index)
+            index = self.events.index(event)
             self.events.pop(index)
             return True
         else:
