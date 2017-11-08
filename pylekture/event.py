@@ -47,7 +47,9 @@ class Event(object):
                         duration=self.getduration(),
                         tags=self.tags,
                         autoplay=self.autoplay,
-                        loop=self.loop)
+                        loop=self.loop,
+                        wait=self.wait,
+                        post_wait=self.post_wait)
     @property
     def name(self):
         """
@@ -201,16 +203,7 @@ class Event(object):
         duration += self.wait
         duration += self.post_wait
         classname = self.__class__.__name__
-        if classname == 'Wait':
-            duration += self.command
-        else:
-            if self.command:
-                try:
-                    if 'ramp' in self.command:
-                        index = self.command.index('ramp')
-                        duration += float(self.command[index + 1])
-                except Exception:
-                    pass
+        duration += self.duration
         return duration
 
     def export(self):

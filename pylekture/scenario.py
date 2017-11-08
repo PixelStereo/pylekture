@@ -37,10 +37,8 @@ class Scenario(Event):
     """
     def __init__(self, *args, **kwargs):
         super(Scenario, self).__init__(*args, **kwargs)
-        if self.name == 'Untitled Event':
-            self.name = 'Untitled Scenario'
-        if self.description == "I'm an event":
-            self.description = "I'm a scenario"
+        self.name = 'Untitled Scenario'
+        self.description = "I'm a scenario"
         self.project = self.parent
         self.index = 0
         self._events = []

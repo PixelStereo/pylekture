@@ -39,7 +39,7 @@ class Random(Event):
     - duration (milliseconds)
     - grain (milliseconds)
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, kwargs):
         super(Random, self).__init__()
         self.parameter = None
         self.destination = 1
@@ -49,11 +49,13 @@ class Random(Event):
             setattr(self, key, value)
 
     def __repr__(self):
-        s = "Random (parameter={parameter}, destination={destination}, duration={duration}, grain={grain}"
+        s = "Random (parameter={parameter}, destination={destination}, duration={duration}, grain={grain}, wait={wait}, post_wait={post_wait})"
         return s.format(parameter=self.parameter,
                         destination=self.destination,
                         duration=self.duration,
-                        grain=self.grain,)
+                        grain=self.grain,
+                        wait=self.wait,
+                        post_wait=self.post_wait)
 
     @property
     def parameter(self):

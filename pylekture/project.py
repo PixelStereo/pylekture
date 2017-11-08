@@ -412,10 +412,12 @@ class Project(object):
         create an event
         """
         size = len(self.events)
-        the_event = None
         if event_type == 'ramp':
-            print(kwargs)
-            the_event = self.new_ramp(kwargs)
+            the_event = Ramp(kwargs)
+        elif event_type == 'random':
+            the_event = Random(kwargs)
+        else:
+            the_event = None
         if the_event:
             self.events.append(the_event)
             #for key, value in kwargs.items():
@@ -432,12 +434,8 @@ class Project(object):
         create a ramp object, that refer to a Parameter object
         it has also a destination (value), a duration and a grain.
         """
-        ramp = Ramp(**kwargs)
-        print(kwargs)
-        if ramp:
-            return ramp
-        else:
-            print('--- -ERROR 7542 Ramp is not valid- ---')
+        
+        return ramp
 
 
     def del_ramp(self, index):
