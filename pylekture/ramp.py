@@ -39,7 +39,7 @@ class Ramp(Event):
     - duration (milliseconds)
     - grain (milliseconds)
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super(Ramp, self).__init__()
         self.parameter = None
         self.destination = 1

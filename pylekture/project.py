@@ -74,7 +74,7 @@ class Project(object):
     def __repr__(self):
         s = "Project (name={name}, path={path}, description={description}, autoplay={autoplay}, " \
             "scenarios={scenarios}, events={events})"
-        return s.format(name=str(self.name).encode('utf-8'),
+        return s.format(name=str(self.name),
                         path=self.path,
                         description=self.description,
                         autoplay=self.autoplay,
@@ -407,24 +407,38 @@ class Project(object):
         """
         return self._events
 
-    def new_ramp(self, *args, **kwargs):
+    def new_event(self, event_type, **kwargs):
+        """
+        create an event
+        """
+        size = len(self.events)
+        the_event = None
+        if event_type == 'ramp':
+            print(kwargs)
+            the_event = self.new_ramp(kwargs)
+        if the_event:
+            self.events.append(the_event)
+            #for key, value in kwargs.items():
+            #    # set all attributes provided of the new event
+            #    setattr(self.events[size], key, value)
+            #    # put the new event in the list of existing events for this project
+            return self.events[size]
+        else:
+            return None
+
+
+    def new_ramp(self, **kwargs):
         """
         create a ramp object, that refer to a Parameter object
         it has also a destination (value), a duration and a grain.
         """
-        size = len(self.events)
-        the_event = None
-        self.events.append(the_event)
-        ramp = Ramp(*args, **kwargs)
+        ramp = Ramp(**kwargs)
+        print(kwargs)
         if ramp:
-            self.events[size] = ramp
-            for key, value in kwargs.items():
-                # set all attributes provided of the new event
-                setattr(self.events[size], key, value)
-                # put the new event in the list of existing events for this project
-            return self.events[size]
+            return ramp
         else:
-            return None
+            print('--- -ERROR 7542 Ramp is not valid- ---')
+
 
     def del_ramp(self, index):
         """

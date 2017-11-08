@@ -1,9 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from time import sleep
-from datetime import datetime
-
 from pylekture.project import new_project
 
 from pyossia import ossia
@@ -14,21 +11,12 @@ my_int = my_device.add_param('test/numeric/int', value_type='int', default_value
 my_float = my_device.add_param('test/numeric/float', value_type='float', default_value=0.123456, domain=[-2.1, 2.2])
 
 my_project = new_project(name= 'My Supa Name')
-e = my_project.new_ramp(parameter=my_int, name='event 1', description='event first', destination=100)
-print(e)
+a_ramp = my_project.new_event('ramp', parameter=my_int, name='event 1', description='my first event', destination=200, durantion=2000)
+a_random = my_project.new_event('random', parameter=my_int, name='event 1', description='event first', destination=100)
+#print(a_random)
+print(a_ramp)
+
+#a_ramp.play()
 
 
-a_random = my_project.new_random(parameter=my_float, name='random 1', description='random first', destination=10)
-print(a_random.play())
-
-my_project.play()
-
-s = my_project.new_scenario()
-print(s)
-
-s.add_event(e)
-
-
-print(my_project.path)
-my_project.write('./')
-print(my_project.path)
+#my_project.play()
