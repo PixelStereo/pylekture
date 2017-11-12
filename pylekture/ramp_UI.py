@@ -20,17 +20,27 @@ class Ramp_UI(QGroupBox):
         super(Ramp_UI, self).__init__()
         self.setTitle('Ramp Interface')
         self.ramp = ramp
+
+        # create UI objects
         self.origin = QSpinBox()
         self.origin.setValue(self.ramp.parameter.value)
+
         self.destination = QSpinBox()
-        self.destination.setValue(self.ramp.destination)
         self.destination.setMaximum(1000)
+        self.destination.setValue(self.ramp.destination)
+
         self.duration = QSpinBox()
         self.duration.setMaximum(100000)
         self.duration.setValue(self.ramp.duration)
+
         self.go = QPushButton()
         self.go.clicked.connect(self.ramp.play)
+
         self.progressbar = QProgressBar()
+        self.progressbar.setMaximum(2000)
+        self.progressbar.setValue(1000)
+
+        # set the layout
         self.layout = QGridLayout()
         self.layout.addWidget(self.origin, 0, 0)
         self.layout.addWidget(self.destination, 0, 1)

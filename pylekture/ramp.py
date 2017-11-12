@@ -8,6 +8,7 @@ Ramp Animation is a basic animation
 from threading import Thread
 from time import time
 from pylekture.event import Event
+
 current_milli_time = lambda: time() * 1000
 
 
