@@ -25,12 +25,10 @@ script:
 - cd ../
 - travis-sphinx build --source docs/source
 after_success:
-- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then
-    travis-sphinx deploy
-    cd tests
-    coveralls
-    then cd ../; 
-  fi
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then travis-sphinx deploy; fi
+- cd tests
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then coveralls; fi
+- cd ../
 - if [ -n "$TRAVIS_TAG" ]; then twine upload -u ${PyPiUser} -p ${PyPiWord} dist/pylekture*.whl; fi
 deploy:
   - provider: releases
