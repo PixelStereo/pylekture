@@ -18,9 +18,11 @@ my_float = my_device.add_param('test/numeric/float', value_type='float', default
 
 my_project = new_project(name= 'Demo Project')
 a_ramp = my_project.new_event('ramp', parameter=my_int, name='event 1', description='my first event', destination=200, duration=2000)
+a_random = my_project.new_event('random', parameter=my_float, name='event 2', description='my second event', destination=1, duration=2000)
 
 
 from pylekture.ramp_UI import Ramp_UI
+from pylekture.random_UI import Random_UI
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget
 
@@ -32,8 +34,10 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.setAutoFillBackground(True)
         self.rampui = Ramp_UI(a_ramp)
+        self.randomui = Random_UI(a_random)
         self.layout = QHBoxLayout()
         self.layout.addWidget(self.rampui)
+        self.layout.addWidget(self.randomui)
         main_box = QWidget()
         main_box.setLayout(self.layout)
         # assign this device to the mainwindow
