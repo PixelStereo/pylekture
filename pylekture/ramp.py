@@ -8,6 +8,7 @@ Ramp Animation is a basic animation
 from threading import Thread
 from time import time
 from pylekture.event import Event
+from pylekture.PySignal import ClassSignal
 
 current_milli_time = lambda: time() * 1000
 
@@ -40,6 +41,9 @@ class Ramp(Event):
     - duration (milliseconds)
     - grain (milliseconds)
     """
+    started = ClassSignal()
+    new_val = ClassSignal()
+    ended = ClassSignal()
     def __init__(self, kwargs):
         super(Ramp, self).__init__()
         self.parameter = None
@@ -99,9 +103,12 @@ class Ramp(Event):
             self.start()
 
         def run(self):
+            self.ramp.started.emit()
             ramper = ramp_generator(self.ramp.parameter.value, self.ramp.destination, self.ramp.duration, self.ramp.grain)
             for val in ramper:
                 self.ramp.parameter.value = val
+                self.ramp.new_val.emit(val)
+            self.ramp.ended.emit()
 
 
 class Player(Thread):
