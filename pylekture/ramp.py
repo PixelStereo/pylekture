@@ -127,4 +127,3 @@ class Player(Thread):
 
     def stop(self):
         self._stop.set()
-
