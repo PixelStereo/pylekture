@@ -9,6 +9,8 @@ from threading import Thread
 from time import time
 from pylekture.event import Event
 import random
+from pylekture.PySignal import ClassSignal
+
 current_milli_time = lambda: time() * 1000
 
 def random_generator(origin=0, destination=1, duration=1000, grain=10):
@@ -39,6 +41,9 @@ class Random(Event):
     - duration (milliseconds)
     - grain (milliseconds)
     """
+    started = ClassSignal()
+    new_val = ClassSignal()
+    ended = ClassSignal()
     def __init__(self, kwargs):
         super(Random, self).__init__()
         self.parameter = None
@@ -98,9 +103,12 @@ class Random(Event):
             self.start()
 
         def run(self):
+            self.random.started.emit()
             randomer = random_generator(self.random.parameter.value, self.random.destination, self.random.duration, self.random.grain)
             for val in randomer:
                 self.random.parameter.value = val
+                self.random.new_val.emit(val)
+            self.random.ended.emit()
 
 
 class Player(Thread):
