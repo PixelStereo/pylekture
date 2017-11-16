@@ -6,6 +6,8 @@
 =====
 #### Python Scenario framework for real-time inter-media projects
 
+[![PyPI version](https://badge.fury.io/py/pylekture.svg)](https://badge.fury.io/py/pylekture)
+
 **pylekture** can be defined as a framework for real-time intermedia applications.
 It is an API for creating and organising Scenario in a Project-based architecture that can be easily accessed through OSC (Open Sound Control) messages.
 
