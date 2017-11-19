@@ -39,8 +39,14 @@ Project / Scenario / Event attributes:
 Changelog
 -------------------------------------------------------------------------------
 - v0.4.0 - work in progress
-    - No more output concept. Parameters outputs value
+    - No more output concept. Parameters outputs value, pylekture deals with parameters, not protocols
+    	- pylekture will be test with pybush (pure python) and pyossia (libossia python binding)
     - Scenario is now just a bunch of events
+    - Events might be:
+    	- a ramp animation
+    	- a random generation
+    - add PySignal to generate PyQt-like signals
+    	- https://github.com/dgovil/PySignal
 
 - v0.3.1 - Aug. 8 2016
     - Fix output menu now display the right output in scenario & events tables
