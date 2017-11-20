@@ -47,6 +47,7 @@ class Ramp(Event):
     def __init__(self, kwargs):
         super(Ramp, self).__init__()
         self.parameter = None
+        self.origin = 0
         self.destination = 1
         self.duration = 1000
         self.grain = 10
@@ -54,8 +55,9 @@ class Ramp(Event):
             setattr(self, key, value)
 
     def __repr__(self):
-        s = "Ramp (parameter={parameter}, destination={destination}, duration={duration}, grain={grain}), wait={wait}, post_wait={post_wait})"
+        s = "Ramp (parameter={parameter}, origin={origin}, destination={destination}, duration={duration}, grain={grain}), wait={wait}, post_wait={post_wait})"
         return s.format(parameter=self.parameter,
+                        origin=self.origin,
                         destination=self.destination,
                         duration=self.duration,
                         grain=self.grain,
@@ -104,7 +106,8 @@ class Ramp(Event):
 
         def run(self):
             self.ramp.started.emit()
-            ramper = ramp_generator(self.ramp.parameter.value, self.ramp.destination, self.ramp.duration, self.ramp.grain)
+            #ramper = ramp_generator(self.ramp.parameter.value, self.ramp.destination, self.ramp.duration, self.ramp.grain)
+            ramper = ramp_generator(self.ramp.origin, self.ramp.destination, self.ramp.duration, self.ramp.grain)
             for val in ramper:
                 self.ramp.parameter.value = val
                 self.ramp.new_val.emit(val)
