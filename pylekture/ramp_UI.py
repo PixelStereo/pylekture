@@ -2,12 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-Graphical User Interface for Ramp
+Graphical User Interface for an Animation of a Parameter
 
 Make a menu for selecting parameter to animate
-SpinBox for origin, destination and duration
-progressbar
-slider to check
+slider to test/follow interpolation
 curve/easing
 
 """
