@@ -37,10 +37,10 @@ class Ramp_UI(QGroupBox):
         self.go.clicked.connect(self.ramp.play)
 
         self.progressbar = QProgressBar()
-        self.progressbar.setMaximum(200)
+        self.progressbar.setMaximum(2000)
         self.ramp.started.connect(self.progressbar.reset)
         #self.ramp.new_val.connect(self.progressbar.setValue)
-        self.ramp.new_val.connect(self.popo)
+        self.ramp.timing.connect(self.timing)
 
         # set the layout
         self.layout = QGridLayout()
@@ -51,5 +51,5 @@ class Ramp_UI(QGroupBox):
         self.layout.addWidget(self.progressbar, 2, 0, 2, 2)
         self.setLayout(self.layout)
 
-    def popo(self, val):
+    def timing(self, val):
         self.progressbar.setValue(val)

@@ -28,8 +28,8 @@ def ramp_generator(origin=0, destination=1, duration=1000, grain=10):
             pass # wait
         last = current_milli_time()
         origin += step
-        yield origin
-
+        timing = int(last-start)
+        yield origin, timing
 
 class Ramp(Event):
     """
@@ -43,6 +43,7 @@ class Ramp(Event):
     """
     started = ClassSignal()
     new_val = ClassSignal()
+    timing = ClassSignal()
     ended = ClassSignal()
     def __init__(self, kwargs):
         super(Ramp, self).__init__()
@@ -51,6 +52,7 @@ class Ramp(Event):
         self.destination = 1
         self.duration = 1000
         self.grain = 10
+        self.current_player = None
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -82,16 +84,23 @@ class Ramp(Event):
         Play an event
         It creates a new object play in a separate thread.
         """
-        self.current_player = Player(self)
-        return self.current_player
+        if self.current_player:
+            self.stop()
+            self.play()
+        else:
+            self.current_player = Player(self)
+            return self.current_player
 
     def stop(self):
         """
         Stop an event
         It will destruct the player in the separate thread.
         """
-        #print(self.current_player)
-        print("stop is not yet implemented")
+        if self.current_player:
+            self.current_player.stop()
+            return True
+        else:
+            return False
 
 
     class Play(Thread):
@@ -108,8 +117,9 @@ class Ramp(Event):
             self.ramp.started.emit()
             #ramper = ramp_generator(self.ramp.parameter.value, self.ramp.destination, self.ramp.duration, self.ramp.grain)
             ramper = ramp_generator(self.ramp.origin, self.ramp.destination, self.ramp.duration, self.ramp.grain)
-            for val in ramper:
+            for val, timing in ramper:
                 self.ramp.parameter.value = val
+                self.ramp.timing.emit(timing)
                 self.ramp.new_val.emit(val)
             self.ramp.ended.emit()
 
@@ -129,4 +139,5 @@ class Player(Thread):
             player.join()
 
     def stop(self):
-        self._stop.set()
+        self._stop()
+        self.parent.current_player = None
