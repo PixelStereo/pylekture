@@ -115,7 +115,6 @@ class Ramp(Event):
 
         def run(self):
             self.ramp.started.emit()
-            #ramper = ramp_generator(self.ramp.parameter.value, self.ramp.destination, self.ramp.duration, self.ramp.grain)
             ramper = ramp_generator(self.ramp.origin, self.ramp.destination, self.ramp.duration, self.ramp.grain)
             for val, timing in ramper:
                 self.ramp.parameter.value = val
