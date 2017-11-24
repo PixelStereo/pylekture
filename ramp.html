@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pylekture.ramp &mdash; pylekture 0.4.0a0+45.g371d260 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pylekture 0.4.0a0+45.g371d260 documentation" href="index.html"/>
+        <link rel="prev" title="pylekture.errors" href="errors.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pylekture
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0a0+45.g371d260
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="project.html">pylekture.project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="event.html">pylekture.event</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scenario.html">pylekture.scenario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">pylekture.functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">pylekture.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">pylekture.errors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pylekture.ramp</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pylekture</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>pylekture.ramp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/ramp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pylekture.ramp">
+<span id="pylekture-ramp"></span><h1>pylekture.ramp<a class="headerlink" href="#module-pylekture.ramp" title="Permalink to this headline">¶</a></h1>
+<p>Ramp Animation is a basic animation</p>
+<dl class="function">
+<dt id="pylekture.ramp.current_milli_time">
+<code class="descclassname">pylekture.ramp.</code><code class="descname">current_milli_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.current_milli_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pylekture.ramp.ramp_generator">
+<code class="descclassname">pylekture.ramp.</code><code class="descname">ramp_generator</code><span class="sig-paren">(</span><em>origin=0</em>, <em>destination=1</em>, <em>duration=1000</em>, <em>grain=10</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.ramp_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Ramp Generator
+step every 10 ms
+Allow to do several ramps in a same project / scenario / event
+:param target:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pylekture.ramp.Ramp">
+<em class="property">class </em><code class="descclassname">pylekture.ramp.</code><code class="descname">Ramp</code><span class="sig-paren">(</span><em>kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Ramp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="event.html#pylekture.event.Event" title="pylekture.event.Event"><code class="xref py py-class docutils literal"><span class="pre">pylekture.event.Event</span></code></a></p>
+<p>The Ramp Object
+a ramp is an interpolation with time as input and a function as output
+it has
+- origin (value)
+- destination (value)
+- duration (milliseconds)
+- grain (milliseconds)</p>
+<dl class="attribute">
+<dt id="pylekture.ramp.Ramp.started">
+<code class="descname">started</code><a class="headerlink" href="#pylekture.ramp.Ramp.started" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class signal allows a signal to be set on a class rather than an instance.
+This emulates the behavior of a PyQt signal</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.ramp.Ramp.new_val">
+<code class="descname">new_val</code><a class="headerlink" href="#pylekture.ramp.Ramp.new_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class signal allows a signal to be set on a class rather than an instance.
+This emulates the behavior of a PyQt signal</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.ramp.Ramp.timing">
+<code class="descname">timing</code><a class="headerlink" href="#pylekture.ramp.Ramp.timing" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class signal allows a signal to be set on a class rather than an instance.
+This emulates the behavior of a PyQt signal</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.ramp.Ramp.ended">
+<code class="descname">ended</code><a class="headerlink" href="#pylekture.ramp.Ramp.ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class signal allows a signal to be set on a class rather than an instance.
+This emulates the behavior of a PyQt signal</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.ramp.Ramp.parameter">
+<code class="descname">parameter</code><a class="headerlink" href="#pylekture.ramp.Ramp.parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time to wait after all events played and before the end of this scenario
+unit:
+seconds</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.ramp.Ramp.play">
+<code class="descname">play</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Ramp.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Play an event
+It creates a new object play in a separate thread.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.ramp.Ramp.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Ramp.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop an event
+It will destruct the player in the separate thread.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pylekture.ramp.Ramp.Play">
+<em class="property">class </em><code class="descname">Play</code><span class="sig-paren">(</span><em>ramp</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Ramp.Play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">threading.Thread</span></code></p>
+<p>Event Player
+It plays the event in a separate Thread</p>
+<dl class="method">
+<dt id="pylekture.ramp.Ramp.Play.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Ramp.Play.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pylekture.ramp.Player">
+<em class="property">class </em><code class="descclassname">pylekture.ramp.</code><code class="descname">Player</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Player" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">threading.Thread</span></code></p>
+<p>A Player that play things</p>
+<dl class="method">
+<dt id="pylekture.ramp.Player.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Player.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pylekture.ramp.Player.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.ramp.Player.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="errors.html" class="btn btn-neutral" title="pylekture.errors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Pixel Stereo.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0a0+45.g371d260',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

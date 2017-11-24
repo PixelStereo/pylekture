@@ -1,0 +1,520 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pylekture.project &mdash; pylekture 0.4.0a0+45.g371d260 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pylekture 0.4.0a0+45.g371d260 documentation" href="index.html"/>
+        <link rel="next" title="pylekture.event" href="event.html"/>
+        <link rel="prev" title="pylekture" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pylekture
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0a0+45.g371d260
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pylekture.project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="event.html">pylekture.event</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scenario.html">pylekture.scenario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">pylekture.functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">pylekture.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">pylekture.errors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ramp.html">pylekture.ramp</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pylekture</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>pylekture.project</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/project.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pylekture.project">
+<span id="pylekture-project"></span><h1>pylekture.project<a class="headerlink" href="#module-pylekture.project" title="Permalink to this headline">¶</a></h1>
+<p>This is the Project Class, which is the base of our document.</p>
+<p>To start with pylekture, you just need to import 2 functions</p>
+<dl class="docutils">
+<dt>Here is an example to create a project.</dt>
+<dd>from pylekture.project import new_project, projects
+my_project = new_project()</dd>
+<dt>Then, you can create a scenario</dt>
+<dd>my_scenario = my_project.new_scenario()</dd>
+</dl>
+<p>You can here create a project, or make a list of projects available.</p>
+<dl class="function">
+<dt id="pylekture.project.new_project">
+<code class="descclassname">pylekture.project.</code><code class="descname">new_project</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.new_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new project
+:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylekture.project.projects">
+<code class="descclassname">pylekture.project.</code><code class="descname">projects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.projects" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all projects available</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pylekture.project.Project">
+<em class="property">class </em><code class="descclassname">pylekture.project.</code><code class="descname">Project</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A project handles everything you need.
+Scenarios and Events are all project-relative</p>
+<dl class="attribute">
+<dt id="pylekture.project.Project.autoplay">
+<code class="descname">autoplay</code><a class="headerlink" href="#pylekture.project.Project.autoplay" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The autplay attribute. If true, the project plays when finish loading from hard drive</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">arg:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.project.Project.lastopened">
+<code class="descname">lastopened</code><a class="headerlink" href="#pylekture.project.Project.lastopened" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datetime of the last opened date of this project. Default is None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Getter:</th><td class="field-body">datetime object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.project.Project.created">
+<code class="descname">created</code><a class="headerlink" href="#pylekture.project.Project.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datetime of the creation of the project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Getter:</th><td class="field-body">datetime object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.project.Project.version">
+<code class="descname">version</code><a class="headerlink" href="#pylekture.project.Project.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>The version of pylekture used to create this project
+Read-Only</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">version (tag + number of commits since tag + sha of commit)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.project.Project.path">
+<code class="descname">path</code><a class="headerlink" href="#pylekture.project.Project.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the filepath of the project.
+It’s initialised at None when created, and can be set to any valid path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – valid filepath. Return True if valid, False otherwise.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset a project by deleting project.attributes, scenarios and events related</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.read">
+<code class="descname">read</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a lekture-project file from hard drive. Must be valid.
+if valid it will be loaded and return True, otherwise, it will return False</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param path:</th><td class="field-body">Filepath to read from.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type path:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">Boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">True if the project has been correctly loaded, False otherwise</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a lekture-project from a file from hard drive
+It will play the file after loading, according to autoplay attribute value</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">arg:</th><td class="field-body">file to load. Filepath must be valid when provided, it must be checked before.</td>
+</tr>
+</tbody>
+</table>
+<p>:rtype:True if the project has been correctly loaded, False otherwise</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.fillin">
+<code class="descname">fillin</code><span class="sig-paren">(</span><em>loaded</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.fillin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates Scenario and Events obects
+First, dump attributes, then scenario and finish with events.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if file formatting is correct, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>path=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a project on the hard drive.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.export">
+<code class="descname">export</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>export a project into a dict/json string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.play">
+<code class="descname">play</code><span class="sig-paren">(</span><em>index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Play the whole project from the beginning.
+If you provide index argument, you can specify where to start the project playing.
+project.play(index=4) will start from the forth scenario of the project.
+If if does not exist, it will return False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<em>integer</em>) – Optional</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pylekture.project.Project.Play">
+<em class="property">class </em><code class="descname">Play</code><span class="sig-paren">(</span><em>project</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.Play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">threading.Thread</span></code></p>
+<p>Instanciate a thread for Playing a whole project
+Allow to start twice or more each projects at the same time</p>
+<dl class="method">
+<dt id="pylekture.project.Project.Play.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.Play.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.scenarios_set">
+<code class="descname">scenarios_set</code><span class="sig-paren">(</span><em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.scenarios_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change order of a scenario in the scenario list of the project</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.project.Project.scenarios">
+<code class="descname">scenarios</code><a class="headerlink" href="#pylekture.project.Project.scenarios" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report existing scenarios</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All Scenario of this project</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.new_scenario">
+<code class="descname">new_scenario</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.new_scenario" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Create a new scenario for this Project</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">args:</th><td class="field-body">Optional args are every attributes of the scenario, associated with a keyword</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">Scenario object</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.del_scenario">
+<code class="descname">del_scenario</code><span class="sig-paren">(</span><em>scenario</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.del_scenario" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete a scenario of this project
+This function won’t delete events of the scenario</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.project.Project.events">
+<code class="descname">events</code><a class="headerlink" href="#pylekture.project.Project.events" title="Permalink to this definition">¶</a></dt>
+<dd><p>All the events of this scenario</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.new_event">
+<code class="descname">new_event</code><span class="sig-paren">(</span><em>event_type</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.new_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>create an event</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.project.Project.del_event">
+<code class="descname">del_event</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.project.Project.del_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete an event, by index or with object instance</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="event.html" class="btn btn-neutral float-right" title="pylekture.event" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="pylekture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Pixel Stereo.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0a0+45.g371d260',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pylekture.event &mdash; pylekture 0.4.0a0+45.g371d260 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pylekture 0.4.0a0+45.g371d260 documentation" href="index.html"/>
+        <link rel="next" title="pylekture.scenario" href="scenario.html"/>
+        <link rel="prev" title="pylekture.project" href="project.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pylekture
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0a0+45.g371d260
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="project.html">pylekture.project</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pylekture.event</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scenario.html">pylekture.scenario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">pylekture.functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">pylekture.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">pylekture.errors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ramp.html">pylekture.ramp</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pylekture</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>pylekture.event</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/event.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pylekture.event">
+<span id="pylekture-event"></span><h1>pylekture.event<a class="headerlink" href="#module-pylekture.event" title="Permalink to this headline">¶</a></h1>
+<p>The Event Class
+An Event is always in a project and it may be in one or several scenario.
+Event is the baseclass for Scenario and Project.
+It inherits from Node, and add some attributes as wait, post_wait, loop and autoplay.
+It adds a few methods too as play(), getduration() and getparent()</p>
+<dl class="class">
+<dt id="pylekture.event.Event">
+<em class="property">class </em><code class="descclassname">pylekture.event.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.event.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>An Event is the base class for all events
+It has at least a parent.
+Only Projects does not have a parent.
+All objects refer to the projects these have created with.
+An optional name, description and tags attributes can be used.
+The service is a read-only value used to check the obect used.
+It should be removed for the version 0.1</p>
+<dl class="attribute">
+<dt id="pylekture.event.Event.name">
+<code class="descname">name</code><a class="headerlink" href="#pylekture.event.Event.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>It acts as a nick name.
+You can have several nodes with the same name
+Read-Only</p>
+<p>:Returns:String</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.description">
+<code class="descname">description</code><a class="headerlink" href="#pylekture.event.Event.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description of this node
+You could here send a few words explainig this node.</p>
+<p>:Args:String
+:Returns:String</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.parent">
+<code class="descname">parent</code><a class="headerlink" href="#pylekture.event.Event.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is the parent of the node.
+It is None for a project.
+It is the project object for events and scenarios</p>
+<p>:Returns:String</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.tags">
+<code class="descname">tags</code><a class="headerlink" href="#pylekture.event.Event.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>a list of string used to create taxonimies.</p>
+<p>:Returns:List of Strings</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.event.Event.add_tag">
+<code class="descname">add_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.event.Event.add_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pylekture.event.Event.del_tag">
+<code class="descname">del_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.event.Event.del_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.is_template">
+<code class="descname">is_template</code><a class="headerlink" href="#pylekture.event.Event.is_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.wait">
+<code class="descname">wait</code><a class="headerlink" href="#pylekture.event.Event.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait time in seconds</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.post_wait">
+<code class="descname">post_wait</code><a class="headerlink" href="#pylekture.event.Event.post_wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time to wait after all events played and before the end of this scenario
+unit:
+seconds</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.autoplay">
+<code class="descname">autoplay</code><a class="headerlink" href="#pylekture.event.Event.autoplay" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The autplay attribute. If true, the project plays when finish loading from hard drive</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">arg:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.loop">
+<code class="descname">loop</code><a class="headerlink" href="#pylekture.event.Event.loop" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The loop attribute. If true, the loop plays again when it reach its end.</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">arg:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylekture.event.Event.service">
+<code class="descname">service</code><a class="headerlink" href="#pylekture.event.Event.service" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the class name as a string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.event.Event.getduration">
+<code class="descname">getduration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.event.Event.getduration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computed duration of the event
+Read-Only</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Duration of the item</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.event.Event.export">
+<code class="descname">export</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.event.Event.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>export the content</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylekture.event.Event.getstate">
+<code class="descname">getstate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylekture.event.Event.getstate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scenario.html" class="btn btn-neutral float-right" title="pylekture.scenario" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="project.html" class="btn btn-neutral" title="pylekture.project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Pixel Stereo.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0a0+45.g371d260',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
