@@ -21,8 +21,7 @@ a_ramp = my_project.new_event('ramp', parameter=my_int, name='event 1', descript
 a_random = my_project.new_event('random', parameter=my_float, name='event 2', description='my second event', destination=1, duration=2000)
 
 
-from pylekture.ramp_UI import Ramp_UI
-from pylekture.random_UI import Random_UI
+from pylekture.animation_UI import Animation_UI
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget
 
@@ -33,11 +32,11 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setAutoFillBackground(True)
-        self.rampui = Ramp_UI(a_ramp)
-        self.randomui = Random_UI(a_random)
+        self.rampui = Animation_UI(a_ramp)
+        #self.randomui = Random_UI(a_random)
         self.layout = QHBoxLayout()
         self.layout.addWidget(self.rampui)
-        self.layout.addWidget(self.randomui)
+        #self.layout.addWidget(self.randomui)
         main_box = QWidget()
         main_box.setLayout(self.layout)
         # assign this device to the mainwindow

@@ -13,11 +13,14 @@ curve/easing
 from PyQt5.QtWidgets import QGroupBox, QSpinBox, QGridLayout, QSlider, QPushButton
 from PyQt5.QtCore import Qt
 
-class Ramp_UI(QGroupBox):
-    """docstring for Ramp_UI"""
+
+class Animation_UI(QGroupBox):
+    """
+    Animation of a Parameter
+    """
     def __init__(self, ramp):
-        super(Ramp_UI, self).__init__()
-        self.setTitle('Ramp Interface')
+        super(Animation_UI, self).__init__()
+        self.setTitle('Animation Interface')
         self.ramp = ramp
 
         # create UI objects
@@ -48,7 +51,8 @@ class Ramp_UI(QGroupBox):
         self.layout.addWidget(self.destination, 0, 1)
         self.layout.addWidget(self.duration, 1, 0)
         self.layout.addWidget(self.go, 1, 1)
-        self.layout.addWidget(self.progressbar, 2, 0, 2, 2)
+        self.layout.addWidget(self.progressbar, 2, 0, 1, 2)
+        self.setFixedSize(200, 150)
         self.setLayout(self.layout)
 
     def timing(self, val):
