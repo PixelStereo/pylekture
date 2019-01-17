@@ -6,6 +6,8 @@
 =====
 #### Python Scenario framework for real-time inter-media projects
 
+[![PyPI version](https://badge.fury.io/py/pylekture.svg)](https://badge.fury.io/py/pylekture)
+
 **pylekture** can be defined as a framework for real-time intermedia applications.
 It is an API for creating and organising Scenario in a Project-based architecture that can be easily accessed through OSC (Open Sound Control) messages.
 
@@ -52,19 +54,13 @@ If you need/want to build the documentation from the repo, here are the steps :
 * ~~Loop for project / scenario / event~~
 * Scenario behavior creates nice sequence (aka auto-cue / auto-follow)
 
-##### 0.2 - 2017
+##### roadmap
 * OSC server for projects, scenario and events access
 * OSC listening creates Nodes, Models and Parameters
 * Namespace implementation for automagic events creation
 * Minuit implementation
 * Keyboard customizable shortcuts
-
-##### 0.3 - Planned
 * Random generator
-
-##### 0.4 - Planned
 * Artnet and MIDI in/out
 * PJLink / TCP / Serial support
-
-##### 0.5 - Planned
 * Graphic display of projects, scenario and events

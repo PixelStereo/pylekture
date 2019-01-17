@@ -33,6 +33,20 @@ def checkType(data):
         pass
     return data
 
+
+def m_bool(value):
+    """Transform to a bool if it is not already"""
+    if not isinstance(value, bool):
+        # check if it is a list
+        try:
+            value = value[0]
+        except TypeError:
+            pass
+        # simplify to a boolean
+        value = bool(value)
+    return value
+
+
 def prop_list(the_class):
     """
     Make a list of properties presents in a class
@@ -67,11 +81,5 @@ def prop_dict(the_class):
     plist = prop_list(the_class)
     pdict = {}
     for prop in plist:
-        if prop == 'output':
-            newprop = '_' + prop
-            newprop = getattr(the_class, newprop)
-            #newprop = newprop
-            pdict.setdefault(prop, newprop)
-        else:
             pdict.setdefault(prop, getattr(the_class, prop))
     return pdict

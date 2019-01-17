@@ -37,20 +37,17 @@ class Scenario(Event):
     """
     def __init__(self, *args, **kwargs):
         super(Scenario, self).__init__(*args, **kwargs)
-        if self.name == 'Untitled Event':
-            self.name = 'Untitled Scenario'
-        if self.description == "I'm an event":
-            self.description = "I'm a scenario"
+        self.name = 'Untitled Scenario'
+        self.description = "I'm a scenario"
         self.project = self.parent
         self.index = 0
         self._events = []
 
     def __repr__(self):
-        s = "Scenario (name={name}, description={description}, output={output}, duration={duration}, tags={tags}, autoplay={autoplay}, loop={loop}, " \
+        s = "Scenario (name={name}, description={description}, duration={duration}, tags={tags}, autoplay={autoplay}, loop={loop}, " \
             "events={events})"
         return s.format(name=self.name,
                         description=self.description,
-                        output=self.output,
                         duration=self.getduration(),
                         tags=self.tags,
                         autoplay=self.autoplay,
@@ -81,10 +78,7 @@ class Scenario(Event):
         Remove an event from the scenario
         It won't delete the event, it just remove it of the scenario
         """
-        try:
-            self.events.remove(event)
-        except ValueError:
-            print('ERROR 1122 : No event is selected - cannot delete the event')
+        self.events.pop(event)
 
 
     class Play(threading.Thread):
@@ -116,7 +110,7 @@ class Scenario(Event):
                 print(dbg.format(name=self.scenario.name, index=index, thread=threading.current_thread().name, time=datetime.datetime.now()))
             for event in self.scenario.events[index:]:
                 # play each event
-                player = event.play(output=self.scenario.output)
+                player = event.play()
                 if player:
                     player.join()
             if debug >= 3:

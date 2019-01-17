@@ -1,4 +1,0 @@
-Cython
-pyliblo
-simplejson
-sphinx_rtd_theme
