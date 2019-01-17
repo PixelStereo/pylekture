@@ -16,7 +16,7 @@ class Output(Node):
     Need to be revamped - protocol miqht be an attribute
     => and protocol-parameters might be in a dict inside the attributes dict?
     """
-    def __init__(self, name=None, description=None, parent=None, port=None):
+    def __init__(self, name='Untitled Output', description='Base Output', parent=None, port=None):
         super(Output, self).__init__(name=name, description=description, parent=parent)
         self._port = port
         if not self.name:
@@ -30,6 +30,7 @@ class Output(Node):
     @port.setter
     def port(self, port):
         self._port = port
+
 
 class OutputMidi(Output):
     """
@@ -52,6 +53,8 @@ class OutputUdp(Output):
     It should be used to double check that you send a correct OSC format message/bundle.
     """
     def __init__(self, parent, port='127.0.0.1:1234'):
-        super(OutputUdp, self).__init__(parent, port)
+        super(OutputUdp, self).__init__(parent=parent, port=port)
         if self.name == 'Untitled Output':
             self.name = 'Untitled Udp Output'
+        if self.description== 'Base Output':
+            self.description = 'Udp Output'

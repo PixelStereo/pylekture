@@ -11,6 +11,15 @@ from time import sleep
 
 p = new_project()
 o = p.new_output('OSC')
+print('--------')
+print('--------')
+print('OUTPUT')
+print('--------')
+print(o.name)
+print(o.port)
+print(o.description)
+print('--------')
+print('--------')
 s = p.new_scenario()
 s.name = 'Scenar avec une ramp $%ù€ù€ÛÁ7å5»[«¶Û»'
 e = p.new_event('Osc', command=['/polo', 1, 'ramp', 6])
