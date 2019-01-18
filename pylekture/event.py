@@ -35,7 +35,6 @@ class Event(Node):
             self.description = "I'm an event"
         self.wait = 0
         self._output = 0
-        self._is_template = False
         self.post_wait = 0
         self._loop = False
         self._autoplay = False
