@@ -39,6 +39,7 @@ class Animation_UI(QGroupBox):
         self.duration.valueChanged.connect(self.duration_update)
 
         self.go = QPushButton()
+        self.go.setText('GO')
         self.go.clicked.connect(self.ramp.play)
 
         self.progressbar = QSlider(Qt.Horizontal, self)
