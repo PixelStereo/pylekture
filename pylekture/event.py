@@ -18,7 +18,7 @@ class Event(object):
     Only Projects does not have a parent.
     All objects refer to the projects these have created with.
     An optional name, description and tags attributes can be used.
-    The service is a read-only value used to check the obect used.
+    The "service" is a read-only value used to check the obect used.
     It should be removed for the version 0.1
 
     """
@@ -29,12 +29,9 @@ class Event(object):
         self._tags = ['No Tags', 'notag']
         self._is_template = False
         self.wait = 0
-<<<<<<< HEAD
         self._output = 0
         self._is_template = False
-=======
         self._parent = None
->>>>>>> 371d260c2a93425b14d9a711f5b8c695048eda0c
         self.post_wait = 0
         self._loop = False
         self._autoplay = False
