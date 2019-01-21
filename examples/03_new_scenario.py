@@ -7,8 +7,8 @@ from pyossia import ossia
 
 my_device = ossia.LocalDevice('PyOssia Test Device')
 my_device.expose(protocol='osc', listening_port=3456, sending_port=1234, logger=False)
-my_int = my_device.add_param('test/numeric/int', value_type='int', default_value=66, domain=[-100, 100], description='an integer')
-my_float = my_device.add_param('test/numeric/float', value_type='float', default_value=0.123456, domain=[-2.1, 2.2])
+my_int = my_device.add_param('test/numeric/int', datatype='int', default_value=66, domain=[-100, 100], description='an integer')
+my_float = my_device.add_param('test/numeric/float', datatype='float', default_value=0.123456, domain=[-2.1, 2.2])
 
 my_project = new_project(name= 'Demo Project')
 a_ramp = my_project.new_event('ramp', parameter=my_int, name='int ramp', description='my first event', destination=100, duration=2000)
