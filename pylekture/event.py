@@ -29,7 +29,6 @@ class Event(object):
         self._tags = ['No Tags', 'notag']
         self._is_template = False
         self.wait = 0
-        self._output = 0
         self._is_template = False
         self._parent = None
         self.post_wait = 0
