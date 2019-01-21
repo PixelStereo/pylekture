@@ -91,9 +91,11 @@ class Scenario(Event):
             self.start()
 
         def run(self):
-            """play a scenario from the beginning
+            """
+            play a scenario from the beginning
             play an scenario
-            Started from the first event if an index has not been provided"""
+            Started from the first event if an index has not been provided
+            """
             if not self.index:
                 # start from the begining
                 index = 0
