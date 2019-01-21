@@ -7,8 +7,8 @@ Ramp Animation is a basic animation
 
 from threading import Thread
 from time import time
+from pylekture.animation import Animation
 from pylekture.event import Event
-from pylekture.PySignal import ClassSignal
 
 current_milli_time = lambda: time() * 1000
 
@@ -31,7 +31,7 @@ def ramp_generator(origin=0, destination=1, duration=1000, grain=10):
         timing = int(last-start)
         yield origin, timing
 
-class Ramp(Event):
+class Ramp(Animation):
     """
     The Ramp Object
     a ramp is an interpolation with time as input and a function as output
@@ -41,18 +41,8 @@ class Ramp(Event):
     - duration (milliseconds)
     - grain (milliseconds)
     """
-    started = ClassSignal()
-    new_val = ClassSignal()
-    timing = ClassSignal()
-    ended = ClassSignal()
-    def __init__(self, kwargs):
-        super(Ramp, self).__init__()
-        self.parameter = None
-        self.origin = 0
-        self.destination = 1
-        self.duration = 1000
-        self.grain = 10
-        self.current_player = None
+    def __init__(self, *args, **kwargs):
+        super(Ramp, self).__init__(*args, **kwargs)
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -65,42 +55,6 @@ class Ramp(Event):
                         grain=self.grain,
                         wait=self.wait,
                         post_wait=self.post_wait)
-
-    @property
-    def parameter(self):
-        """
-        Time to wait after all events played and before the end of this scenario
-        unit:
-        seconds
-        """
-        return self._parameter
-    @parameter.setter
-    def parameter(self, parameter):
-        self._parameter = parameter
-        return True
-
-    def play(self):
-        """
-        Play an event
-        It creates a new object play in a separate thread.
-        """
-        if self.current_player:
-            self.stop()
-            self.play()
-        else:
-            self.current_player = Player(self)
-            return self.current_player
-
-    def stop(self):
-        """
-        Stop an event
-        It will destruct the player in the separate thread.
-        """
-        if self.current_player:
-            self.current_player.stop()
-            return True
-        else:
-            return False
 
 
     class Play(Thread):
@@ -121,22 +75,3 @@ class Ramp(Event):
                 self.ramp.timing.emit(timing)
                 self.ramp.new_val.emit(val)
             self.ramp.ended.emit()
-
-
-class Player(Thread):
-    """
-    A Player that play things
-    """
-    def __init__(self, parent):
-        super(Player, self).__init__()
-        self.parent = parent
-        self.start()
-
-    def run(self):
-        player = self.parent.Play(self.parent)
-        if player:
-            player.join()
-
-    def stop(self):
-        self._stop()
-        self.parent.current_player = None

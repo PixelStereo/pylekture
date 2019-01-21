@@ -9,6 +9,7 @@ from threading import Thread
 from time import time
 from pylekture.event import Event
 import random
+from pylekture.animation import Animation
 from pylekture.PySignal import ClassSignal
 
 current_milli_time = lambda: time() * 1000
@@ -31,7 +32,7 @@ def random_generator(origin=0, destination=1, duration=1000, grain=10):
         yield frand
 
 
-class Random(Event):
+class Random(Animation):
     """
     The Random Object
     a random is a pseudo random generation
@@ -41,15 +42,8 @@ class Random(Event):
     - duration (milliseconds)
     - grain (milliseconds)
     """
-    started = ClassSignal()
-    new_val = ClassSignal()
-    ended = ClassSignal()
-    def __init__(self, kwargs):
-        super(Random, self).__init__()
-        self.parameter = None
-        self.destination = 1
-        self.duration = 1000
-        self.grain = 10
+    def __init__(self, *args, **kwargs):
+        super(Random, self).__init__(*args, **kwargs)
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -61,35 +55,6 @@ class Random(Event):
                         grain=self.grain,
                         wait=self.wait,
                         post_wait=self.post_wait)
-
-    @property
-    def parameter(self):
-        """
-        The parameter to control
-        unit:
-        seconds
-        """
-        return self._parameter
-    @parameter.setter
-    def parameter(self, parameter):
-        self._parameter = parameter
-        return True
-
-    def play(self):
-        """
-        Play an event
-        It creates a new object play in a separate thread.
-        """
-        self.current_player = Player(self)
-        return self.current_player
-
-    def stop(self):
-        """
-        Stop an event
-        It will destruct the player in the separate thread.
-        """
-        #print(self.current_player)
-        print("stop is not yet implemented")
 
 
     class Play(Thread):
@@ -109,22 +74,3 @@ class Random(Event):
                 self.random.parameter.value = val
                 self.random.new_val.emit(val)
             self.random.ended.emit()
-
-
-class Player(Thread):
-    """
-    A Player that play things
-    """
-    def __init__(self, parent):
-        super(Player, self).__init__()
-        self.parent = parent
-        self.start()
-
-    def run(self):
-        player = self.parent.Play(self.parent)
-        if player:
-            player.join()
-
-    def stop(self):
-        self._stop.set()
-
