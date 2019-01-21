@@ -349,8 +349,10 @@ class Project(object):
                 wait = scenario.getduration() / 1000
                 # add wait and post_wait to duration
                 wait = wait + scenario.wait + scenario.post_wait
-                # play the scenario
-                scenario.play()
+                # play each scenario
+                player = scenario.play()
+                if player:
+                    player.join()
             if debug >= 3:
                 dbg = "project-ends: {name} in {thread} - it is {time}"
                 print(dbg.format(name=self.project.name, thread=str(threading.current_thread().name), time=str(datetime.datetime.now())))
