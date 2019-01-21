@@ -28,6 +28,8 @@ def random_generator(origin=0, destination=1, duration=1000, grain=10):
             pass # wait
         last = current_milli_time()
         # uniform gives you a floating-point value
+        if not origin:
+            origin=0
         frand = round(random.uniform(origin, destination), 6)
         yield frand
 
@@ -69,7 +71,7 @@ class Random(Animation):
 
         def run(self):
             self.random.started.emit()
-            randomer = random_generator(self.random.parameter.value, self.random.destination, self.random.duration, self.random.grain)
+            randomer = random_generator(origin=self.random.parameter.value, destination=self.random.destination, duration=self.random.duration, grain=self.random.grain)
             for val in randomer:
                 self.random.parameter.value = val
                 self.random.new_val.emit(val)
