@@ -30,8 +30,8 @@ class TestAll(unittest.TestCase):
 
     def test_project(self):
         # create projects
-        my_project = new_project(name='Test Device')
-        self.assertEqual(my_project.name, 'Test Device')
+        my_project = new_project(name='Test project')
+        self.assertEqual(my_project.name, 'Test project')
         print(my_project)
         my_project.play()
         new_project()
