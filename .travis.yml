@@ -2,21 +2,22 @@ sudo: required
 dist: xenial
 language: python
 python:
-- "2.6"
 - "2.7"
-- "3.3"
 - "3.4"
 - "3.5"
 - "3.5-dev"
 - "3.6"
 - "3.6-dev"
 - "3.7-dev"
-- "3.8-dev"
 - "nightly"
 install:
 - sudo apt-get update
-- sudo apt-get -qq install python-setuptools python-dev
+# install liblo before pyliblo
+- sudo apt-get -qq install python-setuptools liblo-dev liblo-tools python-dev
+# upgrade pip itself
 - pip install --upgrade pip
+# need to compile pyliblo
+- pip install Cython
 - pip install -ve .
 - pip install coverage
 - pip install codacy-coverage
