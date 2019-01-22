@@ -3,10 +3,10 @@
 
 from pybush import new_device
 
-my_device = new_device('Test Device')
+my_device = new_device(name='test')
 my_device.new_output(protocol='OSC', port='127.0.0.1:1234')
-my_int = my_device.new_parameter('test/numeric/int', datatype='int', default_value=66, domain=[-100, 100], description='an integer')
-my_float = my_device.new_parameter('test/numeric/float', datatype='float', default_value=0.123456, domain=[-2.1, 2.2])
+my_int = my_device.new_parameter('/numeric/int', datatype='int', default_value=66, domain=[-100, 100], description='an integer')
+my_float = my_device.new_parameter('numeric/float', datatype='float', default_value=0.123456, domain=[-2.1, 2.2])
 
 from pylekture.project import new_project
 
