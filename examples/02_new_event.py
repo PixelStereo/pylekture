@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from pybush import new_device
+# A device is a bunch of parameters accessible through a protocol/
+# For exemple we're creating an OSC device with 2 parameters, an int and a float
 
 my_device = new_device('Test Device')
 my_device.new_output(protocol='OSC', port='127.0.0.1:1234')
