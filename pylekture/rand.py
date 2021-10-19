@@ -14,7 +14,7 @@ from pylekture.PySignal import ClassSignal
 
 current_milli_time = lambda: time() * 1000
 
-def random_generator(origin=0, destination=1, duration=1000, grain=10):
+def random_generator(datatype=float, origin=0, destination=1, duration=1000, grain=10):
     """
     The Random Generator
     step every 10 ms (default)
@@ -30,8 +30,15 @@ def random_generator(origin=0, destination=1, duration=1000, grain=10):
         # uniform gives you a floating-point value
         if not origin:
             origin=0
-        frand = round(random.uniform(origin, destination), 6)
-        yield frand
+        if datatype == 'float':
+            frand = round(random.uniform(origin, destination), precision)
+        elif datatype == 'int':
+            frand = round(random.randrange(origin, destination), grain)
+        else:
+            print('error - random only works with float or int')
+            return None
+        timing = int(last-start)
+        yield frand, timing
 
 
 class Random(Animation):
@@ -71,8 +78,9 @@ class Random(Animation):
 
         def run(self):
             self.random.started.emit()
-            randomer = random_generator(origin=self.random.parameter.value, destination=self.random.destination, duration=self.random.duration, grain=self.random.grain)
-            for val in randomer:
+            randomer = random_generator(datatype=self.random.parameter.datatype, origin=self.random.parameter.value, destination=self.random.destination, duration=self.random.duration, grain=self.random.grain)
+            for val, timing in randomer:
                 self.random.parameter.value = val
+                self.random.timing.emit(timing)
                 self.random.new_val.emit(val)
             self.random.ended.emit()

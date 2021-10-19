@@ -39,7 +39,7 @@ a_ramp = my_project.new_event('ramp', parameter=my_int, name='event 1', descript
 a_random = my_project.new_event('random', parameter=my_other_int, name='event 2', description='my second event', destination=100, duration=2000)
 
 
-from pylekture.animation_UI import Animation_UI
+from pylekture.animation_UI import Animation_UI, Ramp_UI
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget
 
@@ -50,7 +50,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setAutoFillBackground(True)
-        self.rampui = Animation_UI(a_ramp)
+        self.rampui = Ramp_UI(a_ramp)
         self.randomui = Animation_UI(a_random)
         self.layout = QHBoxLayout()
         self.layout.addWidget(self.rampui)
