@@ -10,8 +10,8 @@ curve/easing
 
 """
 
-from PyQt5.QtWidgets import QGroupBox, QSpinBox, QGridLayout, QSlider, QPushButton
-from PyQt5.QtCore import Qt
+from PySide6.QtWidgets import QGroupBox, QSpinBox, QGridLayout, QSlider, QPushButton
+from PySide6.QtCore import Qt
 
 
 class Animation_UI(QGroupBox):
