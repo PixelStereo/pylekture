@@ -1,0 +1,3 @@
+[submodule "3rdparty/pybush"]
+	path = 3rdparty/pybush
+	url = https://github.com/PixelStereo/pybush
