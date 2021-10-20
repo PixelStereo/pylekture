@@ -47,7 +47,10 @@ class Animation_UI(QGroupBox):
         self.ramp.timing.connect(self.timing)
 
         self.value = QSlider(Qt.Horizontal, self)
-        self.value.setMaximum(self.ramp.parameter.domain[1])
+        #self.value.setMinimum(self.ramp.parameter.domain[0])
+        #self.value.setMaximum(self.ramp.parameter.domain[1])
+        self.value.setMinimum(self.ramp.origin)
+        self.value.setMaximum(self.ramp.destination)
         self.ramp.new_val.connect(self.parameter_update)
 
         # set the layout
@@ -92,7 +95,7 @@ class Animation_UI(QGroupBox):
         """
         update parameter to be ramped
         """
-        self.ramp.parameter.value = val
+        self.value.setValue(val)
 
 class Ramp_UI(Animation_UI):
     """docstring for Ramp_UI"""
