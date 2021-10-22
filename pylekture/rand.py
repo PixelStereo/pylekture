@@ -10,7 +10,6 @@ from time import time
 from pylekture.event import Event
 import random
 from pylekture.animation import Animation
-from pylekture.PySignal import ClassSignal
 
 current_milli_time = lambda: time() * 1000
 
@@ -77,10 +76,16 @@ class Random(Animation):
             self.start()
 
         def run(self):
-            self.random.started.emit()
+            print('BEFORE')
+            self.random.started.emit(1)
+            print('AFTER')
             randomer = random_generator(datatype=self.random.parameter.datatype, origin=self.random.parameter.value, destination=self.random.destination, duration=self.random.duration, grain=self.random.grain)
+            print('--------')
+            print('--------')
+            print('--------')
             for val, timing in randomer:
                 self.random.parameter.value = val
+                print('deuz')
                 self.random.timing.emit(timing)
-                self.random.new_val.emit(val)
+                #self.random.new_val.emit(val)
             self.random.ended.emit()

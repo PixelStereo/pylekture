@@ -10,7 +10,8 @@ import datetime
 from time import sleep
 from pylekture.event import Event
 from pylekture.constants import debug
-from pylekture.PySignal import ClassSignal
+
+from PySide6.QtCore import Signal
 
 
 class Player(threading.Thread):
@@ -45,10 +46,11 @@ class Animation(Event):
     - duration
     - grain
     """
-    started = ClassSignal()
-    new_val = ClassSignal()
-    timing = ClassSignal()
-    ended = ClassSignal()
+    started = Signal(int)
+    new_val = Signal(int)
+    print('creating a signal')
+    timing = Signal(int)
+    ended = Signal(int)
     def __init__(self, kwargs):
         super(Animation, self).__init__()
         self.parameter = None

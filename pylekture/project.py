@@ -418,6 +418,7 @@ class Project(object):
             the_event = Ramp(kwargs)
         elif event_type == 'random':
             the_event = Random(kwargs)
+            
         else:
             the_event = None
         if the_event:
