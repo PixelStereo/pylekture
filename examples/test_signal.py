@@ -71,7 +71,7 @@ if __name__ == "__main__":
     main = MainWindow()
     acc_instance = Account()
 
-    acc_instance.textUpdate.connect(main.update_text)
-    main.ui.pushButton.clicked.connect(acc_instance.start)
+    #acc_instance.textUpdate.connect(main.update_text)
+    #main.ui.pushButton.clicked.connect(acc_instance.start)
 
     sys.exit(app.exec())

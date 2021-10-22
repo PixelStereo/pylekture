@@ -47,8 +47,8 @@ class Animation_UI(QGroupBox):
         #self.ramp.timing.connect(self.timing)
 
         self.value = QSlider(Qt.Horizontal, self)
-        #self.value.setMinimum(self.ramp.parameter.domain[0])
-        #self.value.setMaximum(self.ramp.parameter.domain[1])
+        self.value.setMinimum(self.ramp.parameter.domain[0])
+        self.value.setMaximum(self.ramp.parameter.domain[1])
         self.value.setMinimum(self.ramp.origin)
         self.value.setMaximum(self.ramp.destination)
         #self.ramp.new_val.connect(self.parameter_update)

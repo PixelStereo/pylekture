@@ -24,7 +24,7 @@ class Player(threading.Thread):
         self.start()
 
     def run(self):
-        player = self.parent.Play(self.parent)
+        player = self.parent.run()
         if player:
             player.join()
             self.parent.current_player

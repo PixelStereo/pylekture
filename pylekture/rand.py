@@ -11,6 +11,8 @@ from pylekture.event import Event
 import random
 from pylekture.animation import Animation
 
+from PySide6.QtCore import QThread
+
 current_milli_time = lambda: time() * 1000
 
 def random_generator(datatype=float, origin=0, destination=1, duration=1000, grain=10):
@@ -40,7 +42,7 @@ def random_generator(datatype=float, origin=0, destination=1, duration=1000, gra
         yield frand, timing
 
 
-class Random(Animation):
+class Random(Animation, QThread):
     """
     The Random Object
     a random is a pseudo random generation
@@ -65,27 +67,12 @@ class Random(Animation):
                         post_wait=self.post_wait)
 
 
-    class Play(Thread):
-        """
-        Event Player
-        It plays the event in a separate Thread
-        """
-        def __init__(self, random):
-            Thread.__init__(self)
-            self.random = random
-            self.start()
-
-        def run(self):
-            print('BEFORE')
-            self.random.started.emit(1)
-            print('AFTER')
-            randomer = random_generator(datatype=self.random.parameter.datatype, origin=self.random.parameter.value, destination=self.random.destination, duration=self.random.duration, grain=self.random.grain)
-            print('--------')
-            print('--------')
-            print('--------')
-            for val, timing in randomer:
-                self.random.parameter.value = val
-                print('deuz')
-                self.random.timing.emit(timing)
-                #self.random.new_val.emit(val)
-            self.random.ended.emit()
+    def run(self):
+        self.start()
+        self.started.emit(1)
+        randomer = random_generator(datatype=self.parameter.datatype, origin=self.parameter.value, destination=self.destination, duration=self.duration, grain=self.grain)
+        for val, timing in randomer:
+            self.parameter.value = val
+            self.timing.emit(timing)
+            self.new_val.emit(val)
+        self.ended.emit(1)
