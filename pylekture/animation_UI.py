@@ -11,10 +11,10 @@ curve/easing
 """
 
 from PySide6.QtWidgets import QGroupBox, QSpinBox, QGridLayout, QSlider, QPushButton, QLabel
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt, Slot, QThread
 
 
-class Animation_UI(QGroupBox):
+class Animation_UI(QGroupBox, QThread):
     """
     Animation of a Parameter
     """
@@ -44,14 +44,12 @@ class Animation_UI(QGroupBox):
 
         self.progressbar = QSlider(Qt.Horizontal, self)
         self.progressbar.setMaximum(self.ramp.duration)
-        #self.ramp.timing.connect(self.timing)
+        self.ramp.timing.connect(self.timing)
 
         self.value = QSlider(Qt.Horizontal, self)
-        self.value.setMinimum(self.ramp.parameter.domain[0])
-        self.value.setMaximum(self.ramp.parameter.domain[1])
         self.value.setMinimum(self.ramp.origin)
         self.value.setMaximum(self.ramp.destination)
-        #self.ramp.new_val.connect(self.parameter_update)
+        self.ramp.new_val.connect(self.parameter_update)
 
         # set the layout
         self.layout = QGridLayout()
@@ -71,7 +69,6 @@ class Animation_UI(QGroupBox):
 
     @Slot(int)
     def timing(self, val):
-        print('creating a Slot')
         self.progressbar.setValue(val)
     
     def origin_update(self, val):
@@ -85,6 +82,7 @@ class Animation_UI(QGroupBox):
         update destination of the ramp
         """
         self.ramp.destination = val
+        self.value.setMaximum(val)
     
     def duration_update(self, val):
         """
