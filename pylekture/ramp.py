@@ -5,7 +5,7 @@
 Ramp Animation is a basic animation
 """
 
-from threading import Thread
+from PySide6.QtCore import QThread
 from time import time
 from pylekture.animation import Animation
 from pylekture.event import Event
@@ -23,6 +23,7 @@ def ramp_generator(origin=0, destination=1, duration=1000, grain=10):
     start = current_milli_time()
     last = start
     step = float( (destination - origin) / ( float(duration / grain) ))
+    print('RAMP: origin =', origin, 'destination =', destination, 'step =', step)
     while (current_milli_time() < (start + duration)):
         while (current_milli_time() < last + grain):
             pass # wait
@@ -31,7 +32,7 @@ def ramp_generator(origin=0, destination=1, duration=1000, grain=10):
         timing = int(last-start)
         yield origin, timing
 
-class Ramp(Animation):
+class Ramp(Animation, QThread):
     """
     The Ramp Object
     a ramp is an interpolation with time as input and a function as output
@@ -58,10 +59,10 @@ class Ramp(Animation):
 
 
     def run(self):
-        self.start()
         self.started.emit(1)
-        ramper = ramp_generator(self.ramp.origin, self.ramp.destination, self.ramp.duration, self.ramp.grain)
-        for val, timing in randomer:
+        ramper = ramp_generator(self.origin, self.destination, self.duration, self.grain)
+        self.new_val.emit(self.origin)
+        for val, timing in ramper:
             self.parameter.value = val
             self.timing.emit(timing)
             self.new_val.emit(val)

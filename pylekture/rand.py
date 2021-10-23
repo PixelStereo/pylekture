@@ -15,7 +15,7 @@ from PySide6.QtCore import QThread
 
 current_milli_time = lambda: time() * 1000
 
-def random_generator(datatype=float, origin=0, destination=1, duration=1000, grain=10):
+def random_generator(datatype=float, origin=0, destination=1, duration=1000, grain=10, step=1):
     """
     The Random Generator
     step every 10 ms (default)
@@ -24,6 +24,7 @@ def random_generator(datatype=float, origin=0, destination=1, duration=1000, gra
     """
     start = current_milli_time()
     last = start
+    print('RANDOM: origin =', origin, 'destination =', destination, 'step =', step)
     while (current_milli_time() < (start + duration)):
         while (current_milli_time() < last + grain):
             pass # wait
@@ -68,7 +69,6 @@ class Random(Animation, QThread):
 
 
     def run(self):
-        self.start()
         self.started.emit(1)
         randomer = random_generator(datatype=self.parameter.datatype, origin=self.parameter.value, destination=self.destination, duration=self.duration, grain=self.grain)
         for val, timing in randomer:
