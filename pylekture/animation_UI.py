@@ -11,45 +11,45 @@ curve/easing
 """
 
 from PySide6.QtWidgets import QGroupBox, QSpinBox, QGridLayout, QSlider, QPushButton, QLabel
-from PySide6.QtCore import Qt, Slot, QThread
+from PySide6.QtCore import Qt, Slot, QRunnable, QThread
 
 
-class Animation_UI(QGroupBox, QThread):
+class Animation_UI(QGroupBox, QRunnable):
     """
     Animation of a Parameter
     """
-    def __init__(self, ramp):
+    def __init__(self, anim):
         super(Animation_UI, self).__init__()
         self.setTitle('Animation Interface')
-        self.ramp = ramp
+        self.anim = anim
 
         # create UI objects
         self.origin = QSpinBox()
-        self.origin.setValue(self.ramp.parameter.value)
+        self.origin.setValue(self.anim.parameter.value)
         self.origin.valueChanged.connect(self.origin_update)
 
         self.destination = QSpinBox()
         #self.destination.setMaximum(1000)
-        self.destination.setValue(self.ramp.destination)
+        self.destination.setValue(self.anim.destination)
         self.destination.valueChanged.connect(self.destination_update)
 
         self.duration = QSpinBox()
         self.duration.setMaximum(100000)
-        self.duration.setValue(self.ramp.duration)
+        self.duration.setValue(self.anim.duration)
         self.duration.valueChanged.connect(self.duration_update)
 
         self.go = QPushButton()
         self.go.setText('GO')
-        self.go.clicked.connect(self.ramp.play)
+        self.go.clicked.connect(self.anim.play)
 
         self.progressbar = QSlider(Qt.Horizontal, self)
-        self.progressbar.setMaximum(self.ramp.duration)
-        self.ramp.timing.connect(self.timing)
+        self.progressbar.setMaximum(self.anim.duration)
+        self.anim.timing.connect(self.timing)
 
         self.value = QSlider(Qt.Horizontal, self)
-        self.value.setMinimum(self.ramp.origin)
-        self.value.setMaximum(self.ramp.destination)
-        self.ramp.new_val.connect(self.parameter_update)
+        self.value.setMinimum(self.anim.origin)
+        self.value.setMaximum(self.anim.destination)
+        self.anim.new_val.connect(self.parameter_update)
 
         # set the layout
         self.layout = QGridLayout()
@@ -73,40 +73,47 @@ class Animation_UI(QGroupBox, QThread):
     
     def origin_update(self, val):
         """
-        update origin of the ramp
+        update origin of the anim
         """
-        self.ramp.origin = val
+        self.anim.origin = val
+        self.value.setMinimum(val)
     
     def destination_update(self, val):
         """
-        update destination of the ramp
+        update destination of the anim
         """
-        self.ramp.destination = val
+        self.anim.destination = val
         self.value.setMaximum(val)
     
     def duration_update(self, val):
         """
-        update duration of the ramp
+        update duration of the anim
         """
-        self.ramp.duration = val
+        self.anim.duration = val
         self.progressbar.setMaximum(val)
     
     def parameter_update(self, val):
         """
-        update parameter to be ramped
+        update parameter to be animed
         """
         self.value.setValue(val)
 
-class Ramp_UI(Animation_UI):
+class Ramp_UI(Animation_UI, QThread):
     """docstring for Ramp_UI"""
     def __init__(self, args):
         super(Ramp_UI, self).__init__(args)
         self.setTitle('Ramp Interface')
         self.args = args
+
+    def run(self):
+        pass
     
-class Random_UI(Animation_UI):
+class Random_UI(Animation_UI, QThread):
     """docstring for Ramp_UI"""
     def __init__(self, args):
         super(Random_UI, self).__init__(args)
         self.setTitle('Random Interface')
         self.args = args    
+
+    def run(self):
+        pass
