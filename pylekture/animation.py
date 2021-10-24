@@ -48,7 +48,6 @@ class Animation(Event):
     """
     started = Signal(int)
     new_val = Signal(int)
-    print('creating a signal')
     timing = Signal(int)
     ended = Signal(int)
     def __init__(self, kwargs):
