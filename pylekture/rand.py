@@ -24,7 +24,6 @@ def random_generator(datatype=float, origin=0, destination=1, duration=1000, gra
     """
     start = current_milli_time()
     last = start
-    print('RANDOM: origin =', origin, 'destination =', destination, 'step =', step)
     while (current_milli_time() < (start + duration)):
         while (current_milli_time() < last + grain):
             pass # wait
@@ -57,6 +56,8 @@ class Random(Animation, QThread):
         super(Random, self).__init__(*args, **kwargs)
         for key, value in kwargs.items():
             setattr(self, key, value)
+        self.animation = random_generator(datatype=self.parameter.datatype, origin=self.parameter.value, destination=self.destination, duration=self.duration, grain=self.grain)
+        self.animation = list(self.animation)
 
     def __repr__(self):
         s = "Random (parameter={parameter}, destination={destination}, duration={duration}, grain={grain}, wait={wait}, post_wait={post_wait})"
@@ -66,13 +67,3 @@ class Random(Animation, QThread):
                         grain=self.grain,
                         wait=self.wait,
                         post_wait=self.post_wait)
-
-
-    def run(self):
-        self.started.emit(1)
-        randomer = random_generator(datatype=self.parameter.datatype, origin=self.parameter.value, destination=self.destination, duration=self.duration, grain=self.grain)
-        for val, timing in randomer:
-            self.parameter.value = val
-            self.timing.emit(timing)
-            self.new_val.emit(val)
-        self.ended.emit(1)

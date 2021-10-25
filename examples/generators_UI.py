@@ -35,8 +35,8 @@ my_other_int = my_device.add_param({
                                     'unique':True})
 
 my_project = new_project(name= 'Demo Project')
-a_ramp = my_project.new_event('ramp', parameter=my_int, name='event 1', description='my first event', destination=200, duration=2000)
-a_random = my_project.new_event('random', parameter=my_other_int, name='event 2', description='my second event', destination=100, duration=2000)
+a_ramp = my_project.new_event('ramp', parameter=my_int, name='a ramp', description='my first event', destination=200, duration=2000)
+a_random = my_project.new_event('random', parameter=my_other_int, name='a random', description='my second event', destination=100, duration=2000)
 
 
 from pylekture.animation_UI import Random_UI, Ramp_UI

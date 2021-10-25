@@ -9,7 +9,9 @@ import datetime
 from time import sleep
 from pylekture.event import Event
 from pylekture.constants import debug
-from PySide6.QtCore import Signal, QThread
+from PySide6.QtCore import Signal, QThread, Slot
+from time import time
+current_milli_time = lambda: time() * 1000
 
 
 class Animation(Event, QThread):
@@ -19,16 +21,13 @@ class Animation(Event, QThread):
     it emit several signals
     - started
     - new_val
-    - ended
     it has several attributes
     - destination
     - duration
     - grain
     """
-    started = Signal(int)
     new_val = Signal(int)
     timing = Signal(int)
-    ended = Signal(int)
     def __init__(self, kwargs):
         super(Animation, self).__init__()
         self.parameter = None
@@ -36,7 +35,8 @@ class Animation(Event, QThread):
         self.duration = 1000
         self.grain = 10
         self.origin = 0
-        self.current_player = None
+        self.started.connect(self.print_start)
+        self.finished.connect(self.print_finished)
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -53,38 +53,42 @@ class Animation(Event, QThread):
         self._parameter = parameter
         return True
 
+    @Slot()
+    def print_start(self):
+        if debug >= 3:
+            dbg = 'event-start: {name} at {time}'
+            print(dbg.format(name=self.name, time=datetime.datetime.now()))
+
+    @Slot()
+    def print_finished(self):
+        if debug >= 3:
+            dbg = 'event-finished: {name} at {time}'
+            print(dbg.format(name=self.name, time=datetime.datetime.now()))
+
     def play(self):
         """
         Play an event
         It creates a new object play in a separate thread.
         """
-        """
-        if self.current_player:
-            self.stop()
-            self.play()
-        else:
-            self.current_player = Player(self)
-            return self.current_player
-        """
         self.start()
-        if debug >= 3:
-            dbg = 'event-play: {name} in {thread} at {time}'
-            print(dbg.format(name=self.name, thread=dir(QThread.currentThread()), time=datetime.datetime.now()))
-        return self.current_player
-
-    def run(self):
-        self.current_player = self.run()
-        if self.current_player:
-            self.current_player.join()
-            self.current_player
+        return self
 
     def stop(self):
         """
         Stop an event
         It will destruct the player in the separate thread.
         """
-        #print(self.current_player)
         self._stop()
-        self.current_player = None
-        #print("stop is not yet implemented")
-        #sleep(1)
+
+    def run(self):
+        """
+        the thread runner
+        """
+        start = current_milli_time()
+        last = start
+        for val, timing in self.animation:
+            while (current_milli_time() - start) < timing:
+                pass # wait
+            self.timing.emit(timing)
+            self.parameter.value = val
+            self.new_val.emit(val)
