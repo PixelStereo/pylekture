@@ -92,11 +92,20 @@ class Animation_UI(QGroupBox, QRunnable):
         self.anim.duration = val
         self.progressbar.setMaximum(val)
     
+    @Slot(int)    
     def parameter_update(self, val):
         """
         update parameter to be animed
         """
         self.value.setValue(val)
+
+class Animation_UI_Updater(QThread):
+    """docstring for Animation_UI_Updater"""
+    def __init__(self, arg):
+        super(Animation_UI_Updater, self).__init__()
+        self.arg = arg
+
+        
 
 class Ramp_UI(Animation_UI, QThread):
     """docstring for Ramp_UI"""

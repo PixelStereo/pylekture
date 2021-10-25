@@ -5,35 +5,14 @@
 Player for animation as ramp or random
 """
 
-import threading
 import datetime
 from time import sleep
 from pylekture.event import Event
 from pylekture.constants import debug
+from PySide6.QtCore import Signal, QThread
 
-from PySide6.QtCore import Signal
 
-
-class Player(threading.Thread):
-    """
-    A Player that play things
-    """
-    def __init__(self, parent):
-        super(Player, self).__init__()
-        self.parent = parent
-        self.start()
-
-    def run(self):
-        player = self.parent.run()
-        if player:
-            player.join()
-            self.parent.current_player
-
-    def stop(self):
-        self._stop()
-        self.parent.current_player = None
-
-class Animation(Event):
+class Animation(Event, QThread):
     """
     The Animation Object
     an animation is the base class for any animation
@@ -87,11 +66,17 @@ class Animation(Event):
             self.current_player = Player(self)
             return self.current_player
         """
-        self.current_player = Player(self)
+        self.start()
         if debug >= 3:
             dbg = 'event-play: {name} in {thread} at {time}'
-            print(dbg.format(name=self.name, thread=threading.current_thread().name, time=datetime.datetime.now()))
+            print(dbg.format(name=self.name, thread=dir(QThread.currentThread()), time=datetime.datetime.now()))
         return self.current_player
+
+    def run(self):
+        self.current_player = self.run()
+        if self.current_player:
+            self.current_player.join()
+            self.current_player
 
     def stop(self):
         """
@@ -99,5 +84,7 @@ class Animation(Event):
         It will destruct the player in the separate thread.
         """
         #print(self.current_player)
-        print("stop is not yet implemented")
-        sleep(1)
+        self._stop()
+        self.current_player = None
+        #print("stop is not yet implemented")
+        #sleep(1)
